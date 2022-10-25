@@ -12,48 +12,25 @@ use Illuminate\Queue\SerializesModels;
 class TicketMail extends Mailable
 {
     use Queueable, SerializesModels;
-
+    use Queueable, SerializesModels;
+    public $ticket_number;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($ticket_number)
     {
-        //
+        $this->ticket_number = $ticket_number;
     }
 
     /**
-     * Get the message envelope.
+     * Build the message.
      *
-     * @return \Illuminate\Mail\Mailables\Envelope
+     * @return $this
      */
-    public function envelope()
+    public function build()
     {
-        return new Envelope(
-            subject: 'Ticket Mail',
-        );
-    }
-
-    /**
-     * Get the message content definition.
-     *
-     * @return \Illuminate\Mail\Mailables\Content
-     */
-    public function content()
-    {
-        return new Content(
-            view: 'view.name',
-        );
-    }
-
-    /**
-     * Get the attachments for the message.
-     *
-     * @return array
-     */
-    public function attachments()
-    {
-        return [];
+        return $this->view('mails.ticket');
     }
 }

@@ -11,6 +11,7 @@ use Validator;
 use Str;
 use DB;
 use Log;
+use Storage;
 use Carbon\Carbon;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
@@ -85,10 +86,10 @@ class PaymentController extends Controller
                 $ticket->event_id = $event->id;
                 $ticket->ticket_number = Str::orderedUuid();
                 //generate qr code and store it in the storage folder
-                $qrCode = QrCode::format('png')->size(500)->generate($ticket->ticket_number);
-                $path = 'qr_codes/'.$ticket->ticket_number.'.pgn';
+                $qrCode = QrCode::format('svg')->size(500)->generate($ticket->ticket_number);
+                $path = 'qr_codes/'.$ticket->ticket_number.'.svg';
                 Storage::disk('public')->put($path, $qrCode);
-                $ticket->qr_code = $ticket->ticket_number.'.png';
+                $ticket->qr_code = $ticket->ticket_number.'.svg';
                 $ticket->status = 'unpaid';
                 $ticket->save();
             }
@@ -98,10 +99,10 @@ class PaymentController extends Controller
             $ticket->event_id = $event->id;
             $ticket->ticket_number = Str::orderedUuid();
             //generate qr code and store it in the storage folder
-            $qrCode = QrCode::format('png')->size(500)->generate($ticket->ticket_number);
-            $path = 'qr_codes/'.$ticket->ticket_number.'.pgn';
+            $qrCode = QrCode::format('svg')->size(500)->generate($ticket->ticket_number);
+            $path = 'qr_codes/'.$ticket->ticket_number.'.svg';
             Storage::disk('public')->put($path, $qrCode);
-            $ticket->qr_code = $ticket->ticket_number.'.png';
+            $ticket->qr_code = $ticket->ticket_number.'.svg';
             $ticket->status = 'unpaid';
             $ticket->save();
         }
@@ -203,7 +204,11 @@ class PaymentController extends Controller
             $ticket = Ticket::where('merchantRequestID', $merchantRequestId)->get();
             foreach($ticket as $t) {
                 $t->status = 'paid';
+                $t->payment_id = $payment->id;
                 $t->save();
+
+                //send email
+                $t->sendTicket($t->email, $t->ticket_number);
             }
 
         } catch (\Throwable $th) {
