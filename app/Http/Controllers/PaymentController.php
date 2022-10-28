@@ -213,6 +213,10 @@ class PaymentController extends Controller
                 $t->sendTicket($t->email, $t->ticket_number);
             }
 
+            //return redirect to / with success toastr
+            toastr()->success('Payment successful kindly check your email for your ticket');
+            return redirect('/');
+
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
             return response()->json($th->getMessage(), 500);
