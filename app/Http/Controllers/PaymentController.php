@@ -14,6 +14,7 @@ use Log;
 use Storage;
 use Carbon\Carbon;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use DataTables;
 
 class PaymentController extends Controller
 {
@@ -59,7 +60,6 @@ class PaymentController extends Controller
         'quantity' => 'required|integer',
         'email' => 'required|email',
         'phone' => 'required',
-        'AccountReference' => 'required',
         'TransactionDescription' => 'required'
         ]);
 
@@ -227,5 +227,64 @@ class PaymentController extends Controller
         return $this->errorResponse($th->getMessage(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
+    }
+
+    public function index(){
+        $payments = Payment::all();
+        return view('payments.index', compact('payments'));
+    }
+    public function allPaymentsTable(){
+        $payments = Payment::all();
+        $payments = $payments->map(function($payment) {
+            $payment_ticket = Ticket::where('payment_id', $payment->id)->select('ticket_number','event_id')->first();
+           
+            if($payment_ticket){
+                $payment->ticket_number = $payment_ticket->ticket_number;
+                $event = Event::where('id', $payment_ticket->event_id)->select('name')->first();
+                if($event){
+                    $payment->event_name = $event->name;
+                }else{
+                    $payment->event_name = 'N/A';
+                }
+            }else{
+                $payment->ticket_number = 'N/A';
+            }
+            
+
+            return $payment;
+        });
+
+        return DataTables::of($payments)
+        ->addColumn('action', function($payment){
+            return '<a href="#" class="btn btn-sm btn-primary">View</a>';
+        })
+        ->addColumn('quantity', function($payment){
+            return $payment->quantity;
+        })
+        ->addColumn('phone_number', function($payment){
+            return $payment->phone_number;
+        })
+        ->addColumn('TransID', function($payment){
+            return $payment->TransID;
+        })
+        ->addColumn('TransTime', function($payment){
+            return $payment->TransTime;
+        })
+        ->addColumn('TransAmount', function($payment){
+            return $payment->TransAmount;
+        })
+        ->addColumn('ticket_number', function($payment){
+            return $payment->ticket_number;
+        })
+        ->addColumn('event_name', function($payment){
+            return $payment->event_name;
+        })
+        ->addColumn('status', function($payment){
+            $ticket = Ticket::where('payment_id', $payment->id)->first();
+            return 'active';
+            // return $ticket->status;
+        })
+        ->rawColumns(['action', 'quantity', 'phone_number', 'TransID', 'TransTime', 'TransAmount', 'ticket_number', 'event_name', 'status'])
+        ->make(true);
     }
 }

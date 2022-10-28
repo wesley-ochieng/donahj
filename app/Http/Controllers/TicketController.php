@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ticket;
+use App\Models\Event;
 use Illuminate\Http\Request;
 use Validator;
+use DataTables;
 
 class TicketController extends Controller
 {
@@ -18,7 +20,65 @@ class TicketController extends Controller
         $tickets = Ticket::all();
         return view('tickets.index', compact('tickets'));
     }
-
+    public function allTicketsTable()
+    {
+        $tickets = Ticket::get();
+        return DataTables::of($tickets)
+        ->addColumn('action', function($ticket){
+            return '<a href="#" class="btn btn-sm btn-primary">View</a>';
+        })
+        ->addColumn('status', function($ticket){
+            if($ticket->status == 'paid'){
+                return '<span class="badge badge-success shadow-sm">Paid</span>';
+            }elseif($ticket->status == 'unpaid'){
+                return '<span class="badge badge-danger shadow-sm">Unpaid</span>';
+            }elseif($ticket->status == 'used'){
+                return '<span class="badge badge-secondary shadow-sm">Used</span>';
+            }
+        })
+        ->addColumn('event', function($ticket){
+            return $ticket->event->name;
+        })
+        ->addColumn('ticket_number', function($ticket){
+            return $ticket->ticket_number;
+        })
+        ->addColumn('qr_code', function($ticket){
+            return '<img src="'.asset('storage/qr_codes/'.$ticket->qr_code).'" alt="barcode" style="max-width:81px"  />';
+        })
+        ->rawColumns(['action', 'status', 'ticket_number', 'qr_code', 'event'])
+        ->make(true);
+    }
+    public function eventTickets($event)
+    {
+        $tickets = Ticket::where('event_id', $event)->get();
+        $event = Event::find($event);
+        return view('events.tickets', compact('tickets','event'));
+    }
+    public function eventTicketsTables($event)
+    {
+        $tickets = Ticket::where('event_id', $event)->get();
+        return DataTables::of($tickets)
+        ->addColumn('action', function($ticket){
+            return '<a href="#" class="btn btn-sm btn-primary">View</a>';
+        })
+        ->addColumn('status', function($ticket){
+            if($ticket->status == 'paid'){
+                return '<span class="badge badge-success shadow-sm">Paid</span>';
+            }elseif($ticket->status == 'unpaid'){
+                return '<span class="badge badge-danger shadow-sm">Unpaid</span>';
+            }elseif($ticket->status == 'used'){
+                return '<span class="badge badge-secondary shadow-sm">Used</span>';
+            }
+        })
+        ->addColumn('ticket_number', function($ticket){
+            return $ticket->ticket_number;
+        })
+        ->addColumn('qr_code', function($ticket){
+            return '<img src="'.asset('storage/qr_codes/'.$ticket->qr_code).'" alt="barcode" style="max-width:81px"  />';
+        })
+        ->rawColumns(['action', 'status', 'ticket_number', 'qr_code'])
+        ->make(true);
+    }
 
     //function to update the ticket status
     public function updateStatus(Request $request)
