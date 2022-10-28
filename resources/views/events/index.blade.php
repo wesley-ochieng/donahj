@@ -75,6 +75,9 @@
                             </div>
                             {{-- button to show tickets --}}
                             <a href="{{ route('tickets.list', $event->id,'tickets') }}" class="btn btn-primary mt-3">Show Tickets</a>
+                            {{-- button to show payments --}}
+                            <a href="{{ route('payments.event', $event->id,'payments') }}" class="btn btn-secondary mt-3">Show Payments</a>
+                            {{-- button to show payments --}}
                         </div>
                       </div>
                     </div>

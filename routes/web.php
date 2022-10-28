@@ -19,9 +19,18 @@ use App\Http\Controllers\TicketController;
 
 Route::get('/', function () {
     //  retrun first event where status is upcoming
-    $event = App\Models\Event::where('status', 'upcoming')->first();
-    return view('welcome', compact('event'));
+    $upcoming_event = App\Models\Event::where('status', 'upcoming')->first();
+
+    $events = App\Models\Event::where('status', 'upcoming')->orderBy('id', 'desc')->get();
+
+    return view('welcome', compact('upcoming_event', 'events'));
 });
+Route::get('/praise-atmosphere/events/{event}', function ($event){
+    $upcoming_event = App\Models\Event::find($event);
+    $events = App\Models\Event::where('status', 'upcoming')->orderBy('id', 'desc')->get();
+    return view('event', compact('upcoming_event', 'events'));
+})->name('home-event');
+
 
 Auth::routes();
 

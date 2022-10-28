@@ -287,4 +287,56 @@ class PaymentController extends Controller
         ->rawColumns(['action', 'quantity', 'phone_number', 'TransID', 'TransTime', 'TransAmount', 'ticket_number', 'event_name', 'status'])
         ->make(true);
     }
+
+    public function eventPayments($event){
+        $event = Event::where('id', $event)->first();
+        return view('events.payments', compact('event'));
+    }
+
+    public function eventPaymentsTable($event){
+        $event = Event::where('id', $event)->first();
+        $tickets = Ticket::where('event_id', $event->id)->get();
+        $payments = $tickets->map(function($ticket) use ($event) {
+            $payment = Payment::where('merchantRequestId', $ticket->merchantRequestId)->first();
+            if($payment){
+                $payment->ticket_number = $ticket->ticket_number;
+                $payment->event_name = $event->name;
+                $payment->status = $ticket->status;
+            }
+            return $payment;
+        });
+
+        return DataTables::of($payments)
+        ->addColumn('action', function($payment){
+            return '<a href="#" class="btn btn-sm btn-primary">View</a>';
+        })
+        ->addColumn('quantity', function($payment){
+            return $payment->quantity;
+        })
+        ->addColumn('phone_number', function($payment){
+            return $payment->phone_number;
+        })
+        ->addColumn('TransID', function($payment){
+            return $payment->TransID;
+        })
+        ->addColumn('TransTime', function($payment){
+            return $payment->TransTime;
+        })
+        ->addColumn('TransAmount', function($payment){
+            return $payment->TransAmount;
+        })
+        ->addColumn('ticket_number', function($payment){
+            return $payment->ticket_number;
+        })
+        ->addColumn('event_name', function($payment){
+            return $payment->event_name;
+        })
+        ->addColumn('status', function($payment){
+            $ticket = Ticket::where('payment_id', $payment->id)->first();
+            return 'active';
+            // return $ticket->status;
+        })
+        ->rawColumns(['action', 'quantity', 'phone_number', 'TransID', 'TransTime', 'TransAmount', 'ticket_number', 'event_name', 'status'])
+        ->make(true);
+    }
 }
