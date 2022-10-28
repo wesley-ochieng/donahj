@@ -77,6 +77,7 @@ class EventController extends Controller
         }
         $event->poster_image = $image_path;
         $event->save();
+        toastr()->success('Event created successfully');
         return redirect()->route('events.list');
 
     }
@@ -123,8 +124,8 @@ class EventController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors()->all(), 400);
-            // return redirect()->back()->withErrors($validator)->withInput();
+            toastr()->warning('Event not updated');
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
         $start_date = date('Y-m-d', strtotime($request->start_date));
@@ -142,8 +143,8 @@ class EventController extends Controller
         $event->capacity = $request->capacity;
         $event->save();
 
-        return response()->json($event, 200);
-        // return redirect()->back()->with('success', 'Event updated successfully');
+        toastr()->success('Event updated successfully');
+        return redirect()->route('events.list');
     }
 
     /**
