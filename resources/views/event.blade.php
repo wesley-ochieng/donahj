@@ -7,6 +7,7 @@
     <meta name="description" content="Praise Atmosphere">
     <meta name="keywords" content="Praise Atmosphere Get Tickets">
     <meta name="author" content="pixelstrap">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" href="{{asset('assets/images/cropped-Praise.png')}}" type="image/x-icon">
     <link rel="shortcut icon" href="{{asset('assets/images/cropped-Praise.png')}}" type="image/x-icon">
     <title>Praise Atmosphere Tickets</title>
@@ -28,6 +29,7 @@
    <!-- Plugins css start-->
    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/animate.css') }}">
    <!-- Plugins css Ends-->
+   <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/sweetalert2.css') }}">
    <!-- Bootstrap css-->
    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap.css') }}">
    <!-- App css-->
@@ -192,7 +194,7 @@
                     </div>
                     {{-- buy button or close modal --}}
                     <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Buy</button>
+                        <button type="button" id="buy-ticket-btn" class="btn btn-primary">Buy</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </form>
@@ -217,6 +219,7 @@
     <script src="{{ asset('assets/js/touchspin/vendors.min.js') }}"></script>
     <script src="{{ asset('assets/js/touchspin/touchspin.js') }}"></script>
     <script src="{{ asset('assets/js/touchspin/input-groups.min.js') }}"></script>
+    <script src="{{ asset('assets/js/sweet-alert/sweetalert.min.js') }}"></script>
     <script>
         "use strict";
         // Countdown js
@@ -245,6 +248,48 @@
                 }
             });
     </script>
+        <script>
+            //submit route('payments.stkpush',$upcoming_event->id,'pay')  using ajax
+      
+            $(document).ready(function(){
+              var token = $('meta[name="csrf-token"]').attr('content');
+              $('#buy-ticket-btn').on('click',function(e){
+                e.preventDefault();
+                var name = $('#name').val();
+                var email = $('#email').val();
+                var quantity = $('#quantity').val();
+                var phone = $('#phone').val();
+                var _token = $("input[name=_token]").val();
+                $.ajax({
+                  url: "{{ route('payments.stkpush',$upcoming_event->id,'pay') }}",
+                  type:"POST",
+                  data:{
+                    name:name,
+                    email:email,
+                    quantity:quantity,
+                    phone:phone,
+                    _token:_token
+                  },
+                  success:function(response){
+                    if(response.ResponseCode == 0){
+                      //close exampleModal
+                      $('#exampleModal').modal('hide');
+                      swal({
+                        title: "Enter your pin to complete payment",
+                        text: "Processing Payment, Please dont close this window",
+                        icon: "success",
+                        buttons: false,
+                        closeOnClickOutside: false,
+                        closeOnEsc: false,
+                      });
+                    }else{
+                      swal("Error", "Ticket not bought", "error");
+                    }
+                  },
+                });
+              });
+            });
+          </script>
     <!-- Theme js-->
     <script src="{{ asset('assets/js/script.js') }}"></script>
     <!-- login js-->
