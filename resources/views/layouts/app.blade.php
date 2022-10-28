@@ -107,7 +107,7 @@
                 </li>
                 <li class="dropdown"><a class="nav-link menu-title link-nav" href="{{ route('tickets.all') }}"><i data-feather="printer"></i></i><span>All Tickets</span></a></li>
                 <li class="dropdown"><a class="nav-link menu-title link-nav" href="{{ route('payments.all') }}"><i data-feather="credit-card"></i><span>Payments</span></a></li>
-                <li><a class="nav-link menu-title link-nav" href="support-ticket.html"><i data-feather="headphones"></i><span>Support Ticket</span></a></li>
+                <li><a class="nav-link menu-title link-nav" href="#"><i data-feather="headphones"></i><span>Support Ticket</span></a></li>
               </ul>
             </div>
             <div class="right-arrow" id="right-arrow"><i data-feather="arrow-right"></i></div>

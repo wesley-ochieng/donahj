@@ -144,6 +144,20 @@
         
       </div>
     </div>
+    <div class="sub-footer light-bg">
+        <div class="custom-container">
+          <div class="row">
+            <div class="col-md-6 col-sm-2">
+              <div class="footer-contain"><img class="img-fluid img-40" src="{{ asset('assets/images/cropped-Praise.png') }}"  alt=""></div>
+            </div>
+            <div class="col-md-6 col-sm-10">
+              <div class="footer-contain">
+                <p class="mb-0">Copyright 2022-23 © Praise Atmosphere All rights reserved. </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     {{-- modal to buy ticket --}}
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog flipInX  animated" role="document">
