@@ -15,6 +15,8 @@ use Storage;
 use Carbon\Carbon;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use DataTables;
+use Mail;
+use App\Mail\TicketMail;
 
 class PaymentController extends Controller
 {
@@ -60,7 +62,7 @@ class PaymentController extends Controller
         'quantity' => 'required|integer',
         'email' => 'required|email',
         'phone' => 'required',
-        'TransactionDescription' => 'required'
+        // 'TransactionDescription' => 'required'
         ]);
 
         if($validator->fails()) {
@@ -92,6 +94,7 @@ class PaymentController extends Controller
                 $ticket->qr_code = $ticket->ticket_number.'.svg';
                 $ticket->status = 'unpaid';
                 $ticket->save();
+                
             }
         } else {
             $ticket = new Ticket();
@@ -128,10 +131,10 @@ class PaymentController extends Controller
             'PartyA' => $phoneNumber,
             'PartyB' => env('MPESA_BUSINESS_SHORT_CODE'),
             'PhoneNumber' => $phoneNumber,
-            'CallBackURL' => env('NGROK_URL').'/api/mpesa/callback',
-            // 'CallBackURL' => 'https://218e-105-161-215-179.in.ngrok.io/api/mpesa/callback/url',
-            'AccountReference' => $request->AccountReference,
-            'TransactionDesc' => $request->TransactionDescription
+            // 'CallBackURL' => env('NGROK_URL').'/api/mpesa/callback',
+            'CallBackURL' => 'https://9380-197-232-61-236.in.ngrok.io/api/mpesa/callback',
+            'AccountReference' => 'Praise Atmosphere',
+            'TransactionDesc' => $event->name,
         ];
 
         $data_string = json_encode($curl_post_data);

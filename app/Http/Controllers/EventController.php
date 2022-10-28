@@ -53,19 +53,22 @@ class EventController extends Controller
             // return response()->json($validator->errors()->all(), 400);
             return redirect()->back()->withErrors($validator)->withInput();
         }
+        //conver the start date to the format 2022-11-05
+        $start_date = date('Y-m-d', strtotime($request->start_date));
+        $end_date = date('Y-m-d', strtotime($request->end_date));
 
         $event = new Event();
         $event->name = $request->name;
         $event->description = $request->description;
-        $event->start_date = $request->start_date;
-        $event->end_date = $request->end_date;
+        $event->start_date = $start_date;
+        $event->end_date = $end_date;
         $event->start_time = $request->start_time;
         $event->amount = $request->amount;
         $event->venue = $request->venue;
         $event->venue_latitude = $request->venue_latitude;
         $event->venue_longitude = $request->venue_longitude;
         //check if event is active or not based on start date if it is in the past or not
-        $event->status = $request->start_date > date('d/m/Y') ? 'upcoming' :( $request-> start_date == date('d/m/Y') ? 'active' : 'passed');
+        $event->status = $start_date > date('Y-m-d') ? 'upcoming' :( $start_date == date('Y-m-d') ? 'active' : 'passed');
         $event->capacity = $request->capacity;
      
         $event->save();
@@ -124,14 +127,18 @@ class EventController extends Controller
             // return redirect()->back()->withErrors($validator)->withInput();
         }
 
+        $start_date = date('Y-m-d', strtotime($request->start_date));
+        $end_date = date('Y-m-d', strtotime($request->end_date));
+
+
         $event->name = $request->name;
         $event->description = $request->description;
-        $event->start_date = $request->start_date;
-        $event->end_date = $request->end_date;
+        $event->start_date = $start_date;
+        $event->end_date = $end_date;
         $event->start_time = $request->start_time;
         $event->amount = $request->amount;
         //check if event is active or not based on start date if it is in the past or not
-        $event->status = $request->start_date > date('Y-m-d') ? 'upcoming' :( $request-> start_date == date('Y-m-d') ? 'active' : 'passed');
+        $event->status = $start_date > date('Y-m-d') ? 'upcoming' :( $start_date == date('Y-m-d') ? 'active' : 'passed');
         $event->capacity = $request->capacity;
         $event->save();
 

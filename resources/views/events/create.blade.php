@@ -45,13 +45,13 @@
                             <div class="col-sm-4">
                             <div class="mb-3">
                                 <label>Starting date</label>
-                                <input class="datepicker-here form-control digits" type="text" name="start_date" autocomplete="off" data-language="">
+                                <input class="datepicker-here form-control digits" type="text" name="start_date" autocomplete="off" data-language="en">
                             </div>
                             </div>
                             <div class="col-sm-4">
                             <div class="mb-3">
                                 <label>Ending date</label>
-                                <input class="datepicker-here form-control" name="end_date" type="end_date" autocomplete="off" data-language="">
+                                <input class="datepicker-here form-control" name="end_date" type="end_date" autocomplete="off" data-language="en">
                             </div>
                             </div>
                             <div class="col-sm-4">

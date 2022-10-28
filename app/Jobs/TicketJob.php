@@ -34,6 +34,7 @@ class TicketJob implements ShouldQueue
      */
     public function handle()
     {
+        dd('test');
         Mail::to($this->email)->send(new TicketMail($this->ticket_number));
     }
 }
