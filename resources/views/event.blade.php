@@ -272,16 +272,18 @@
                   },
                   success:function(response){
                     if(response.ResponseCode == 0){
-                      //close exampleModal
-                      $('#exampleModal').modal('hide');
-                      swal({
-                        title: "Enter your pin to complete payment",
-                        text: "Processing Payment, Please dont close this window",
-                        icon: "success",
-                        buttons: false,
-                        closeOnClickOutside: false,
-                        closeOnEsc: false,
-                      });
+                        $('#exampleModal').modal('hide');
+                        swal({
+                            title: "Check Your phone and Enter Mpesa Pin",
+                            text: "Initiating Payment, Please dont close this window",
+                            icon: "info",
+                            buttons: false,
+                            closeOnClickOutside: false,
+                            closeOnEsc: false,
+                            onOpen: () => {
+                                swal.showLoading();
+                            }
+                        });
                     }else{
                       swal("Error", "Ticket not bought", "error");
                     }
