@@ -76,7 +76,9 @@
             </div>
         </header>
         <!-- Page Body Start-->
+        @if($upcoming_event)
         <div class="container-fluid p-0 m-0">
+          
             <div class="comingsoon comingsoon-bgimg"
                 style="background-image: url('{{ asset('storage/' . $upcoming_event->poster_image) }}');background-attachment: fixed;background-position: center;background-repeat: no-repeat;background-size: cover;">
                 <div class="comingsoon-inner text-center"><a href="#"><img
@@ -107,6 +109,7 @@
                     </a>
                 </div>
             </div>
+           
         </div>
         <div class="container">
             <section id="about">
@@ -144,6 +147,7 @@
                 </div>
 
             </section>
+           
             <section class="demo-section section-py-space" id="Applications">
                 <div class="title">
                     <h2>Other Events</h2>
@@ -170,6 +174,7 @@
             </section>
 
         </div>
+        @endif
     </div>
     <div class="sub-footer light-bg">
         <div class="custom-container">
@@ -187,6 +192,7 @@
         </div>
     </div>
     {{-- modal to buy ticket --}}
+    @if($upcoming_event)
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog flipInX  animated" role="document">
@@ -237,6 +243,7 @@
             </div>
         </div>
     </div>
+    @endif
 
 
     <!-- latest jquery-->
@@ -256,6 +263,7 @@
     <script src="{{ asset('assets/js/touchspin/touchspin.js') }}"></script>
     <script src="{{ asset('assets/js/touchspin/input-groups.min.js') }}"></script>
     <script src="{{ asset('assets/js/sweet-alert/sweetalert.min.js') }}"></script>
+    @if($upcoming_event)
     <script>
         "use strict";
         // Countdown js
@@ -263,7 +271,7 @@
             minute = second * 60,
             hour = minute * 60,
             day = hour * 24;
-        var countDown = new Date('{{ $upcoming_event->start_date }} {{ $upcoming_event->start_time }}').getTime(),
+            var countDown = new Date('{{ $upcoming_event->start_date }} {{ $upcoming_event->start_time }}').getTime(),
             x = setInterval(function() {
 
                 var now = new Date().getTime(),
@@ -328,6 +336,7 @@
             });
         });
     </script>
+    @endif
     <!-- Theme js-->
     <script src="{{ asset('assets/js/script.js') }}"></script>
     <!-- login js-->

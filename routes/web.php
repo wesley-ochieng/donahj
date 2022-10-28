@@ -32,26 +32,26 @@ Route::get('/praise-atmosphere/events/{event}', function ($event){
 })->name('home-event');
 
 
-Auth::routes();
+Auth::routes(['register' => false]);
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/events', [EventController::class, 'index'])->name('events.list');
-Route::post('/events', [EventController::class, 'store'])->name('events.store');
-Route::get('/create-event',[EventController::class, 'create'])->name('events.create');
+Route::get('/events', [EventController::class, 'index'])->name('events.list')->middleware('auth');
+Route::post('/events', [EventController::class, 'store'])->name('events.store')->middleware('auth');
+Route::get('/create-event',[EventController::class, 'create'])->name('events.create')->middleware('auth');
 Route::get('/events/{event}', [EventController::class, 'show']);
-Route::put('/events/{event}', [EventController::class, 'update']);
-Route::delete('/events/{event}', [EventController::class, 'destroy']);
+Route::put('/events/{event}', [EventController::class, 'update'])->middleware('auth');
+Route::delete('/events/{event}', [EventController::class, 'destroy'])->middleware('auth');
 
-Route::get('/events/{event}/tickets', [TicketController::class, 'eventTickets'])->name('tickets.list');
-Route::get('/events/{event}/tickets-tables', [TicketController::class, 'eventTicketsTables'])->name('tickets.tables');
-Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.all');
-Route::get('/all-tickets-table', [TicketController::class, 'allTicketsTable'])->name('all.tickets.table');
+Route::get('/events/{event}/tickets', [TicketController::class, 'eventTickets'])->name('tickets.list')->middleware('auth');
+Route::get('/events/{event}/tickets-tables', [TicketController::class, 'eventTicketsTables'])->name('tickets.tables')->middleware('auth');
+Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.all')->middleware('auth');
+Route::get('/all-tickets-table', [TicketController::class, 'allTicketsTable'])->name('all.tickets.table')->middleware('auth');
 
-Route::get('/payments', [PaymentController::class, 'index'])->name('payments.all');
-Route::get('/payments-table', [PaymentController::class, 'allPaymentsTable'])->name('payments.table');
-Route::get('/events/{event}/payments', [PaymentController::class, 'eventPayments'])->name('payments.event');
-Route::get('/events/{event}/payments-table', [PaymentController::class, 'eventPaymentsTable'])->name('payments.event.table');
+Route::get('/payments', [PaymentController::class, 'index'])->name('payments.all')->middleware('auth');
+Route::get('/payments-table', [PaymentController::class, 'allPaymentsTable'])->name('payments.table')->middleware('auth');
+Route::get('/events/{event}/payments', [PaymentController::class, 'eventPayments'])->name('payments.event')->middleware('auth');
+Route::get('/events/{event}/payments-table', [PaymentController::class, 'eventPaymentsTable'])->name('payments.event.table')->middleware('auth');
 
 Route::post('events/{event}/pay', [PaymentController::class, 'stkpush'])->name('payments.stkpush');
 Route::post('mpesa/callback/url', [PaymentController::class, 'MpesaResponse']);
