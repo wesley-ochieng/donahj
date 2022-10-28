@@ -16,8 +16,14 @@ class Ticket extends Model
         return $this->belongsTo(Event::class);
     }
 
+    public function payment(){
+        return $this->hasOne(Payment::class);
+    }
+
     //send ticket
     public function sendTicket($email, $ticketnumber){
         TicketJob::dispatch($email, $ticketnumber);
     }
+    
+   
 }

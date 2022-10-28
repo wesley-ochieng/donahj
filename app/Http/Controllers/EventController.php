@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use Illuminate\Http\Request;
 use Validator;
+use Storage;
 
 class EventController extends Controller
 {
@@ -15,9 +16,8 @@ class EventController extends Controller
      */
     public function index()
     {
-        $events = Event::all();
-        return response()->json($events);
-        // return view('events.index', compact('events'));
+        $events = Event::orderBy('id', 'desc')->get();
+        return view('events.index', compact('events'));
     }
 
     /**
@@ -27,7 +27,8 @@ class EventController extends Controller
      */
     public function create()
     {
-        //
+
+        return view('events.create');
     }
 
     /**
@@ -49,8 +50,8 @@ class EventController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors()->all(), 400);
-            // return redirect()->back()->withErrors($validator)->withInput();
+            // return response()->json($validator->errors()->all(), 400);
+            return redirect()->back()->withErrors($validator)->withInput();
         }
 
         $event = new Event();
@@ -60,17 +61,21 @@ class EventController extends Controller
         $event->end_date = $request->end_date;
         $event->start_time = $request->start_time;
         $event->amount = $request->amount;
+        $event->venue = $request->venue;
+        $event->venue_latitude = $request->venue_latitude;
+        $event->venue_longitude = $request->venue_longitude;
         //check if event is active or not based on start date if it is in the past or not
-        $event->status = $request->start_date > date('Y-m-d') ? 'upcoming' :( $request-> start_date == date('Y-m-d') ? 'active' : 'passed');
+        $event->status = $request->start_date > date('d/m/Y') ? 'upcoming' :( $request-> start_date == date('d/m/Y') ? 'active' : 'passed');
         $event->capacity = $request->capacity;
+     
         $event->save();
+        if($request->hasFile('poster_image')){
+            $image_path = Storage::disk('public')->put('/Images/poser_image/'.$event->id, $request->poster_image);
+        }
+        $event->poster_image = $image_path;
+        $event->save();
+        return redirect()->route('events.list');
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Event created successfully',
-            'data' => $event
-        ]);
-        // return redirect()->back()->with('success', 'Event created successfully');
     }
 
     /**

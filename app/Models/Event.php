@@ -13,4 +13,19 @@ class Event extends Model
     {
         return $this->hasMany(Ticket::class);
     }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    //count tickets sold
+    public function ticketsSold()
+    {
+        return $this->tickets()->count();
+    }
+
+
+
+
 }

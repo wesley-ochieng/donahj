@@ -16,12 +16,17 @@ return new class extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('description');
+            $table->longText('description');
             $table->string('start_date');
             $table->string('end_date')->nullable();
             $table->string('start_time')->nullable();
             $table->integer('amount');
             $table->integer('capacity');
+            $table->string('venue')->nullable();
+            $table->string('venue_latitude')->nullable();
+            $table->string('venue_longitude')->nullable();
+            $table->string('venue_address')->nullable();
+            $table->string('poster_image')->nullable();
             $table->enum('status', ['active', 'upcoming', 'passed']);
             $table->timestamps();
         });
