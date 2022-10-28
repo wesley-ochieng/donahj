@@ -25,7 +25,7 @@ Route::put('/events/{event}', [EventController::class, 'update']);
 Route::delete('/events/{event}', [EventController::class, 'destroy']);
 
 Route::post('events/{event}/pay', [PaymentController::class, 'stkpush']);
-Route::post('mpesa/callback/url', [PaymentController::class, 'MpesaResponse']);
+Route::post('mpesa/callback', [PaymentController::class, 'MpesaResponse']);
 
 //confirming the ticket is valid
 Route::post('tickets/confirm', [TicketController::class, 'updateStatus']);

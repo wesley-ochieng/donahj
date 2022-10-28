@@ -72,7 +72,7 @@ class PaymentController extends Controller
         DB::beginTransaction();
         //check if the capacity is available
         $availableCapacity = $event->capacity - $event->tickets()->count();
-        if($availableCapacity < $request->quantity) {
+        if($event->capacity < $request->quantity) {
             return response()->json('The capacity is not available', 400);
         }
         
@@ -128,8 +128,8 @@ class PaymentController extends Controller
             'PartyA' => $phoneNumber,
             'PartyB' => env('MPESA_BUSINESS_SHORT_CODE'),
             'PhoneNumber' => $phoneNumber,
-            'CallBackURL' => env('NGROK_URL').'/api/mpesa/callback/url',
-            // 'CallBackURL' => 'https://2014-197-232-61-224.eu.ngrok.io/api/mpesa/callback/url',
+            'CallBackURL' => env('NGROK_URL').'/api/mpesa/callback',
+            // 'CallBackURL' => 'https://218e-105-161-215-179.in.ngrok.io/api/mpesa/callback/url',
             'AccountReference' => $request->AccountReference,
             'TransactionDesc' => $request->TransactionDescription
         ];
