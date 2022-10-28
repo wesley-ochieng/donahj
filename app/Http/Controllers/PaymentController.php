@@ -131,8 +131,7 @@ class PaymentController extends Controller
             'PartyA' => $phoneNumber,
             'PartyB' => env('MPESA_BUSINESS_SHORT_CODE'),
             'PhoneNumber' => $phoneNumber,
-            // 'CallBackURL' => env('NGROK_URL').'/api/mpesa/callback',
-            'CallBackURL' => 'https://9380-197-232-61-236.in.ngrok.io/api/mpesa/callback',
+            'CallBackURL' => env('NGROK_URL').'/api/mpesa/callback',
             'AccountReference' => 'Praise Atmosphere',
             'TransactionDesc' => $event->name,
         ];
@@ -213,6 +212,10 @@ class PaymentController extends Controller
                 //send email
                 $t->sendTicket($t->email, $t->ticket_number);
             }
+
+            //return redirect to / with success toastr
+            toastr()->success('Payment successful kindly check your email for your ticket');
+            return redirect('/');
 
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
