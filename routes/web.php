@@ -31,10 +31,14 @@ Route::get('/praise-atmosphere/events/{event}', function ($event){
     return view('event', compact('upcoming_event', 'events'));
 })->name('home-event');
 
+Route::get('generate', function (){
+    \Illuminate\Support\Facades\Artisan::call('storage:link');
+    echo 'ok';
+});
 
 Auth::routes(['register' => false]);
 
-// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::get('/events', [EventController::class, 'index'])->name('events.list')->middleware('auth');
 Route::post('/events', [EventController::class, 'store'])->name('events.store')->middleware('auth');
