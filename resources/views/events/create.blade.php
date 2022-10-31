@@ -127,15 +127,12 @@
         e.preventDefault();
         if($('#event-name').val() == '' || $('#event-amount').val() == '' || $('#event-capacity').val() == '' || $('#event-location').val() == ''){
           $('#submit-form-btn').after('<div class="alert alert-danger alert-dismissible fade show" role="alert">All fields are required <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
-          
         }else{
         $('#submit-form-btn').attr('disabled', true);
         $('#submit-form-btn').html('');
         $('#submit-form-btn').append('<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Adding....');
         $(this).unbind('submit').submit();
         }
-
-
       });
     </script>
 @endsection

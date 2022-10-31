@@ -52,14 +52,19 @@
             <div class="custom-container">
               <div class="row">
                 <div class="col-12">
-                  <nav class="navbar navbar-light p-0" id="navbar-example2"><a class="navbar-brand" href="javascript:void(0)"> <img class="img-fluid img-40" src="{{asset('assets/images/cropped-Praise.png')}}"  alt=""></a>
+                    <nav class="navbar navbar-light p-0" id="navbar-example2"><a class="navbar-brand"
+                        href="javascript:void(0)"> <img class="img-fluid img-40"
+                            src="{{ asset('assets/images/cropped-Praise.png') }}" alt=""></a>
                     <ul class="landing-menu nav nav-pills">
-                     
+                      <li class="nav-item menu-back">back<i class="fa fa-angle-right"></i></li>
                     </ul>
-                    <div class="buy-block"><a class="btn-landing" href="https://praiseatmosphere.com/" target="_blank">Home</a>
-                      <div class="toggle-menu"><i class="fa fa-bars"></i></div>
+                    <div class="buy-block">
+                      <a class="btn-landing" href="https://praiseatmosphere.com/"
+                            target="_blank">Home</a>
+                            <a class="btn btn-secondary" href="{{ url('/') }}" style="border-radius: 20px">Events</a>
+                        <div class="toggle-menu"><i class="fa fa-bars"></i></div>
                     </div>
-                  </nav>
+                </nav>
                 </div>
               </div>
             </div>
@@ -171,30 +176,27 @@
               </button>
             </div>
             <div class="modal-body">
-                <form action="{{ route('payments.stkpush',$upcoming_event->id,'pay') }}" method="POST">
+                <form action="{{ route('payments.stkpush',$upcoming_event->id,'pay') }}" class="needs-validation" id="submit-form" method="POST">
                     @csrf
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" name="name" id="name" class="form-control input-air-primary" placeholder="Enter your name" aria-describedby="helpId">
                     </div>
-                    {{-- email --}}
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" name="email" id="email" class="form-control input-air-primary" placeholder="Enter your email" aria-describedby="helpId">
                     </div>
-                    {{-- quantity --}}
                     <div class="form-group">
                         <label for="quantity">Quantity</label>
-                        <input type="number" name="quantity" id="quantity" class="form-control input-air-primary touchspin" placeholder="Enter quantity" aria-describedby="helpId">
+                        <input type="number" name="quantity" id="quantity" class="form-control input-air-primary touchspin" value="1" placeholder="Enter quantity" aria-describedby="helpId">
+                        <span class="text-muted"> Total amount is : <strong class="text-success" id="totalAmount">{{ $upcoming_event->amount }}</strong></span>
                     </div>
-                    {{-- phone number for payment --}}
                     <div class="form-group">
                         <label for="phone">Phone Number</label>
                         <input type="text" name="phone" id="phone" class="form-control input-air-primary" placeholder="Enter phone number" aria-describedby="helpId">
                     </div>
-                    {{-- buy button or close modal --}}
                     <div class="form-group">
-                        <button type="button" id="buy-ticket-btn" class="btn btn-primary">Buy</button>
+                        <button type="button" id="buy-ticket-btn" class="btn btn-primary" id="submit-form-btn">Buy</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </form>
@@ -220,6 +222,7 @@
     <script src="{{ asset('assets/js/touchspin/touchspin.js') }}"></script>
     <script src="{{ asset('assets/js/touchspin/input-groups.min.js') }}"></script>
     <script src="{{ asset('assets/js/sweet-alert/sweetalert.min.js') }}"></script>
+    <script src="{{ asset('assets/js/form-validation-custom.js') }}"></script>
     <script>
         "use strict";
         // Countdown js
@@ -248,6 +251,14 @@
                 }
             });
     </script>
+    <script>
+        $('#quantity').on('change', function(e){
+            let quantity = $(this).val();
+            let amount = {{ $upcoming_event->amount }};
+            let totalAmount = quantity * amount;
+            $('#totalAmount').text(totalAmount);
+        });
+        </script>
         <script>
             //submit route('payments.stkpush',$upcoming_event->id,'pay')  using ajax
       
@@ -260,35 +271,43 @@
                 var quantity = $('#quantity').val();
                 var phone = $('#phone').val();
                 var _token = $("input[name=_token]").val();
-                $.ajax({
-                  url: "{{ route('payments.stkpush',$upcoming_event->id,'pay') }}",
-                  type:"POST",
-                  data:{
-                    name:name,
-                    email:email,
-                    quantity:quantity,
-                    phone:phone,
-                    _token:_token
-                  },
-                  success:function(response){
-                    if(response.ResponseCode == 0){
-                        $('#exampleModal').modal('hide');
-                        swal({
-                            title: "Check Your phone and Enter Mpesa Pin",
-                            text: "Initiating Payment, Please dont close this window",
-                            icon: "info",
-                            buttons: false,
-                            closeOnClickOutside: false,
-                            closeOnEsc: false,
-                            onOpen: () => {
-                                swal.showLoading();
-                            }
-                        });
-                    }else{
-                      swal("Error", "Ticket not bought", "error");
-                    }
-                  },
-                });
+                if($('#name').val() == '' || $('#email').val() == '' || $('#quantity').val() == '' || $('#phone').val() == ''){
+                  swal("Error", "All fields are required", "error");
+                  $('#submit-form-btn').after('<div class="alert alert-danger alert-dismissible fade show" role="alert">All fields are required <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                }else{
+                    $('#buy-ticket-btn').attr('disabled', true);
+                    $('#buy-ticket-btn').html('');
+                    $('#buy-ticket-btn').append('<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> please wait....');
+                    $.ajax({
+                    url: "{{ route('payments.stkpush',$upcoming_event->id,'pay') }}",
+                    type:"POST",
+                    data:{
+                        name:name,
+                        email:email,
+                        quantity:quantity,
+                        phone:phone,
+                        _token:_token
+                    },
+                    success:function(response){
+                        if(response.ResponseCode == 0){
+                            $('#exampleModal').modal('hide');
+                            swal({
+                                title: "Check Your phone and Enter Mpesa Pin",
+                                text: "Initiating Payment, Please dont close this window",
+                                icon: "info",
+                                buttons: false,
+                                closeOnClickOutside: false,
+                                closeOnEsc: false,
+                                onOpen: () => {
+                                    swal.showLoading();
+                                }
+                            });
+                        }else{
+                        swal("Error", "Ticket not bought", "error");
+                        }
+                    },
+                    });
+                }
               });
             });
           </script>
