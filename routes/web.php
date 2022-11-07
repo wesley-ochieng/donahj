@@ -21,13 +21,13 @@ Route::get('/', function () {
     //  retrun first event where status is upcoming
     $upcoming_event = App\Models\Event::where('status', 'upcoming')->first();
 
-    $events = App\Models\Event::where('status', 'upcoming')->orderBy('id', 'desc')->get();
+    $events = App\Models\Event::where('status', 'upcoming')->where('id', '!=', $upcoming_event->id)->orderBy('id', 'desc')->get();
 
     return view('welcome', compact('upcoming_event', 'events'));
 });
 Route::get('/praise-atmosphere/events/{event}', function ($event){
-    $upcoming_event = App\Models\Event::find($event);
-    $events = App\Models\Event::where('status', 'upcoming')->orderBy('id', 'desc')->get();
+    $upcoming_event = App\Models\Event::find($event);   
+    $events = App\Models\Event::where('status', 'upcoming')->where('id', '!=', $event)->orderBy('id', 'desc')->get();
     return view('event', compact('upcoming_event', 'events'));
 })->name('home-event');
 

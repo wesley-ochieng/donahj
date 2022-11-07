@@ -131,6 +131,37 @@
                             </div>
                             <div class="col sm-6">
                                 <p>{!! $upcoming_event->description !!}.</p>
+                                <p class="text-primary"> 
+                                    <span class="text-muted" >Regular-price: </span>
+                                    <strong>
+                                    {{ $upcoming_event->eventPrice->regular_advance_price  }}  KSH 
+                                    </strong>
+                                    <small class="text-muted"><em>(advanced)</em></small>
+                                    {{ $upcoming_event->eventPrice->regular_gate_price  }}  KSH
+                                    <small class="text-muted"><em>(at the gate)</em></small>
+                                </p>
+                                @if($upcoming_event->eventPrice->vip_advance_price )
+                                <p class="text-success"> 
+                                    <span class="text-muted" >Vip-price: </span>
+                                    <strong>
+                                    {{ $upcoming_event->eventPrice->vip_advance_price  }}  KSH 
+                                    </strong>
+                                    <small class="text-muted"><em>(advanced)</em></small>
+                                    {{ $upcoming_event->eventPrice->vip_gate_price  }}  KSH
+                                    <small class="text-muted"><em>(at the gate)</em></small>
+                                </p>
+                                @endif
+                                @if($upcoming_event->eventPrice->vvip_advance_price )
+                                <p class="text-warning"> 
+                                    <span class="text-muted" >VVip-price: </span>
+                                    <strong>
+                                    {{ $upcoming_event->eventPrice->vvip_advance_price  }}  KSH 
+                                    </strong>
+                                    <small class="text-muted"><em>(advanced)</em></small>
+                                    {{ $upcoming_event->eventPrice->vvip_gate_price  }}  KSH
+                                    <small class="text-muted"><em>(at the gate)</em></small>
+                                </p>
+                                @endif
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <span class="badge badge-success badge-pill"><strong>Start Date:</strong>
@@ -224,9 +255,15 @@
                             <label for="ticket-type">Ticket Type</label>
                             <select class="form-select input-air-primary" name="ticket_type" id="ticket-type">
                                 <option value="" selected disabled>Select ticket type</option>
+                                @if($upcoming_event->eventPrice->regular_advance_price)
                                 <option value="regular">Regular</option>
+                                @endif
+                                @if($upcoming_event->eventPrice->vip_advance_price)
                                 <option value="vip">VIP</option>
+                                @endif
+                                @if($upcoming_event->eventPrice->vvip_advance_price)
                                 <option value="vvip">VVIP</option>
+                                @endif
                             </select>
                         </div>
                         <div class="form-group">
@@ -234,7 +271,7 @@
                             <input type="number" name="quantity" id="quantity"
                                 class="form-control input-air-primary touchspin" placeholder="Enter quantity" value="1"
                                 aria-describedby="helpId">
-                                <span class="text-muted"> Total amount is : <strong class="text-success" id="totalAmount">{{ $upcoming_event->amount }}</strong></span>
+                                <span class="text-muted"> Total amount is : <strong class="text-success" id="totalAmount"></strong></span>
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone Number <em>07xxxxxxxx</em></label>
@@ -301,12 +338,32 @@
         });
     </script>
     <script>
-      $('#quantity').on('change', function(e){
-        let quantity = $(this).val();
-        let amount = {{ $upcoming_event->amount }};
-        let totalAmount = quantity * amount;
-        $('#totalAmount').text(totalAmount);
-      });
+        $('#ticket-type').on('change', function() {
+            var ticketType = $(this).val();
+            var quantity = $('#quantity').val();
+            var totalAmount = 0;
+            if(ticketType == 'regular') {
+                totalAmount = {{ $upcoming_event->eventPrice->regular_advance_price }} * quantity;
+            } else if(ticketType == 'vip') {
+                totalAmount = {{ $upcoming_event->eventPrice->vip_advance_price ?  $upcoming_event->eventPrice->vip_advance_price:0}} * quantity;
+            } else if(ticketType == 'vvip') {
+                totalAmount = {{ $upcoming_event->eventPrice->vvip_advance_price ? $upcoming_event->eventPrice->vvip_advance_price:0 }} * quantity;
+            }
+            $('#totalAmount').text(totalAmount);
+        });
+        $('#quantity').on('change', function() {
+            var ticketType = $('#ticket-type').val();
+            var quantity = $(this).val();
+            var totalAmount = 0;
+            if(ticketType == 'regular') {
+                totalAmount = {{ $upcoming_event->eventPrice->regular_advance_price }} * quantity;
+            } else if(ticketType == 'vip') {
+                totalAmount = {{ $upcoming_event->eventPrice->vip_advance_price ?  $upcoming_event->eventPrice->vip_advance_price:0}} * quantity;
+            } else if(ticketType == 'vvip') {
+                totalAmount = {{ $upcoming_event->eventPrice->vvip_advance_price ? $upcoming_event->eventPrice->vvip_advance_price:0 }} * quantity;
+            }
+            $('#totalAmount').text(totalAmount);
+        });
     </script>
     <script>
         //submit route('payments.stkpush',$upcoming_event->id,'pay')  using ajax
@@ -321,7 +378,7 @@
                 var phone = $('#phone').val();
                 var ticket_type = $('#ticket-type').val();
                 var _token = $("input[name=_token]").val();
-                if($('#name').val() == '' || $('#email').val() == '' || $('#quantity').val() == '' || $('#phone').val() == ''){
+                if($('#name').val() == '' || $('#email').val() == '' || $('#quantity').val() == '' || $('#phone').val() == ''||  $('#ticket-type').val() == ''){
                   swal("Error", "All fields are required", "error");
                   $('#submit-form-btn').after('<div class="alert alert-danger alert-dismissible fade show" role="alert">All fields are required <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
                 }else{

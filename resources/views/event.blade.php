@@ -112,6 +112,37 @@
                         </div>
                         <div class="col sm-6">
                             <p>{!! $upcoming_event->description !!}.</p>
+                            <p class="text-primary"> 
+                              <span class="text-muted" >Regular-price: </span>
+                              <strong>
+                              {{ $upcoming_event->eventPrice->regular_advance_price  }}  KSH 
+                              </strong>
+                              <small class="text-muted"><em>(advanced)</em></small>
+                              {{ $upcoming_event->eventPrice->regular_gate_price  }}  KSH
+                              <small class="text-muted"><em>(at the gate)</em></small>
+                          </p>
+                          @if($upcoming_event->eventPrice->vip_advance_price )
+                          <p class="text-success"> 
+                              <span class="text-muted" >Vip-price: </span>
+                              <strong>
+                              {{ $upcoming_event->eventPrice->vip_advance_price  }}  KSH 
+                              </strong>
+                              <small class="text-muted"><em>(advanced)</em></small>
+                              {{ $upcoming_event->eventPrice->vip_gate_price  }}  KSH
+                              <small class="text-muted"><em>(at the gate)</em></small>
+                          </p>
+                          @endif
+                          @if($upcoming_event->eventPrice->vvip_advance_price )
+                          <p class="text-warning"> 
+                              <span class="text-muted" >VVip-price: </span>
+                              <strong>
+                              {{ $upcoming_event->eventPrice->vvip_advance_price  }}  KSH 
+                              </strong>
+                              <small class="text-muted"><em>(advanced)</em></small>
+                              {{ $upcoming_event->eventPrice->vvip_gate_price  }}  KSH
+                              <small class="text-muted"><em>(at the gate)</em></small>
+                          </p>
+                          @endif
                             <div class="row">
                                 <div class="col-sm-6">
                                     <span class="badge badge-success badge-pill"><strong>Start Date:</strong> {{ $upcoming_event->start_date }}  @ {{ $upcoming_event->start_time }}</span>
@@ -133,7 +164,7 @@
             </div>
             <div class="custom-container">
               <div class="row demo-block">
-                @foreach($events as $event)
+                @forelse($events as $event)
 
                 <div class="col-xl-3 col-lg-4 col-sm-6 wow fadeIn">
                   <div class="demo-box"><a href="{{ route('home-event',$event->id) }}" target="_blank">
@@ -144,7 +175,13 @@
                         </div>
                       </div></a></div>
                 </div>
-                @endforeach
+                @empty
+                <div class="col-sm-12">
+                    <div class="alert alert-info">
+                        <h5>Stay Tuned for more upcoming events</h5>
+                    </div>
+                </div>
+                @endforelse
               </div>
             </div>
           </section>
@@ -189,11 +226,18 @@
                     <div class="form-group">
                       <label for="ticket-type">Ticket Type</label>
                       <select class="form-select input-air-primary" name="ticket_type" id="ticket-type">
-                          <option value="" selected disabled>Select ticket type</option>
-                          <option value="regular">Regular</option>
-                          <option value="vip">VIP</option>
-                          <option value="vvip">VVIP</option>
-                      </select>
+                        <option value="" selected disabled>Select ticket type</option>
+                        @if($upcoming_event->eventPrice->regular_advance_price)
+                        <option value="regular">Regular</option>
+                        @endif
+                        @if($upcoming_event->eventPrice->vip_advance_price)
+                        <option value="vip">VIP</option>
+                        @endif
+                        @if($upcoming_event->eventPrice->vvip_advance_price)
+                        <option value="vvip">VVIP</option>
+                        @endif
+                    </select>
+                      
                     </div>
                     <div class="form-group">
                         <label for="quantity">Quantity</label>
@@ -240,7 +284,7 @@
             hour = minute * 60,
             day = hour * 24;
 
-        var countDown = new Date('{{$event->start_date}} {{$event->start_time}}').getTime(),
+        var countDown = new Date('{{$upcoming_event->start_date}} {{$upcoming_event->start_time}}').getTime(),
             x = setInterval(function() {
 
             var now = new Date().getTime(),
@@ -261,10 +305,30 @@
             });
     </script>
     <script>
-        $('#quantity').on('change', function(e){
-            let quantity = $(this).val();
-            let amount = {{ $upcoming_event->amount }};
-            let totalAmount = quantity * amount;
+        $('#ticket-type').on('change', function() {
+            var ticketType = $(this).val();
+            var quantity = $('#quantity').val();
+            var totalAmount = 0;
+            if(ticketType == 'regular') {
+                totalAmount = {{ $upcoming_event->eventPrice->regular_advance_price }} * quantity;
+            } else if(ticketType == 'vip') {
+                totalAmount = {{ $upcoming_event->eventPrice->vip_advance_price ?  $upcoming_event->eventPrice->vip_advance_price:0}} * quantity;
+            } else if(ticketType == 'vvip') {
+                totalAmount = {{ $upcoming_event->eventPrice->vvip_advance_price ? $upcoming_event->eventPrice->vvip_advance_price:0 }} * quantity;
+            }
+            $('#totalAmount').text(totalAmount);
+        });
+        $('#quantity').on('change', function() {
+            var ticketType = $('#ticket-type').val();
+            var quantity = $(this).val();
+            var totalAmount = 0;
+            if(ticketType == 'regular') {
+                totalAmount = {{ $upcoming_event->eventPrice->regular_advance_price }} * quantity;
+            } else if(ticketType == 'vip') {
+                totalAmount = {{ $upcoming_event->eventPrice->vip_advance_price ?  $upcoming_event->eventPrice->vip_advance_price:0}} * quantity;
+            } else if(ticketType == 'vvip') {
+                totalAmount = {{ $upcoming_event->eventPrice->vvip_advance_price ? $upcoming_event->eventPrice->vvip_advance_price:0 }} * quantity;
+            }
             $('#totalAmount').text(totalAmount);
         });
         </script>
@@ -281,7 +345,7 @@
                 var phone = $('#phone').val();
                 var ticket_type = $('#ticket-type').val();
                 var _token = $("input[name=_token]").val();
-                if($('#name').val() == '' || $('#email').val() == '' || $('#quantity').val() == '' || $('#phone').val() == ''){
+                if($('#name').val() == '' || $('#email').val() == '' || $('#quantity').val() == '' || $('#phone').val() == ''|| $('#ticket-type').val() == ''){
                   swal("Error", "All fields are required", "error");
                   $('#submit-form-btn').after('<div class="alert alert-danger alert-dismissible fade show" role="alert">All fields are required <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
                 }else{
