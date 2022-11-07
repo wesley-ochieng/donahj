@@ -24,6 +24,11 @@ class Ticket extends Model
     public function sendTicket($email, $ticketnumber){
         TicketJob::dispatch($email, $ticketnumber);
     }
+
+    public function ticketsSold()
+    {
+        return $this->event()->ticketsSold();
+    }
     
    
 }

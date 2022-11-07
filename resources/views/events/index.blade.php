@@ -67,11 +67,15 @@
                         </div>
                         <div class="project-status mt-4">
                             <div class="media mb-0">
-                              <p>{{$event->ticketsSold()}} / {{ $event->capacity }} - <small class="text-info">{{($event->ticketsSold() * 100)/$event->capacity}}%</small></p>
+                              <p>{{$event->ticketsSold()}} / {{ $event->capacity }} 
+                                -
+                                <small class="text-info">{{($event->ticketsSold() * 100 == 0? 0: ($event->ticketsSold() * 100)/$event->capacty )}}%</small></p>
                               <div class="media-body text-end"><span>Sold</span></div>
                             </div>
                             <div class="progress" style="height: 5px">
-                              <div class="progress-bar-animated bg-success progress-bar-striped" role="progressbar" style="width:{{($event->ticketsSold() * 100)/$event->capacity}}%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                              <div class="progress-bar-animated bg-success progress-bar-striped" role="progressbar" 
+                              style="width:{{($event->ticketsSold() * 100 == 0? 0: ($event->ticketsSold() * 100)/$event->capacty )}}%" 
+                              aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             {{-- button to show tickets --}}
                             <a href="{{ route('tickets.list', $event->id,'tickets') }}" class="btn btn-primary mt-3">Show Tickets</a>

@@ -64,34 +64,86 @@
                         </div>
                         <div class="row">
                             <div class="col-sm-4">
-                                <label for="event-amount">Event Amount:</label>
-                                <input type="number" class="form-control" id="event-amount" name="amount" placeholder="Enter Amount to charge for a ticket" required>
-                            </div>
-                            <div class="col-sm-4">
-                                <label for="event-capacity">Event Capacity:</label>
-                                <input type="number" class="form-control" id="event-capacity" name="capacity" placeholder="Enter Capacity" required>
-                            </div>
-                            <div class="col-sm-4">
                                 <label for="event-location">Event Location:</label>
                                 <input type="text" class="form-control" id="event-location" name="venue">
                                 <input type="hidden" name="venue_longtitude">
                                 <input type="hidden" name="venue_latitude">
                             </div>
+                            <div class="col-sm-8">
+                              <div class="mb-3">
+                                <label>Upload Poster Image</label>
+                                <input class="form-control" type="file" name="poster_image" required>
+                            </div>
+                            </div>
                         </div>
+                        {{-- quantity and pricing for vip regular and vvip --}}
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="mb-3">
+                                    <label for="event-quantity" >Regular Quantity:</label>
+                                    <input type="number" class="form-control" id="event-quantity" name="regular_quantity" placeholder="Event Quantity" required>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="mb-6">
+                                    <label for="event-price" >Regular Advance Price:</label>
+                                    <input type="number" class="form-control" id="event-price" name="regular_advance_price" placeholder="Advance Regular Price" required>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="mb-3">
+                                    <label for="event-gate-price" >Regular Gate Price:</label>
+                                    <input type="number" class="form-control" id="event-gate-price" name="regular_gate_price" placeholder="Gate Ticket Price" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="mb-3">
+                                    <label for="event-quantity" >VIP Quantity:</label>
+                                    <input type="number" class="form-control" id="event-quantity" name="vip_quantity" placeholder="Event Quantity" >
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="mb-6">
+                                    <label for="event-price" >VIP Advance Price:</label>
+                                    <input type="number" class="form-control" id="event-price" name="vip_advance_price" placeholder="Advance VIP Price" >
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="mb-3">
+                                    <label for="event-gate-price" >VIP Gate Price:</label>
+                                    <input type="number" class="form-control" id="event-gate-price" name="vip_gate_price" placeholder="Gate Ticket Price" >
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="mb-3">
+                                    <label for="event-quantity" >VVIP Quantity:</label>
+                                    <input type="number" class="form-control" id="event-quantity" name="vvip_quantity" placeholder="Event Quantity" >
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="mb-6">
+                                    <label for="event-price" >VVIP Advance Price:</label>
+                                    <input type="number" class="form-control" id="event-price" name="vvip_advance_price" placeholder="Advance VVIP Price" >
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="mb-3">
+                                    <label for="event-gate-price" >VVIP Gate Price:</label>
+                                    <input type="number" class="form-control" id="event-gate-price" name="vvip_gate_price" placeholder="Gate Ticket Price" >
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col">
                             <div class="my-3">
                                 <label>Enter Event Description</label>
                                 <textarea id="editor1" class="form-control" name="description" cols="30" rows="10" required>
                                 </textarea>
-                            </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                            <div class="mb-3">
-                                <label>Upload Poster Image</label>
-                                <input class="form-control" type="file" name="poster_image" required>
                             </div>
                             </div>
                         </div>

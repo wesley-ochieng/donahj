@@ -20,8 +20,7 @@ return new class extends Migration
             $table->string('start_date');
             $table->string('end_date')->nullable();
             $table->string('start_time')->nullable();
-            $table->integer('amount');
-            $table->integer('capacity');
+            $table->integer('capacity')->nullable();
             $table->string('venue')->nullable();
             $table->string('venue_latitude')->nullable();
             $table->string('venue_longitude')->nullable();

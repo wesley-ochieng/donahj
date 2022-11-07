@@ -319,6 +319,7 @@
                 var email = $('#email').val();
                 var quantity = $('#quantity').val();
                 var phone = $('#phone').val();
+                var ticket_type = $('#ticket-type').val();
                 var _token = $("input[name=_token]").val();
                 if($('#name').val() == '' || $('#email').val() == '' || $('#quantity').val() == '' || $('#phone').val() == ''){
                   swal("Error", "All fields are required", "error");
@@ -331,11 +332,12 @@
                       url: "{{ route('payments.stkpush', $upcoming_event->id, 'pay') }}",
                       type: "POST",
                       data: {
-                          name: name,
-                          email: email,
-                          quantity: quantity,
-                          phone: phone,
-                          _token: _token
+                            name: name,
+                            email: email,
+                            quantity: quantity,
+                            phone: phone,
+                            ticket_type: ticket_type,
+                            _token: _token
                       },
                       success: function(response) {
                           if (response.ResponseCode == 0) {

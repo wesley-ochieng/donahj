@@ -25,6 +25,11 @@ class Event extends Model
         return $this->tickets()->count();
     }
 
+    public function eventPrice()
+    {
+        return $this->hasOne(EventPrice::class);
+    }
+
 
 
 

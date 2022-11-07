@@ -17,18 +17,15 @@ return new class extends Migration
             $table->id();
             $table->foreignId('event_id');
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
+            $table->integer('regular_quantity')->nullable();
             $table->integer('regular_advance_price')->nullable();
-            $table->integer('regular_advance_quantity')->nullable();
             $table->integer('regular_gate_price')->nullable();
-            $table->integer('regular_gate_quantity')->nullable();
+            $table->integer('vip_quantity')->nullable();
             $table->integer('vip_advance_price')->nullable();
-            $table->integer('vip_advance_quantity')->nullable();
             $table->integer('vip_gate_price')->nullable();
-            $table->integer('vip_gate_quantity')->nullable();
+            $table->integer('vvip_quantity')->nullable();
             $table->integer('vvip_advance_price')->nullable();
-            $table->integer('vvip_advance_quantity')->nullable();
             $table->integer('vvip_gate_price')->nullable();
-            $table->integer('vvip_gate_quantity')->nullable();
             $table->timestamps();
         });
     }

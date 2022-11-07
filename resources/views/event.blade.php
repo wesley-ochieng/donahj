@@ -279,6 +279,7 @@
                 var email = $('#email').val();
                 var quantity = $('#quantity').val();
                 var phone = $('#phone').val();
+                var ticket_type = $('#ticket-type').val();
                 var _token = $("input[name=_token]").val();
                 if($('#name').val() == '' || $('#email').val() == '' || $('#quantity').val() == '' || $('#phone').val() == ''){
                   swal("Error", "All fields are required", "error");
@@ -295,6 +296,7 @@
                         email:email,
                         quantity:quantity,
                         phone:phone,
+                        ticket_type:ticket_type,
                         _token:_token
                     },
                     success:function(response){
