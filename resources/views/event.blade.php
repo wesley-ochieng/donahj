@@ -187,6 +187,15 @@
                         <input type="email" name="email" id="email" class="form-control input-air-primary" placeholder="Enter your email" aria-describedby="helpId">
                     </div>
                     <div class="form-group">
+                      <label for="ticket-type">Ticket Type</label>
+                      <select class="form-select input-air-primary" name="ticket_type" id="ticket-type">
+                          <option value="" selected disabled>Select ticket type</option>
+                          <option value="regular">Regular</option>
+                          <option value="vip">VIP</option>
+                          <option value="vvip">VVIP</option>
+                      </select>
+                    </div>
+                    <div class="form-group">
                         <label for="quantity">Quantity</label>
                         <input type="number" name="quantity" id="quantity" class="form-control input-air-primary touchspin" value="1" placeholder="Enter quantity" aria-describedby="helpId">
                         <span class="text-muted"> Total amount is : <strong class="text-success" id="totalAmount">{{ $upcoming_event->amount }}</strong></span>

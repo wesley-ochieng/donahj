@@ -221,6 +221,15 @@
                                 aria-describedby="helpId">
                         </div>
                         <div class="form-group">
+                            <label for="ticket-type">Ticket Type</label>
+                            <select class="form-select input-air-primary" name="ticket_type" id="ticket-type">
+                                <option value="" selected disabled>Select ticket type</option>
+                                <option value="regular">Regular</option>
+                                <option value="vip">VIP</option>
+                                <option value="vvip">VVIP</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
                             <label for="quantity">Quantity</label>
                             <input type="number" name="quantity" id="quantity"
                                 class="form-control input-air-primary touchspin" placeholder="Enter quantity" value="1"
@@ -230,7 +239,7 @@
                         <div class="form-group">
                             <label for="phone">Phone Number <em>07xxxxxxxx</em></label>
                             <input type="text" name="phone" id="phone"
-                                class="form-control input-air-primary" placeholder="Enter phone number"
+                                class="form-control input-air-primary" placeholder="Enter phone number" maxlength="10"
                                 aria-describedby="helpId">
                         </div>
                         <div class="form-group">
