@@ -86,10 +86,18 @@ class PaymentController extends Controller
 
         try {
         DB::beginTransaction();
-        //check if the capacity is available
-        $availableCapacity = $event->capacity - $event->tickets()->count();
-        if($event->capacity < $request->quantity) {
-            return response()->json('The capacity is not available', 400);
+        if($request->ticket_type == 'regular') {
+            $capacity = $eventprice->regular_quantity;
+        } else if($request->ticket_type == 'vip') {
+            $capacity = $event->vip_quantity;
+        } else if($request->ticket_type == 'vvip') {
+            $capacity = $event->vvip_quantity;
+        } else {
+            $capacity = $event->regular_quantity;
+        }
+        // check if the capacity is available
+        if($capacity < $request->quantity) {
+            return response()->json(['message' => 'The capacity is not available'], 400);
         }
         
         //check if quantity is more than one and if it is, create multiple tickets
@@ -125,9 +133,16 @@ class PaymentController extends Controller
         }
 
         //deduct the quantity from the capacity
-        $event->capacity = $availableCapacity;
-        $event->save();
-
+        if($request->ticket_type == 'regular') {
+            $eventprice->regular_quantity = $capacity - $request->quantity;
+        } else if($request->ticket_type == 'vip') {
+            $eventprice->vip_quantity = $capacity - $request->quantity;
+        } else if($request->ticket_type == 'vvip') {
+            $eventprice->vvip_quantity = $capacity - $request->quantity;
+        } else {
+            $eventprice->regular_quantity = $capacity - $request->quantity;
+        }
+        $eventprice->save();
         //mpesa
         $amount = $amount * $request->quantity;
         $phone = $request->phone;
