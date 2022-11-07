@@ -53,32 +53,58 @@ class EventController extends Controller
             // return response()->json($validator->errors()->all(), 400);
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        //conver the start date to the format 2022-11-05
-        $start_date = date('Y-m-d', strtotime($request->start_date));
-        $end_date = date('Y-m-d', strtotime($request->end_date));
 
-        $event = new Event();
-        $event->name = $request->name;
-        $event->description = $request->description;
-        $event->start_date = $start_date;
-        $event->end_date = $end_date;
-        $event->start_time = $request->start_time;
-        $event->amount = $request->amount;
-        $event->venue = $request->venue;
-        $event->venue_latitude = $request->venue_latitude;
-        $event->venue_longitude = $request->venue_longitude;
-        //check if event is active or not based on start date if it is in the past or not
-        $event->status = $start_date > date('Y-m-d') ? 'upcoming' :( $start_date == date('Y-m-d') ? 'active' : 'passed');
-        $event->capacity = $request->capacity;
-     
-        $event->save();
-        if($request->hasFile('poster_image')){
-            $image_path = Storage::disk('public')->put('/Images/poser_image/'.$event->id, $request->poster_image);
+        try {
+            DB::beginTransaction();
+            //conver the start date to the format 2022-11-05
+            $start_date = date('Y-m-d', strtotime($request->start_date));
+            $end_date = date('Y-m-d', strtotime($request->end_date));
+
+            $event = new Event();
+            $event->name = $request->name;
+            $event->description = $request->description;
+            $event->start_date = $start_date;
+            $event->end_date = $end_date;
+            $event->start_time = $request->start_time;
+            $event->amount = $request->amount;
+            $event->venue = $request->venue;
+            $event->venue_latitude = $request->venue_latitude;
+            $event->venue_longitude = $request->venue_longitude;
+            //check if event is active or not based on start date if it is in the past or not
+            $event->status = $start_date > date('Y-m-d') ? 'upcoming' :( $start_date == date('Y-m-d') ? 'active' : 'passed');
+            // $event->capacity = $request->capacity;
+            $event->save();
+            if($request->hasFile('poster_image')){
+                $image_path = Storage::disk('public')->put('/Images/poser_image/'.$event->id, $request->poster_image);
+            }
+            $event->poster_image = $image_path;
+            $event->save();
+
+            // adding event capacity and prices
+            $event_price = new EventPrice();
+            $event_price->event_id = $event->id;
+            $event_price->regular_advance_price = $request->regular_advance_price;
+            $event_price->regular_advance_quantity = $request->regular_advance_quantity;
+            $event_price->regular_gate_price = $request->regular_gate_price;
+            $event_price->regular_gate_quantity = $request->regular_gate_quantity;
+            $event_price->vip_advance_price = $request->vip_advance_price;
+            $event_price->vip_advance_quantity = $request->vip_advance_quantity;
+            $event_price->vip_gate_price = $request->vip_gate_price;
+            $event_price->vip_gate_quantity = $request->vip_gate_quantity;
+            $event_price->vvip_advance_price = $request->vvip_advance_price;
+            $event_price->vvip_advance_quantity = $request->vvip_advance_quantity;
+            $event_price->vvip_gate_price = $request->vvip_gate_price;
+            $event_price->vvip_gate_quantity = $request->vvip_gate_quantity;
+            $event_price->save();
+            DB::commit();
+            toastr()->success('Event created successfully');
+            return redirect()->route('events.list');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            toastr()->error($th->getMessage());
+            return redirect()->back();
         }
-        $event->poster_image = $image_path;
-        $event->save();
-        toastr()->success('Event created successfully');
-        return redirect()->route('events.list');
+        
 
     }
 
@@ -128,23 +154,31 @@ class EventController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $start_date = date('Y-m-d', strtotime($request->start_date));
-        $end_date = date('Y-m-d', strtotime($request->end_date));
+        try {
+            DB::beginTransaction();
+            $start_date = date('Y-m-d', strtotime($request->start_date));
+            $end_date = date('Y-m-d', strtotime($request->end_date));
 
 
-        $event->name = $request->name;
-        $event->description = $request->description;
-        $event->start_date = $start_date;
-        $event->end_date = $end_date;
-        $event->start_time = $request->start_time;
-        $event->amount = $request->amount;
-        //check if event is active or not based on start date if it is in the past or not
-        $event->status = $start_date > date('Y-m-d') ? 'upcoming' :( $start_date == date('Y-m-d') ? 'active' : 'passed');
-        $event->capacity = $request->capacity;
-        $event->save();
+            $event->name = $request->name;
+            $event->description = $request->description;
+            $event->start_date = $start_date;
+            $event->end_date = $end_date;
+            $event->start_time = $request->start_time;
+            $event->amount = $request->amount;
+            //check if event is active or not based on start date if it is in the past or not
+            $event->status = $start_date > date('Y-m-d') ? 'upcoming' :( $start_date == date('Y-m-d') ? 'active' : 'passed');
+            // $event->capacity = $request->capacity;
+            $event->save();
+            DB::commit();
+            toastr()->success('Event updated successfully');
+            return redirect()->route('events.list');
 
-        toastr()->success('Event updated successfully');
-        return redirect()->route('events.list');
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            toastr()->error($th->getMessage());
+            return redirect()->back();
+        }
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Payment;
 use App\Models\Event;
+use App\Models\EventPrice;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -62,12 +63,25 @@ class PaymentController extends Controller
         'quantity' => 'required|integer',
         'email' => 'required|email',
         'phone' => 'required',
+        'ticket_type' => 'required',
         // 'TransactionDescription' => 'required'
         ]);
 
         if($validator->fails()) {
             return response()->json($validator->errors()->all(), 400);
             // return $this->errorResponse($validator->errors()->all(), Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        $eventprice = EventPrice::where('event_id', $event->id)->first();
+        //check the price of the particular ticket type
+        if($request->ticket_type == 'regular') {
+            $amount = $eventprice->regular_advance_price;
+        } else if($request->ticket_type == 'vip') {
+            $amount = $eventprice->vip_advance_price;
+        } else if($request->ticket_type == 'vvip') {
+            $amount = $eventprice->vvip_advance_price;
+        } else {
+            $amount = $eventprice->regular_price;
         }
 
         try {
@@ -115,7 +129,7 @@ class PaymentController extends Controller
         $event->save();
 
         //mpesa
-        $amount = $event->amount * $request->quantity;
+        $amount = $amount * $request->quantity;
         $phone = $request->phone;
         $formatedPhone = substr($phone, 1);//712345678
         $code = "254";
