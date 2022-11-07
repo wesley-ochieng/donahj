@@ -31,13 +31,14 @@
             <div class="card">
               <div class="card-body">
                 <div class="form theme-form">
-                    <form action="{{ route('events.store') }}" method="POST" enctype="multipart/form-data">
+                    <form action="{{ route('events.store') }}" class="needs-validation" method="POST" enctype="multipart/form-data" id="submit-form">
                         @csrf
                         <div class="row">
                             <div class="col">
                             <div class="mb-3">
                                 <label for="event-name" >Event Name:</label>
-                                <input type="text" class="form-control" id="event-name" name="name" placeholder="Event Name">
+                                <input type="text" class="form-control" id="event-name" name="name" placeholder="Event Name" required>
+                                <div class="invalid-feedback">Please provide a valid city.</div>
                             </div>
                             </div>
                         </div>
@@ -45,7 +46,7 @@
                             <div class="col-sm-4">
                             <div class="mb-3">
                                 <label>Starting date</label>
-                                <input class="datepicker-here form-control digits" type="text" name="start_date" autocomplete="off" data-language="en">
+                                <input class="datepicker-here form-control digits" type="text" name="start_date" autocomplete="off" data-language="en" required>
                             </div>
                             </div>
                             <div class="col-sm-4">
@@ -57,18 +58,18 @@
                             <div class="col-sm-4">
                                 <div class="mb-3">
                                     <label for="event-time" >Event Time:</label>
-                                    <input type="time" class="form-control" id="event-time" name="start_time">
+                                    <input type="time" class="form-control" id="event-time" name="start_time" required>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-4">
                                 <label for="event-amount">Event Amount:</label>
-                                <input type="number" class="form-control" id="event-amount" name="amount" placeholder="Enter Amount to charge for a ticket">
+                                <input type="number" class="form-control" id="event-amount" name="amount" placeholder="Enter Amount to charge for a ticket" required>
                             </div>
                             <div class="col-sm-4">
                                 <label for="event-capacity">Event Capacity:</label>
-                                <input type="number" class="form-control" id="event-capacity" name="capacity" placeholder="Enter Capacity">
+                                <input type="number" class="form-control" id="event-capacity" name="capacity" placeholder="Enter Capacity" required>
                             </div>
                             <div class="col-sm-4">
                                 <label for="event-location">Event Location:</label>
@@ -81,7 +82,7 @@
                             <div class="col">
                             <div class="my-3">
                                 <label>Enter Event Description</label>
-                                <textarea id="editor1" class="form-control" name="description" cols="30" rows="10">
+                                <textarea id="editor1" class="form-control" name="description" cols="30" rows="10" required>
                                 </textarea>
                             </div>
                             </div>
@@ -90,14 +91,14 @@
                             <div class="col">
                             <div class="mb-3">
                                 <label>Upload Poster Image</label>
-                                <input class="form-control" type="file" name="poster_image">
+                                <input class="form-control" type="file" name="poster_image" required>
                             </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col">
                             <div class="text-end">
-                                <button class="btn btn-secondary me-3" type="submit">Add</button>
+                                <button class="btn btn-secondary me-3" type="submit" id="submit-form-btn">Add</button>
                                 <a class="btn btn-danger" href="{{ route('events.list') }}">Cancel</a></div>
                             </div>
                         </div>
@@ -120,4 +121,18 @@
     <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.js') }}"></script>
     <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.en.js') }}"></script>
     <script src="{{ asset('assets/js/datepicker/date-picker/datepicker.custom.js') }}"></script>
+    <script src="{{ asset('assets/js/form-validation-custom.js') }}"></script>
+    <script>
+      $('#submit-form').on('submit', function(e){
+        e.preventDefault();
+        if($('#event-name').val() == '' || $('#event-amount').val() == '' || $('#event-capacity').val() == '' || $('#event-location').val() == ''){
+          $('#submit-form-btn').after('<div class="alert alert-danger alert-dismissible fade show" role="alert">All fields are required <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+        }else{
+        $('#submit-form-btn').attr('disabled', true);
+        $('#submit-form-btn').html('');
+        $('#submit-form-btn').append('<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span> Adding....');
+        $(this).unbind('submit').submit();
+        }
+      });
+    </script>
 @endsection

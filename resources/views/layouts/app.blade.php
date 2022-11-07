@@ -107,7 +107,21 @@
                 </li>
                 <li class="dropdown"><a class="nav-link menu-title link-nav" href="{{ route('tickets.all') }}"><i data-feather="printer"></i></i><span>All Tickets</span></a></li>
                 <li class="dropdown"><a class="nav-link menu-title link-nav" href="{{ route('payments.all') }}"><i data-feather="credit-card"></i><span>Payments</span></a></li>
-                <li><a class="nav-link menu-title link-nav" href="support-ticket.html"><i data-feather="headphones"></i><span>Support Ticket</span></a></li>
+                <li><a class="nav-link menu-title link-nav" href="#"><i data-feather="headphones"></i><span>Support Ticket</span></a></li>
+                {{-- logout --}}
+                <li class="dropdown">
+                  <a class="nav-link menu-title" href="javascript:void(0)"><i data-feather="log-out"></i><span>Logout</span></a>
+                  <ul class="nav-submenu menu-content">
+                    <li>
+                      <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        {{ __('Logout') }}
+                      </a>
+                      <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                      </form>
+                    </li>
+                  </ul>
+                </li>
               </ul>
             </div>
             <div class="right-arrow" id="right-arrow"><i data-feather="arrow-right"></i></div>
