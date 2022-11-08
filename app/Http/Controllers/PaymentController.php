@@ -25,7 +25,7 @@ class PaymentController extends Controller
         //timestamp
         $timestamp = Carbon::rawParse('now')->format('YmdHms');
         //passkey
-        $passkey = "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919";
+        $passkey = "996552801fb21afb5cb091fae6994e99664ad2dc17ffb20258e783cd227ca87e";
         //businessShortCode
         $businessShortCode = env('MPESA_BUSINESS_SHORT_CODE');
         //generate password
@@ -103,8 +103,6 @@ class PaymentController extends Controller
         //check if quantity is more than one and if it is, create multiple tickets
         if($request->quantity > 1) {
             for($i = 0; $i < $request->quantity; $i++) {
-
-
                 $ticket = new Ticket();
                 $ticket->email = $request->email;
                 $ticket->event_id = $event->id;

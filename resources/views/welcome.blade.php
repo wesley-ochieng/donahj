@@ -187,21 +187,24 @@
                 </div>
                 <div class="custom-container">
                     <div class="row demo-block">
-                        @foreach ($events as $event)
-                            <div class="col-xl-3 col-lg-4 col-sm-6 wow fadeIn">
-                                <div class="demo-box"><a href="{{ route('home-event', $event->id) }}"
-                                        target="_blank">
-                                        <div class="img-wrraper"><img class="img-fluid"
-                                                src="{{ asset('storage/' . $event->poster_image) }}" alt="">
-                                        </div>
-                                        <div class="demo-detail">
-                                            <div class="demo-title">
-                                                <h3>{{ $event->name }}</h3>
-                                            </div>
-                                        </div>
-                                    </a></div>
+                        @forelse($events as $event)
+
+                        <div class="col-xl-3 col-lg-4 col-sm-6 wow fadeIn">
+                          <div class="demo-box"><a href="{{ route('home-event',$event->id) }}" target="_blank">
+                              <div class="img-wrraper"><img class="img-fluid" src="{{ asset('storage/'.$event->poster_image) }}" alt=""></div>
+                              <div class="demo-detail">                       
+                                <div class="demo-title">
+                                  <h3>{{ $event->name }}</h3>
+                                </div>
+                              </div></a></div>
+                        </div>
+                        @empty
+                        <div class="col-sm-12">
+                            <div class="alert alert-info">
+                                <h5>Stay Tuned for more upcoming events</h5>
                             </div>
-                        @endforeach
+                        </div>
+                        @endforelse
                     </div>
                 </div>
             </section>
