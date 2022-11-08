@@ -18,6 +18,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use DataTables;
 use Mail;
 use App\Mail\TicketMail;
+use Session;
 
 class PaymentController extends Controller
 {
@@ -42,7 +43,7 @@ class PaymentController extends Controller
         $consumer_key= env('MPESA_CONSUMER_KEY');
         $consumer_secret= env('MPESA_CONSUMER_SECRET');
         $credentials = base64_encode($consumer_key.":".$consumer_secret);
-        $url = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials";
+        $url = "https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials";
 
         $curl = curl_init();
         curl_setopt($curl, CURLOPT_URL, $url);
@@ -147,7 +148,7 @@ class PaymentController extends Controller
         $formatedPhone = substr($phone, 1);//712345678
         $code = "254";
         $phoneNumber = $code.$formatedPhone;//254712345678
-        $url = 'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
+        $url = 'https://api.safaricom.co.ke/mpesa/stkpush/v1/processrequest';
 
         $curl_post_data = [
             'BusinessShortCode' => env('MPESA_BUSINESS_SHORT_CODE'),
@@ -173,7 +174,6 @@ class PaymentController extends Controller
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
         $curl_response = curl_exec($curl);
-
         //create a payment
         $payment = new payment();
         $payment->merchantRequestId = json_decode($curl_response)->MerchantRequestID;
@@ -202,6 +202,7 @@ class PaymentController extends Controller
     public function MpesaResponse(Request $request) {
         try {
             $contents = json_decode($request->getContent(), true);
+            Log::info($contents);
             $merchantRequestId = $contents['Body']['stkCallback']['MerchantRequestID'];
             $checkoutRequestId = $contents['Body']['stkCallback']['CheckoutRequestID'];
             $content = $contents['Body']['stkCallback']['CallbackMetadata']['Item'];
@@ -242,6 +243,7 @@ class PaymentController extends Controller
 
             //return redirect to / with success toastr
             toastr()->success('Payment successful kindly check your email for your ticket');
+            Session::flash('message', 'Purchase of ticket was successfull!');
             return redirect('/');
 
         } catch (\Throwable $th) {

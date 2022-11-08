@@ -31,11 +31,6 @@ Route::get('/praise-atmosphere/events/{event}', function ($event){
     return view('event', compact('upcoming_event', 'events'));
 })->name('home-event');
 
-Route::get('generate', function (){
-    \Illuminate\Support\Facades\Artisan::call('storage:link');
-    echo 'ok';
-});
-
 Auth::routes(['register' => false]);
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

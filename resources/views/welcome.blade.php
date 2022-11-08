@@ -341,6 +341,20 @@
         });
     </script>
     <script>
+         var msg = '{{Session::get('message')}}';
+            var alert = '{{Session::get('alert-class')}}';
+            var exist = '{{Session::has('message')}}';
+            console.log(msg);
+            if(exist){
+                swal({
+                    title: "Success",
+                    text: msg,
+                    icon: "success",
+                    button: "Ok",
+                });
+            }   
+    </script>
+    <script>
         $('#ticket-type').on('change', function() {
             var ticketType = $(this).val();
             var quantity = $('#quantity').val();
