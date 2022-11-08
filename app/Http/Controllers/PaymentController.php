@@ -8,7 +8,6 @@ use App\Models\EventPrice;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Validator;
 use Str;
 use DB;
 use Log;
@@ -19,6 +18,7 @@ use DataTables;
 use Mail;
 use App\Mail\TicketMail;
 use Session;
+use Validator;
 
 class PaymentController extends Controller
 {
@@ -202,11 +202,9 @@ class PaymentController extends Controller
     public function MpesaResponse(Request $request) {
         try {
             $contents = json_decode($request->getContent(), true);
-            Log::info($contents);
             $merchantRequestId = $contents['Body']['stkCallback']['MerchantRequestID'];
             $checkoutRequestId = $contents['Body']['stkCallback']['CheckoutRequestID'];
             $content = $contents['Body']['stkCallback']['CallbackMetadata']['Item'];
-
             $contentLength = count($content);
             //get the payment
             $payment = Payment::where('merchantRequestID', $merchantRequestId)->first();
@@ -244,7 +242,8 @@ class PaymentController extends Controller
             //return redirect to / with success toastr
             toastr()->success('Payment successful kindly check your email for your ticket');
             Session::flash('message', 'Purchase of ticket was successfull!');
-            return redirect('/');
+            // return redirect()->route('home');
+            // return redirect('/');
 
         } catch (\Throwable $th) {
             Log::error($th->getMessage());

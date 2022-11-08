@@ -5,7 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Jobs\TicketJob;
-
+use App\Mail\TicketMail;
+use Mail;
 
 class Ticket extends Model
 {
@@ -22,7 +23,8 @@ class Ticket extends Model
 
     //send ticket
     public function sendTicket($email, $ticketnumber){
-        TicketJob::dispatch($email, $ticketnumber);
+        // TicketJob::dispatch($email, $ticketnumber);
+        Mail::to($email)->send(new TicketMail($ticketnumber));
     }
 
     public function ticketsSold()
