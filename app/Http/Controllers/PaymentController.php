@@ -238,13 +238,14 @@ class PaymentController extends Controller
                 $t->save();
 
                 //send email
+                
                 $t->sendTicket($t->email, $t->ticket_number);
             }
 
             //return redirect to / with success toastr
             toastr()->success('Payment successful kindly check your email for your ticket');
             Session::flash('message', 'Purchase of ticket was successfull!');
-            return redirect('/');
+            return redirect('https://praiseatmosphere.com/events');
 
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
