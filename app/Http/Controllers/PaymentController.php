@@ -283,7 +283,11 @@ class PaymentController extends Controller
 
     public function index(){
         $payments = Payment::all();
-        return view('payments.index', compact('payments'));
+        $total_payment = Payment::sum('TransAmount');
+        $total_transactions = Payment::count();
+        $total_successful_transactions = Payment::where('TransID','!=', null )->count();
+        $total_failed_transactions = Payment::where('TransID', null)->count();
+        return view('payments.index', compact('payments', 'total_payment', 'total_transactions', 'total_successful_transactions', 'total_failed_transactions'));
     }
     public function allPaymentsTable(){
         $payments = Payment::all();

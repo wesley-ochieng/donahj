@@ -23,7 +23,8 @@ class EventController extends Controller
         $events = Event::orderBy('id', 'desc')->get();
         $total_payments = Payment::sum('TransAmount');
         $total_tickets_sold = Ticket::where('status', '!=', 'unpaid')->count();
-        return view('events.index', compact('events','total_payments', 'total_tickets_sold'));
+        $total_transactions = Payment::count();
+        return view('events.index', compact('events','total_payments', 'total_tickets_sold', 'total_transactions'));
     }
 
     /**
