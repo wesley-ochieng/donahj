@@ -56,7 +56,11 @@ class TicketController extends Controller
     {
         $tickets = Ticket::where('event_id', $event)->get();
         $event = Event::find($event);
-        return view('events.tickets', compact('tickets','event'));
+        $total_paid_tickets = Ticket::where('status', 'paid')->where('event_id', $event->id)->count();
+        $total_unpaid_tickets = Ticket::where('status', 'unpaid')->where('event_id', $event->id)->count();
+        $total_active_tickets = Ticket::where('status', 'active')->where('event_id', $event->id)->count();
+        $total_used_tickets = Ticket::where('status', 'used')->where('event_id', $event->id)->count();
+        return view('events.tickets', compact('tickets','event', 'total_paid_tickets', 'total_unpaid_tickets', 'total_active_tickets', 'total_used_tickets'));
     }
     public function eventTicketsTables($event)
     {
