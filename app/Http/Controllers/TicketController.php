@@ -18,7 +18,11 @@ class TicketController extends Controller
     public function index()
     {
         $tickets = Ticket::all();
-        return view('tickets.index', compact('tickets'));
+        $total_paid_tickets = Ticket::where('status', 'paid')->count();
+        $total_unpaid_tickets = Ticket::where('status', 'unpaid')->count();
+        $total_active_tickets = Ticket::where('status', 'active')->count();
+        $total_used_tickets = Ticket::where('status', 'used')->count();
+        return view('tickets.index', compact('tickets', 'total_paid_tickets', 'total_unpaid_tickets', 'total_active_tickets', 'total_used_tickets'));
     }
     public function allTicketsTable()
     {

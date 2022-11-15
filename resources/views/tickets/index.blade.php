@@ -27,6 +27,48 @@
     </div>
     <!-- Container-fluid starts-->
     <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="card shadow">
+            <div class="card-header b-l-success">
+              <h5>Total Paid Tickets</h5>
+            </div>
+            <div class="card-body py-3">
+              <p class="lead fs-3 fw-bold text-success">{{ $total_paid_tickets }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow">
+            <div class="card-header b-l-danger">
+              <h5>Total Unpaid</h5>
+            </div>
+            <div class="card-body py-3">
+              <p class="lead fs-3 fw-bold text-danger">{{ $total_unpaid_tickets }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow">
+            <div class="card-header b-l-info">
+              <h5>Total Active Tickets</h5>
+            </div>
+            <div class="card-body py-3">
+              <p class="lead fs-3 fw-bold text-info">{{ $total_active_tickets }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow">
+            <div class="card-header b-l-secondary">
+              <h5>Total Used</h5>
+            </div>
+            <div class="card-body py-3">
+              <p class="lead fs-3 fw-bold text-secondary">{{ $total_used_tickets }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="row project-cards">
         <div class="col-sm-12">
           <div class="card shadow">
