@@ -24,6 +24,38 @@
     </div>
     <!-- Container-fluid starts-->
     <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-4">
+          <div class="card shadow">
+            <div class="card-header b-l-warning">
+              <h5>Total Events</h5>
+            </div>
+            <div class="card-body py-3">
+              <p class="lead fs-3 fw-bold text-warning">{{ count($events) }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card shadow">
+            <div class="card-header b-l-success">
+              <h5>Total Amount Collected</h5>
+            </div>
+            <div class="card-body py-3">
+              <p class="lead fs-3 fw-bold text-success">KSH {{ $total_payments }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card shadow">
+            <div class="card-header b-l-info">
+              <h5>Total Tickets</h5>
+            </div>
+            <div class="card-body py-3">
+              <p class="lead fs-3 fw-bold text-info">{{ $total_tickets_sold }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="row project-cards">
         <div class="col-md-12 project-list">
           <div class="card">
@@ -68,20 +100,19 @@
                         <div class="project-status mt-4">
                             <div class="media mb-0">
                               <p>{{$event->ticketsSold()}} / {{ $event->capacity }} 
-                                -
-                                <small class="text-info">{{($event->ticketsSold() * 100 == 0? 0: ($event->ticketsSold() * 100)/$event->capacty )}}%</small></p>
+                                - {{ empty($event->ticketsSold()) ? 0 : round($event->ticketsSold() / $event->capacity * 100) }}% Sold</p>
                               <div class="media-body text-end"><span>Sold</span></div>
                             </div>
                             <div class="progress" style="height: 5px">
                               <div class="progress-bar-animated bg-success progress-bar-striped" role="progressbar" 
-                              style="width:{{($event->ticketsSold() * 100 == 0? 0: ($event->ticketsSold() * 100)/$event->capacty )}}%" 
+                              style="width:{{ empty($event->ticketsSold()) ? 0 : round($event->ticketsSold() / $event->capacity * 100) }}%" 
                               aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             {{-- button to show tickets --}}
                             <a href="{{ route('tickets.list', $event->id,'tickets') }}" class="btn btn-primary mt-3">Show Tickets</a>
                             {{-- button to show payments --}}
                             <a href="{{ route('payments.event', $event->id,'payments') }}" class="btn btn-secondary mt-3">Show Payments</a>
-                            {{-- button to show payments --}}
+                            <a href="{{ route('events.edit', $event->id) }}" class="btn btn-info mt-3"> <i class="fa fa-edit" aria-hidden="true"></i> Edit</a>
                         </div>
                       </div>
                     </div>

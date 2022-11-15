@@ -8,7 +8,6 @@ use App\Models\EventPrice;
 use App\Models\Ticket;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Validator;
 use Str;
 use DB;
 use Log;
@@ -19,6 +18,7 @@ use DataTables;
 use Mail;
 use App\Mail\TicketMail;
 use Session;
+use Validator;
 
 class PaymentController extends Controller
 {
@@ -109,10 +109,10 @@ class PaymentController extends Controller
                 $ticket->event_id = $event->id;
                 $ticket->ticket_number = Str::orderedUuid();
                 //generate qr code and store it in the storage folder
-                $qrCode = QrCode::format('svg')->size(500)->generate($ticket->ticket_number);
-                $path = 'qr_codes/'.$ticket->ticket_number.'.svg';
+                $qrCode = QrCode::format('png')->size(500)->generate($ticket->ticket_number);
+                $path = 'qr_codes/'.$ticket->ticket_number.'.png';
                 Storage::disk('public')->put($path, $qrCode);
-                $ticket->qr_code = $ticket->ticket_number.'.svg';
+                $ticket->qr_code = $ticket->ticket_number.'.png';
                 $ticket->status = 'unpaid';
                 $ticket->save();
                 
@@ -123,10 +123,10 @@ class PaymentController extends Controller
             $ticket->event_id = $event->id;
             $ticket->ticket_number = Str::orderedUuid();
             //generate qr code and store it in the storage folder
-            $qrCode = QrCode::format('svg')->size(500)->generate($ticket->ticket_number);
-            $path = 'qr_codes/'.$ticket->ticket_number.'.svg';
+            $qrCode = QrCode::format('png')->size(500)->generate($ticket->ticket_number);
+            $path = 'qr_codes/'.$ticket->ticket_number.'.png';
             Storage::disk('public')->put($path, $qrCode);
-            $ticket->qr_code = $ticket->ticket_number.'.svg';
+            $ticket->qr_code = $ticket->ticket_number.'.png';
             $ticket->status = 'unpaid';
             $ticket->save();
         }
@@ -202,11 +202,9 @@ class PaymentController extends Controller
     public function MpesaResponse(Request $request) {
         try {
             $contents = json_decode($request->getContent(), true);
-            Log::info($contents);
             $merchantRequestId = $contents['Body']['stkCallback']['MerchantRequestID'];
             $checkoutRequestId = $contents['Body']['stkCallback']['CheckoutRequestID'];
             $content = $contents['Body']['stkCallback']['CallbackMetadata']['Item'];
-
             $contentLength = count($content);
             //get the payment
             $payment = Payment::where('merchantRequestID', $merchantRequestId)->first();
@@ -236,23 +234,41 @@ class PaymentController extends Controller
                 $t->status = 'paid';
                 $t->payment_id = $payment->id;
                 $t->save();
-
-                //send email
+                $event = Event::find($t->event_id);
                 
-                $t->sendTicket($t->email, $t->ticket_number);
+                $t->sendTicket($t->email, $t->ticket_number, $event->name);
             }
 
-            //return redirect to / with success toastr
             toastr()->success('Payment successful kindly check your email for your ticket');
             Session::flash('message', 'Purchase of ticket was successfull!');
-            return redirect('https://praiseatmosphere.com/events');
+
+            Log::info('Mpesa Response: '.json_encode($contents));
 
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
             return response()->json($th->getMessage(), 500);
         }
     }
+    public function redirectToHome() {
+        $upcoming_event = Event::where('status', 'upcoming')->first();
 
+        if(!$upcoming_event){
+            $events = Event::all();
+        }else{
+            $events = Event::where('status', 'upcoming')->where('id', '!=', $upcoming_event->id)->orderBy('id', 'desc')->get();
+        }
+        return view('welcome', compact('upcoming_event', 'events'));
+    }
+
+    public function checkPayment($merchantRequestID){
+        $payment = Ticket::where('merchantRequestId', $merchantRequestID)->first();
+        // return response()->json($payment, 200);
+        if($payment->status == 'paid'){
+            return response()->json('success', 200);
+        }else{
+            return response()->json('unpaid', 200);
+        }
+    }
     public function autoConfirmPayment($phone, $merchantRequestId, $checkoutRequestId) {
         try {
         $transaction = MpesaTransaction::where('MSISDN', $phone)
