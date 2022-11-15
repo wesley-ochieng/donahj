@@ -346,7 +346,23 @@ class PaymentController extends Controller
 
     public function eventPayments($event){
         $event = Event::where('id', $event)->first();
-        return view('events.payments', compact('event'));
+        $tickets = Ticket::where('event_id', $event->id)->get();
+        $payments = $tickets->map(function($ticket) use ($event) {
+            $payment = Payment::where('merchantRequestId', $ticket->merchantRequestId)->first();
+            if($payment){
+                $payment->ticket_number = $ticket->ticket_number;
+                $payment->event_name = $event->name;
+                $payment->status = $ticket->status;
+            }
+            return $payment;
+        });
+
+        $total_payment = $payments->where('TransID','!=', null )->sum('TransAmount');
+        
+        $total_transactions = $payments->count();
+        $total_successful_transactions = $payments->where('TransID','!=', null )->count();
+        $total_failed_transactions = $payments->where('TransID', null)->count();
+        return view('events.payments', compact('event', 'payments', 'total_payment', 'total_transactions', 'total_successful_transactions', 'total_failed_transactions'));
     }
 
     public function eventPaymentsTable($event){
