@@ -107,6 +107,13 @@
                             <div class="col-6 font-success">{{ $event->start_time }}</div>
                             <div class="col-6"> <span>Capacity</span></div>
                             <div class="col-6 font-success">{{$event->capacity }}</div>
+                            <div class="col-6"> <span>Regular Capacity</span></div>
+                            <div class="col-6 font-success">{{$event->eventPrice->regular_quantity }}</div>
+                            <div class="col-6"> <span>VIP Capacity</span></div>
+                            <div class="col-6 font-success">{{$event->eventPrice->vip_quantity }}</div>
+                            <div class="col-6"> <span>Kids Capacity</span></div>
+                            <div class="col-6 font-success">{{$event->eventPrice->kids_quantity }}</div>
+
                         </div>
                         <div class="project-status mt-4">
                             <div class="media mb-0">

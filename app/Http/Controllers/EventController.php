@@ -96,6 +96,9 @@ class EventController extends Controller
             $event_price->vvip_quantity = $request->vvip_quantity;
             $event_price->vvip_advance_price = $request->vvip_advance_price;
             $event_price->vvip_gate_price = $request->vvip_gate_price;
+            $event_price->kids_quantity = $request->kids_quantity;
+            $event_price->kids_advance_price = $request->kids_advance_price;
+            $event_price->kids_gate_price = $request->kids_gate_price;
             $event_price->save();
 
             $event->capacity = $event_price->regular_quantity + $event_price->vip_quantity + $event_price->vvip_quantity;
@@ -193,6 +196,9 @@ class EventController extends Controller
             $event_price->vvip_quantity = $request->vvip_quantity;
             $event_price->vvip_advance_price = $request->vvip_advance_price;
             $event_price->vvip_gate_price = $request->vvip_gate_price;
+            $event_price->kids_quantity = $request->kids_quantity;
+            $event_price->kids_advance_price = $request->kids_advance_price;
+            $event_price->kids_gate_price = $request->kids_gate_price;
             $event_price->save();
 
             $event->capacity = $event_price->regular_quantity + $event_price->vip_quantity + $event_price->vvip_quantity;

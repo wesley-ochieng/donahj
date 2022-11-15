@@ -81,8 +81,10 @@ class PaymentController extends Controller
             $amount = $eventprice->vip_advance_price;
         } else if($request->ticket_type == 'vvip') {
             $amount = $eventprice->vvip_advance_price;
+        } else if($request->ticket_type == 'kids') {
+            $amount = $eventprice->kids_advance_price;
         } else {
-            $amount = $eventprice->regular_price;
+            $amount = $eventprice->regular_quantity;
         }
 
         try {
@@ -90,11 +92,13 @@ class PaymentController extends Controller
         if($request->ticket_type == 'regular') {
             $capacity = $eventprice->regular_quantity;
         } else if($request->ticket_type == 'vip') {
-            $capacity = $event->vip_quantity;
+            $capacity = $eventprice->vip_quantity;
         } else if($request->ticket_type == 'vvip') {
-            $capacity = $event->vvip_quantity;
+            $capacity = $eventprice->vvip_quantity;
+        } else if($request->ticket_type == 'kids') {
+            $capacity = $eventprice->kids_quantity;
         } else {
-            $capacity = $event->regular_quantity;
+            $capacity = $eventprice->regular_quantity;
         }
         // check if the capacity is available
         if($capacity < $request->quantity) {
@@ -358,7 +362,7 @@ class PaymentController extends Controller
         });
 
         $total_payment = $payments->where('TransID','!=', null )->sum('TransAmount');
-        
+
         $total_transactions = $payments->count();
         $total_successful_transactions = $payments->where('TransID','!=', null )->count();
         $total_failed_transactions = $payments->where('TransID', null)->count();

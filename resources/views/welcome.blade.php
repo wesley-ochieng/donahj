@@ -193,6 +193,17 @@
                                     <small class="text-muted"><em>(at the gate)</em></small>
                                 </p>
                                 @endif
+                                @if($upcoming_event->eventPrice->kids_advance_price )
+                                <p class="text-info"> 
+                                    <span class="text-muted" >Kids-price: </span>
+                                    <strong>
+                                    {{ $upcoming_event->eventPrice->kids_advance_price  }}  KSH
+                                    </strong>
+                                    <small class="text-muted"><em>(advanced)</em></small>
+                                    {{ $upcoming_event->eventPrice->kids_gate_price  }}  KSH
+                                    <small class="text-muted"><em>(at the gate)</em></small>
+                                </p>
+                                @endif
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <span class="badge badge-success badge-pill"><strong>Start Date:</strong>
@@ -298,6 +309,10 @@
                                 @if($upcoming_event->eventPrice->vvip_advance_price)
                                 <option value="vvip">VVIP</option>
                                 @endif
+                                @if($upcoming_event->eventPrice->kids_advance_price)
+                                <option value="kids">Kids</option>
+                                @endif
+                        
                             </select>
                         </div>
                         <div class="form-group">
@@ -396,6 +411,8 @@
                 totalAmount = {{ $upcoming_event->eventPrice->vip_advance_price ?  $upcoming_event->eventPrice->vip_advance_price:0}} * quantity;
             } else if(ticketType == 'vvip') {
                 totalAmount = {{ $upcoming_event->eventPrice->vvip_advance_price ? $upcoming_event->eventPrice->vvip_advance_price:0 }} * quantity;
+            }  else if(ticketType == 'kids') {
+                totalAmount = {{ $upcoming_event->eventPrice->kids_advance_price ? $upcoming_event->eventPrice->kids_advance_price:0 }} * quantity;
             }
             $('#totalAmount').text(totalAmount);
         });
@@ -409,6 +426,8 @@
                 totalAmount = {{ $upcoming_event->eventPrice->vip_advance_price ?  $upcoming_event->eventPrice->vip_advance_price:0}} * quantity;
             } else if(ticketType == 'vvip') {
                 totalAmount = {{ $upcoming_event->eventPrice->vvip_advance_price ? $upcoming_event->eventPrice->vvip_advance_price:0 }} * quantity;
+            } else if( ticketType == 'kids') {
+                totalAmount = {{ $upcoming_event->eventPrice->kids_advance_price ? $upcoming_event->eventPrice->kids_advance_price:0 }} * quantity;
             }
             $('#totalAmount').text(totalAmount);
         });

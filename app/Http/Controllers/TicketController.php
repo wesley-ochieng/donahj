@@ -67,7 +67,7 @@ class TicketController extends Controller
         $tickets = Ticket::where('event_id', $event)->get();
         return DataTables::of($tickets)
         ->addColumn('action', function($ticket){
-            return '<a href="#" class="btn btn-sm btn-primary">View</a>';
+            return '<a href="#" id="'.$ticket->id.'" class="btn btn-sm btn-primary">View</a>';
         })
         ->addColumn('status', function($ticket){
             if($ticket->status == 'paid'){

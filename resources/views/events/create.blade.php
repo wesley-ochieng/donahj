@@ -137,6 +137,26 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="mb-3">
+                                    <label for="event-quantity" >Kids Quantity:</label>
+                                    <input type="number" class="form-control" id="event-quantity" name="kids_quantity" placeholder="Event Quantity" >
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="mb-6">
+                                    <label for="event-price" >Kids Advance Price:</label>
+                                    <input type="number" class="form-control" id="event-price" name="kids_advance_price" placeholder="Advance Kids Price" >
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="mb-3">
+                                    <label for="event-gate-price" >Kids Gate Price:</label>
+                                    <input type="number" class="form-control" id="event-gate-price"  name="kids_gate_price" placeholder="Gate Ticket Price" >
+                                </div>
+                            </div>
+                        </div>
 
                         <div class="row">
                             <div class="col">
