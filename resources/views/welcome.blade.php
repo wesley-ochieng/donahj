@@ -195,9 +195,9 @@
                                 @endif
                                 @if($upcoming_event->eventPrice->kids_advance_price )
                                 <p class="text-info"> 
-                                    <span class="text-muted" >Kids-price: </span>
+                                    <span class="text-muted" >Kids-price <em class="text-dark small">(12 years and below): </em> </span>
                                     <strong>
-                                    {{ $upcoming_event->eventPrice->kids_advance_price  }}  KSH
+                                    {{ $upcoming_event->eventPrice->kids_advance_price  }}  KSH 
                                     </strong>
                                     <small class="text-muted"><em>(advanced)</em></small>
                                     {{ $upcoming_event->eventPrice->kids_gate_price  }}  KSH
@@ -310,7 +310,7 @@
                                 <option value="vvip">VVIP</option>
                                 @endif
                                 @if($upcoming_event->eventPrice->kids_advance_price)
-                                <option value="kids">Kids</option>
+                                <option value="kids">Kids <em>(12 years and below)</em></option>
                                 @endif
                         
                             </select>

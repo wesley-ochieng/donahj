@@ -150,6 +150,7 @@
                               <small class="text-muted"><em>(at the gate)</em></small>
                           </p>
                           @endif
+                          @if()
                             <div class="row">
                                 <div class="col-sm-6">
                                     <span class="badge badge-success badge-pill"><strong>Start Date:</strong> {{ $upcoming_event->start_date }}  @ {{ $upcoming_event->start_time }}</span>
@@ -244,7 +245,7 @@
                         <option value="vvip">VVIP</option>
                         @endif
                         @if($upcoming_event->eventPrice->kids_advance_price)
-                        <option value="kids">Kids</option>
+                        <option value="kids">Kids <em>(12 years and below)</em></option>
                         @endif
                     </select>
                       
