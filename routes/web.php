@@ -34,6 +34,7 @@ Route::delete('/events/{event}', [EventController::class, 'destroy'])->middlewar
 
 Route::get('/events/{event}/tickets', [TicketController::class, 'eventTickets'])->name('tickets.list')->middleware('auth');
 Route::get('/events/{event}/tickets-tables', [TicketController::class, 'eventTicketsTables'])->name('tickets.tables')->middleware('auth');
+Route::get('/events/show-ticket/{ticket}', [TicketController::class, 'show'])->name('ticket.show')->middleware('auth');
 Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.all')->middleware('auth');
 Route::get('/all-tickets-table', [TicketController::class, 'allTicketsTable'])->name('all.tickets.table')->middleware('auth');
 

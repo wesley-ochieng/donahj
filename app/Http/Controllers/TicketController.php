@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Ticket;
 use App\Models\Event;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use Validator;
 use DataTables;
@@ -29,7 +30,7 @@ class TicketController extends Controller
         $tickets = Ticket::get();
         return DataTables::of($tickets)
         ->addColumn('action', function($ticket){
-            return '<a href="#" class="btn btn-sm btn-primary">View</a>';
+            return'<a href="#" id="'.$ticket->id.'" class="btn btn-sm btn-primary show-ticket" >View</a>';
         })
         ->addColumn('status', function($ticket){
             if($ticket->status == 'paid'){
@@ -119,5 +120,12 @@ class TicketController extends Controller
         return response()->json(['message' => 'Ticket does not exist'], 400);
 
         // return redirect()->route('tickets.index')->with('success', 'Ticket status updated successfully');
+    }
+
+    public function show($ticket){
+        $ticket = Ticket::find($ticket);
+        $ticket->payment = Payment::where('merchantRequestId', $ticket->merchantRequestId)->first();
+        return response()->json($ticket, 200);
+
     }
 }
