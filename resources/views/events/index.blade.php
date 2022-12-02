@@ -131,6 +131,7 @@
                             {{-- button to show payments --}}
                             <a href="{{ route('payments.event', $event->id,'payments') }}" class="btn btn-secondary mt-3">Show Payments</a>
                             <a href="{{ route('events.edit', $event->id) }}" class="btn btn-info mt-3"> <i class="fa fa-edit" aria-hidden="true"></i> Edit</a>
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#complimentary-tickets" id="{{ $event->id }}" class="btn btn-warning mt-3 create-complimentary-btn"> Create Complimentary</a>
                         </div>
                       </div>
                     </div>
@@ -145,4 +146,50 @@
     </div>
     <!-- Container-fluid Ends-->
   </div>
+  {{-- modal complimentary-tickets --}}
+  <div class="modal fade" id="complimentary-tickets" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Create Complimentary Tickets</h5>
+          <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="{{ route('tickets.complimentary') }}" method="POST" id="complimentary-ticket-form">
+            @csrf
+            <input type="hidden" name="event_id" id="event_id" value="">
+            <div class="form-group">
+              <label for="name">Organization Name</label>
+              <input type="text" name="organization_name" id="name" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" name="email" id="email" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="quantity">Quantity</label>
+              <input type="number" name="quantity" id="quantity" class="form-control">
+            </div>
+          
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" form="complimentary-ticket-form" class="btn btn-primary float-start">Create</button>
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+@endsection
+@section('scripts')
+<script>
+  $(document).ready(function(){
+    $('.create-complimentary-btn').click(function(){
+      let eventId = $(this).attr('id');
+      console.log(eventId);
+      $('#event_id').val(eventId);
+    });
+  });
+</script>
 @endsection

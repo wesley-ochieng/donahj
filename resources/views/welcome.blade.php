@@ -117,7 +117,7 @@
         <div class="container-fluid p-0 m-0">
          
             <div class="comingsoon comingsoon-bgimg"
-                style="background-image: url('{{ asset('storage/' . $upcoming_event->poster_image) }}')">
+                style="background-image: url('{{ asset('storage/' . $upcoming_event->poster_image) }}'); background-attachment: fixed;">
                 <div class="comingsoon-inner text-center" style="position: absolute; top:63vh">
                     
                     {{-- button to open modal and buy ticket --}}
@@ -128,9 +128,7 @@
                 
                 </div>
             </div>
-            <h5 class="text-dark text-capitalize text-center event-title">
-                {{ $upcoming_event->name }}
-                <br>
+            <h5 class="text-dark text-capitalize text-center event-title" style=" background-color: rgba(255, 255, 255, 0.4);">
                 <a href="#about" class="btn btn-secondary btn-sm">
                     About this Event
                 </a>
@@ -138,9 +136,9 @@
            
         </div>
         <div class="container">
-            <section id="about pt-4">
+            <section id="about" class="pt-5">
                 <div class="title">
-                    <h2 class="mt-3">About this event</h2>
+                    <h2 class="mt-5">About this event</h2>
                 </div>
                 <hr>
                 <div class="card card-absolute my-3 shadow">

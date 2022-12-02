@@ -14,12 +14,17 @@ class FrontEndController extends Controller
 
     public function home(){
         //  retrun first event where status is upcoming
-        $upcoming_event = Event::where('status', 'upcoming')->first();
+        $upcoming_event = Event::where('status', 'upcoming')
+        ->orWhere('status', 'active')
+        ->first();
 
         if(!$upcoming_event){
             $events = Event::all();
         }else{
-            $events = Event::where('status', 'upcoming')->where('id', '!=', $upcoming_event->id)->orderBy('id', 'desc')->get();
+            $events = Event::where('status', 'upcoming')
+            ->orWhere('status', 'active')
+            ->where('id', '!=', $upcoming_event->id)
+            ->orderBy('id', 'desc')->get();
         }
         return view('welcome', compact('upcoming_event', 'events'));
     }

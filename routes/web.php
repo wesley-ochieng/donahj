@@ -50,3 +50,10 @@ Route::post('mpesa/callback/url', [PaymentController::class, 'MpesaResponse']);
 
 //confirming the ticket is valid
 Route::post('tickets/confirm', [TicketController::class, 'updateStatus']);
+
+//create complementary ticket
+Route::post('events/complimentary', [TicketController::class, 'storeComplimentary'])->name('tickets.complimentary')->middleware('auth');
+Route::get('run-migrations',function(){
+    Artisan::call('migrate');
+    return "Migrations run successfully";
+});

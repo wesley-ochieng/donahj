@@ -8,6 +8,10 @@ use App\Models\Payment;
 use Illuminate\Http\Request;
 use Validator;
 use DataTables;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use App\Models\ComplimentaryTicket;
+use Str;
+use Storage;
 
 class TicketController extends Controller
 {
@@ -65,7 +69,9 @@ class TicketController extends Controller
     }
     public function eventTicketsTables($event)
     {
-        $tickets = Ticket::where('event_id', $event)->get();
+        $tickets = Ticket::where('event_id', $event)
+        ->where('status', 'paid')
+        ->get();
         return DataTables::of($tickets)
         ->addColumn('action', function($ticket){
             return '<a href="#" id="'.$ticket->id.'" class="btn btn-sm btn-primary">View</a>';
@@ -94,15 +100,14 @@ class TicketController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'ticket_number' => 'required',
-            'event_id' => 'required',
         ]);
 
         if ($validator->fails()) {
-            return response()->json($validator->errors()->all(), 400);
+            return response()->json(['message' => $validator->errors()->first()], 422);
         }
 
         //check if the ticket exists
-        $ticket = Ticket::where('ticket_number', $request->ticket_number)->where('event_id', $request->event_id)->first();
+        $ticket = Ticket::where('ticket_number', $request->ticket_number)->first();
         if($ticket){
             //check if the ticket has been used
             if($ticket->status == 'used'){
@@ -121,11 +126,80 @@ class TicketController extends Controller
 
         // return redirect()->route('tickets.index')->with('success', 'Ticket status updated successfully');
     }
+    public function eventPayments(Request $request){
+        $event = Event::find($request->event_id);
+        $tickets = Ticket::where('event_id', $event->id)
+        ->where('status', 'paid')
+        ->get();
+        $payments = $tickets->map(function($ticket) use ($event) {
+            $payment = Payment::where('merchantRequestId', $ticket->merchantRequestId)
+            ->whereNotNull('transID')
+            ->first();
+            if($payment){
+                $payment->ticket_number = $ticket->ticket_number;
+                $payment->event_name = $event->name;
+                $payment->status = $ticket->status;
+                $payment->TransID = $payment->TransID;
+            }
+            return $payment;
+        });
+        return response()->json(['payments' => $payments], 200);
+    }
 
     public function show($ticket){
         $ticket = Ticket::find($ticket);
         $ticket->payment = Payment::where('merchantRequestId', $ticket->merchantRequestId)->first();
         return response()->json($ticket, 200);
 
+    }
+
+    public function storeComplimentary(Request $request){
+        $validator = Validator::make($request->all(), [
+            'event_id' => 'required|exists:events,id',
+            'organization_name' => 'required',
+            'email' => 'required',
+            'quantity' => 'required',
+        ]);
+        if ($validator->fails()) {
+            toastr()->error($validator->errors()->first());
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $event = Event::find($request->event_id);
+        if($request->quantity > 1) {
+            for($i = 0; $i < $request->quantity; $i++) {
+                $ticket = new ComplimentaryTicket();
+                $ticket->email = $request->email;
+                $ticket->event_id = $event->id;
+                $ticket->ticket_number = Str::orderedUuid();
+                //generate qr code and store it in the storage folder
+                $qrCode = QrCode::format('png')->size(500)->generate($ticket->ticket_number);
+                $path = 'qr_codes/'.$ticket->ticket_number.'.png';
+                Storage::disk('public')->put($path, $qrCode);
+                $ticket->qr_code = $ticket->ticket_number.'.png';
+                $ticket->status = 'paid';
+                $ticket->organization_name = $request->organization_name;
+                $ticket->save();
+                    
+                $ticket->sendTicket($ticket->email, $ticket->ticket_number, $event->name);
+                
+            }
+        } else {
+            $ticket = new ComplimentaryTicket();
+            $ticket->email = $request->email;
+            $ticket->event_id = $event->id;
+            $ticket->ticket_number = Str::orderedUuid();
+            //generate qr code and store it in the storage folder
+            $qrCode = QrCode::format('png')->size(500)->generate($ticket->ticket_number);
+            $path = 'qr_codes/'.$ticket->ticket_number.'.png';
+            Storage::disk('public')->put($path, $qrCode);
+            $ticket->qr_code = $ticket->ticket_number.'.png';
+            $ticket->status = 'paid';
+            $ticket->organization_name = $request->organization_name;
+            $ticket->save();
+            $ticket->sendTicket($ticket->email, $ticket->ticket_number, $event->name);
+        }
+        toastr()->success('Ticket generated successfully');
+        return redirect()->back()->with('success', 'Ticket generated successfully');
     }
 }
