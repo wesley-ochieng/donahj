@@ -159,7 +159,7 @@ class PaymentController extends Controller
             'PartyA' => $phoneNumber,
             'PartyB' => env('MPESA_BUSINESS_SHORT_CODE'),
             'PhoneNumber' => $phoneNumber,
-            'CallBackURL' => env('NGROK_URL').'/api/mpesa/callback',
+            'CallBackURL' => env('NGROK_URL').'/mpesa/callback/url',
             'AccountReference' => 'Praise Atmosphere',
             'TransactionDesc' => $event->name,
         ];
@@ -242,9 +242,11 @@ class PaymentController extends Controller
             //return redirect to / with success toastr
             toastr()->success('Payment successful kindly check your email for your ticket');
             Session::flash('message', 'Purchase of ticket was successfull!');
-            // return redirect()->route('home');
-            // return redirect('/');
-
+            // return redirect()->to('/', 200)->with('success', 'Payment successful kindly check your email for your ticket');
+            // return with status 200
+            
+            // reload the page
+            return redirect()->back();
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
             return response()->json($th->getMessage(), 500);
