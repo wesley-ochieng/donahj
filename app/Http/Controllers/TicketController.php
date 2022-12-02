@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\PaymentImport;
 use App\Models\Ticket;
 use App\Models\Event;
 use App\Models\Payment;
@@ -12,6 +13,8 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Models\ComplimentaryTicket;
 use Str;
 use Storage;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Models\BulkUpload;
 
 class TicketController extends Controller
 {
@@ -201,5 +204,48 @@ class TicketController extends Controller
         }
         toastr()->success('Ticket generated successfully');
         return redirect()->back()->with('success', 'Ticket generated successfully');
+    }
+
+    public function storeBulk (Request $request) {
+        try {
+            // upload file
+            Excel::import(new PaymentImport, $request->file('file'));
+        
+            return response()->json([
+                'status' => 'success',
+                'message' => 'File uploaded successfully'
+            ]);
+        } catch (\Throwable $th) {
+            dd($th->getMessage());
+        }
+    }
+
+    public function confirmPayment ($code) {
+        // check if the payment code exists
+        $payment = BulkUpload::where('payment_code', $code)->first();
+
+        // check if the payment does not exist
+        if (!$payment) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Payment code does not exist'
+            ]);
+        }
+
+        // check if the payment code has been used
+        if ($payment->status == 'used') {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Payment code has already been used'
+            ]);
+        }
+        // update the payment code
+        $payment->status = 'used';
+        $payment->save();
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Payment code confirmed successfully'
+        ]);
     }
 }

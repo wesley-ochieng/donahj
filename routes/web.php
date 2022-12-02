@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BulkUploadController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventController;
@@ -57,3 +58,5 @@ Route::get('run-migrations',function(){
     Artisan::call('migrate');
     return "Migrations run successfully";
 });
+Route::post('events/{event}/payments', [BulkUploadController::class, 'bulkUpload'])->name('payments.bulk')->middleware('auth');
+

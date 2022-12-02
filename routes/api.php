@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\BulkUploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,3 +31,8 @@ Route::post('mpesa/callback', [PaymentController::class, 'MpesaResponse']);
 //confirming the ticket is valid
 Route::post('payments', [TicketController::class, 'eventPayments']);
 Route::post('tickets/confirm', [TicketController::class, 'updateStatus']);
+
+// bulk upload
+// Route::post('events/{event}/payments', [TicketController::class, 'storeBulk']);
+Route::post('events/{event}/payments', [BulkUploadController::class, 'bulkUpload']);
+Route::post('payment/{code}', [TicketController::class, 'confirmPayment']);

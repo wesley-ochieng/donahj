@@ -196,6 +196,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         Yoeunes\Toastr\ToastrServiceProvider::class,
         Yajra\Datatables\DatatablesServiceProvider::class,
+        Maatwebsite\Excel\ExcelServiceProvider::class,
 
     ],
 
@@ -213,6 +214,7 @@ return [
     'aliases' => Facade::defaultAliases()->merge([
         'Carbon' => Illuminate\Support\Carbon::class,
         'Datatables' => Yajra\Datatables\Facades\Datatables::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         // 'ExampleClass' => App\Example\ExampleClass::class,
     ])->toArray(),
 
