@@ -11,13 +11,17 @@
             <h3>Create Event</h3>
             <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="{{ route('events.list') }}">Events</a></li>
-              <li class="breadcrumb-item active">project list</li>
+              <li class="breadcrumb-item active">Edit Event</li>
             </ol>
           </div>
           <div class="col-sm-6">
             <!-- Bookmark Start-->
             <div class="bookmark">
-
+                <ul>
+                    <li>
+                    <a href="{{ route('events.list') }}" class="btn btn-primary">Events List</a>
+                    </li>
+                </ul>
             </div>
             <!-- Bookmark Ends-->
           </div>
@@ -29,15 +33,19 @@
         <div class="row">
           <div class="col-sm-12">
             <div class="card">
+                <div class="card-header">
+                    <h5>Edit {{ $event->name }} Event</h5>
+                </div>
               <div class="card-body">
                 <div class="form theme-form">
-                    <form action="{{ route('events.store') }}" class="needs-validation" method="POST" enctype="multipart/form-data" id="submit-form">
+                    <form action="{{ route('events.update',$event->id) }}" class="needs-validation" method="POST" enctype="multipart/form-data" id="submit-form">
                         @csrf
+                        @method('PUT')
                         <div class="row">
                             <div class="col">
                             <div class="mb-3">
                                 <label for="event-name" >Event Name:</label>
-                                <input type="text" class="form-control" id="event-name" name="name" placeholder="Event Name" required>
+                                <input type="text" class="form-control" id="event-name" name="name" value="{{ $event->name }}" placeholder="Event Name" required>
                                 <div class="invalid-feedback">Please provide a valid city.</div>
                             </div>
                             </div>
@@ -46,33 +54,33 @@
                             <div class="col-sm-4">
                             <div class="mb-3">
                                 <label>Starting date</label>
-                                <input class="datepicker-here form-control digits" type="text" name="start_date" autocomplete="off" data-language="en" required>
+                                <input class="datepicker-here form-control digits" type="text" value="{{ $event->start_date }}" name="start_date" autocomplete="off" data-language="en" required>
                             </div>
                             </div>
                             <div class="col-sm-4">
                             <div class="mb-3">
-                                <label>Ending date</label>
-                                <input class="datepicker-here form-control" name="end_date" type="end_date" autocomplete="off" data-language="en">
+                                <label>Ending date </label>
+                                <input class="datepicker-here form-control" name="end_date" value="{{ $event->end_date }}" type="end_date" autocomplete="off" data-language="en">
                             </div>
                             </div>
                             <div class="col-sm-4">
                                 <div class="mb-3">
                                     <label for="event-time" >Event Time:</label>
-                                    <input type="time" class="form-control" id="event-time" name="start_time" required>
+                                    <input type="time" class="form-control" id="event-time" value="{{ $event->start_time }}" name="start_time" required>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-4">
                                 <label for="event-location">Event Location:</label>
-                                <input type="text" class="form-control" id="event-location" name="venue">
+                                <input type="text" class="form-control" id="event-location" value="{{ $event->venue }}" name="venue">
                                 <input type="hidden" name="venue_longtitude">
                                 <input type="hidden" name="venue_latitude">
                             </div>
                             <div class="col-sm-8">
                               <div class="mb-3">
                                 <label>Upload Poster Image</label>
-                                <input class="form-control" type="file" name="poster_image" required>
+                                <input class="form-control" type="file" name="poster_image">
                             </div>
                             </div>
                         </div>
@@ -81,19 +89,19 @@
                             <div class="col-sm-4">
                                 <div class="mb-3">
                                     <label for="event-quantity" >Regular Quantity:</label>
-                                    <input type="number" class="form-control" id="event-quantity" name="regular_quantity" placeholder="Event Quantity" required>
+                                    <input type="number" class="form-control" id="event-quantity" value="{{ $event->eventPrice->regular_quantity }}" name="regular_quantity" placeholder="Event Quantity" required>
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <div class="mb-6">
                                     <label for="event-price" >Regular Advance Price:</label>
-                                    <input type="number" class="form-control" id="event-price" name="regular_advance_price" placeholder="Advance Regular Price" required>
+                                    <input type="number" class="form-control" id="event-price" value="{{ $event->eventPrice->regular_advance_price }}" name="regular_advance_price" placeholder="Advance Regular Price" required>
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <div class="mb-3">
                                     <label for="event-gate-price" >Regular Gate Price:</label>
-                                    <input type="number" class="form-control" id="event-gate-price" name="regular_gate_price" placeholder="Gate Ticket Price" required>
+                                    <input type="number" class="form-control" id="event-gate-price" value="{{ $event->eventPrice->regular_gate_price }}" name="regular_gate_price" placeholder="Gate Ticket Price" required>
                                 </div>
                             </div>
                         </div>
@@ -101,19 +109,19 @@
                             <div class="col-sm-4">
                                 <div class="mb-3">
                                     <label for="event-quantity" >VIP Quantity:</label>
-                                    <input type="number" class="form-control" id="event-quantity" name="vip_quantity" placeholder="Event Quantity" >
+                                    <input type="number" class="form-control" id="event-quantity" value="{{ $event->eventPrice->vip_quantity }}" name="vip_quantity" placeholder="Event Quantity" >
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <div class="mb-6">
                                     <label for="event-price" >VIP Advance Price:</label>
-                                    <input type="number" class="form-control" id="event-price" name="vip_advance_price" placeholder="Advance VIP Price" >
+                                    <input type="number" class="form-control" id="event-price" value="{{ $event->eventPrice->vip_advance_price }}" name="vip_advance_price" placeholder="Advance VIP Price" >
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <div class="mb-3">
                                     <label for="event-gate-price" >VIP Gate Price:</label>
-                                    <input type="number" class="form-control" id="event-gate-price" name="vip_gate_price" placeholder="Gate Ticket Price" >
+                                    <input type="number" class="form-control" id="event-gate-price" value="{{ $event->eventPrice->vip_gate_price }}" name="vip_gate_price" placeholder="Gate Ticket Price" >
                                 </div>
                             </div>
                         </div>
@@ -121,39 +129,40 @@
                             <div class="col-sm-4">
                                 <div class="mb-3">
                                     <label for="event-quantity" >VVIP Quantity:</label>
-                                    <input type="number" class="form-control" id="event-quantity" name="vvip_quantity" placeholder="Event Quantity" >
+                                    <input type="number" class="form-control" value="{{ $event->eventPrice->vvip_quantity }}" id="event-quantity" name="vvip_quantity" placeholder="Event Quantity" >
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <div class="mb-6">
                                     <label for="event-price" >VVIP Advance Price:</label>
-                                    <input type="number" class="form-control" id="event-price" name="vvip_advance_price" placeholder="Advance VVIP Price" >
+                                    <input type="number" class="form-control" value="{{ $event->eventPrice->vvip_advance_price }}" id="event-price" name="vvip_advance_price" placeholder="Advance VVIP Price" >
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <div class="mb-3">
                                     <label for="event-gate-price" >VVIP Gate Price:</label>
-                                    <input type="number" class="form-control" id="event-gate-price" name="vvip_gate_price" placeholder="Gate Ticket Price" >
+                                    <input type="number" class="form-control" id="event-gate-price" {{ $event->eventPrice->vvip_gate_price }} name="vvip_gate_price" placeholder="Gate Ticket Price" >
                                 </div>
                             </div>
                         </div>
+                        {{-- kids --}}
                         <div class="row">
                             <div class="col-sm-4">
                                 <div class="mb-3">
                                     <label for="event-quantity" >Kids Quantity:</label>
-                                    <input type="number" class="form-control" id="event-quantity" name="kids_quantity" placeholder="Event Quantity" >
+                                    <input type="number" class="form-control" id="event-quantity" value="{{ $event->eventPrice->kids_quantity }}" name="kids_quantity" placeholder="Event Quantity" >
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <div class="mb-6">
                                     <label for="event-price" >Kids Advance Price:</label>
-                                    <input type="number" class="form-control" id="event-price" name="kids_advance_price" placeholder="Advance Kids Price" >
+                                    <input type="number" class="form-control" id="event-price" value="{{ $event->eventPrice->kids_advance_price }}" name="kids_advance_price" placeholder="Advance Kids Price" >
                                 </div>
                             </div>
                             <div class="col-sm-4">
                                 <div class="mb-3">
                                     <label for="event-gate-price" >Kids Gate Price:</label>
-                                    <input type="number" class="form-control" id="event-gate-price"  name="kids_gate_price" placeholder="Gate Ticket Price" >
+                                    <input type="number" class="form-control" id="event-gate-price" value="{{ $event->eventPrice->kids_gate_price }}" name="kids_gate_price" placeholder="Gate Ticket Price" >
                                 </div>
                             </div>
                         </div>
@@ -163,6 +172,7 @@
                             <div class="my-3">
                                 <label>Enter Event Description</label>
                                 <textarea id="editor1" class="form-control" name="description" cols="30" rows="10" required>
+                                    {{ $event->description }}
                                 </textarea>
                             </div>
                             </div>
@@ -170,7 +180,7 @@
                         <div class="row">
                             <div class="col">
                             <div class="text-end">
-                                <button class="btn btn-secondary me-3" type="submit" id="submit-form-btn">Add</button>
+                                <button class="btn btn-secondary me-3" type="submit" id="submit-form-btn">Edit Event</button>
                                 <a class="btn btn-danger" href="{{ route('events.list') }}">Cancel</a></div>
                             </div>
                         </div>

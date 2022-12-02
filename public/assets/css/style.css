@@ -30971,6 +30971,45 @@ span.twitter-typeahead .tt-suggestion {
     padding-left: 0;
     padding-right: 0 !important; } }
 
+  #clockdiv .title{
+        background-color: rgba(255, 255, 255, 0.7);
+          padding: 10px;
+          border-radius:10px;
+    }
+     .buy-ticket-btn{
+      background-color: #800000;
+      color: #fff;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 5px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      height: 69px;
+      width: 230px
+    }
+    .buy-ticket-btn:hover{
+      background-color: #2688f9;
+      color: #fff;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 5px;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+      height: 69px;
+      width: 230px
+    }
+    .event-title{
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 20px;
+        border-radius: 10px;
+        position: absolute;
+        top: 95vh;
+        left: 0;
+        margin: 0 auto;
+        right: 0;
+        width: 100%;}
 /**=====================
     60. RTL CSS Ends
 ==========================**/

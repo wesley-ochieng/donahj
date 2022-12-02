@@ -22,9 +22,9 @@ class Ticket extends Model
     }
 
     //send ticket
-    public function sendTicket($email, $ticketnumber){
+    public function sendTicket($email, $ticketnumber, $event){
         // TicketJob::dispatch($email, $ticketnumber);
-        Mail::to($email)->send(new TicketMail($ticketnumber));
+        Mail::to($email)->send(new TicketMail($ticketnumber, $event));
     }
 
     public function ticketsSold()

@@ -81,8 +81,10 @@ class PaymentController extends Controller
             $amount = $eventprice->vip_advance_price;
         } else if($request->ticket_type == 'vvip') {
             $amount = $eventprice->vvip_advance_price;
+        } else if($request->ticket_type == 'kids') {
+            $amount = $eventprice->kids_advance_price;
         } else {
-            $amount = $eventprice->regular_price;
+            $amount = $eventprice->regular_quantity;
         }
 
         try {
@@ -90,11 +92,13 @@ class PaymentController extends Controller
         if($request->ticket_type == 'regular') {
             $capacity = $eventprice->regular_quantity;
         } else if($request->ticket_type == 'vip') {
-            $capacity = $event->vip_quantity;
+            $capacity = $eventprice->vip_quantity;
         } else if($request->ticket_type == 'vvip') {
-            $capacity = $event->vvip_quantity;
+            $capacity = $eventprice->vvip_quantity;
+        } else if($request->ticket_type == 'kids') {
+            $capacity = $eventprice->kids_quantity;
         } else {
-            $capacity = $event->regular_quantity;
+            $capacity = $eventprice->regular_quantity;
         }
         // check if the capacity is available
         if($capacity < $request->quantity) {
@@ -109,10 +113,10 @@ class PaymentController extends Controller
                 $ticket->event_id = $event->id;
                 $ticket->ticket_number = Str::orderedUuid();
                 //generate qr code and store it in the storage folder
-                $qrCode = QrCode::format('svg')->size(500)->generate($ticket->ticket_number);
-                $path = 'qr_codes/'.$ticket->ticket_number.'.svg';
+                $qrCode = QrCode::format('png')->size(500)->generate($ticket->ticket_number);
+                $path = 'qr_codes/'.$ticket->ticket_number.'.png';
                 Storage::disk('public')->put($path, $qrCode);
-                $ticket->qr_code = $ticket->ticket_number.'.svg';
+                $ticket->qr_code = $ticket->ticket_number.'.png';
                 $ticket->status = 'unpaid';
                 $ticket->save();
                 
@@ -123,10 +127,10 @@ class PaymentController extends Controller
             $ticket->event_id = $event->id;
             $ticket->ticket_number = Str::orderedUuid();
             //generate qr code and store it in the storage folder
-            $qrCode = QrCode::format('svg')->size(500)->generate($ticket->ticket_number);
-            $path = 'qr_codes/'.$ticket->ticket_number.'.svg';
+            $qrCode = QrCode::format('png')->size(500)->generate($ticket->ticket_number);
+            $path = 'qr_codes/'.$ticket->ticket_number.'.png';
             Storage::disk('public')->put($path, $qrCode);
-            $ticket->qr_code = $ticket->ticket_number.'.svg';
+            $ticket->qr_code = $ticket->ticket_number.'.png';
             $ticket->status = 'unpaid';
             $ticket->save();
         }
@@ -234,25 +238,41 @@ class PaymentController extends Controller
                 $t->status = 'paid';
                 $t->payment_id = $payment->id;
                 $t->save();
-
-                //send email
-                $t->sendTicket($t->email, $t->ticket_number);
+                $event = Event::find($t->event_id);
+                
+                $t->sendTicket($t->email, $t->ticket_number, $event->name);
             }
 
-            //return redirect to / with success toastr
             toastr()->success('Payment successful kindly check your email for your ticket');
             Session::flash('message', 'Purchase of ticket was successfull!');
-            // return redirect()->to('/', 200)->with('success', 'Payment successful kindly check your email for your ticket');
-            // return with status 200
-            
-            // reload the page
-            return redirect()->back();
+
+            Log::info('Mpesa Response: '.json_encode($contents));
+
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
             return response()->json($th->getMessage(), 500);
         }
     }
+    public function redirectToHome() {
+        $upcoming_event = Event::where('status', 'upcoming')->first();
 
+        if(!$upcoming_event){
+            $events = Event::all();
+        }else{
+            $events = Event::where('status', 'upcoming')->where('id', '!=', $upcoming_event->id)->orderBy('id', 'desc')->get();
+        }
+        return view('welcome', compact('upcoming_event', 'events'));
+    }
+
+    public function checkPayment($merchantRequestID){
+        $payment = Ticket::where('merchantRequestId', $merchantRequestID)->first();
+        // return response()->json($payment, 200);
+        if($payment->status == 'paid'){
+            return response()->json('success', 200);
+        }else{
+            return response()->json('unpaid', 200);
+        }
+    }
     public function autoConfirmPayment($phone, $merchantRequestId, $checkoutRequestId) {
         try {
         $transaction = MpesaTransaction::where('MSISDN', $phone)
@@ -267,7 +287,11 @@ class PaymentController extends Controller
 
     public function index(){
         $payments = Payment::all();
-        return view('payments.index', compact('payments'));
+        $total_payment = Payment::sum('TransAmount');
+        $total_transactions = Payment::count();
+        $total_successful_transactions = Payment::where('TransID','!=', null )->count();
+        $total_failed_transactions = Payment::where('TransID', null)->count();
+        return view('payments.index', compact('payments', 'total_payment', 'total_transactions', 'total_successful_transactions', 'total_failed_transactions'));
     }
     public function allPaymentsTable(){
         $payments = Payment::all();
@@ -326,7 +350,23 @@ class PaymentController extends Controller
 
     public function eventPayments($event){
         $event = Event::where('id', $event)->first();
-        return view('events.payments', compact('event'));
+        $tickets = Ticket::where('event_id', $event->id)->get();
+        $payments = $tickets->map(function($ticket) use ($event) {
+            $payment = Payment::where('merchantRequestId', $ticket->merchantRequestId)->first();
+            if($payment){
+                $payment->ticket_number = $ticket->ticket_number;
+                $payment->event_name = $event->name;
+                $payment->status = $ticket->status;
+            }
+            return $payment;
+        });
+
+        $total_payment = $payments->where('TransID','!=', null )->sum('TransAmount');
+
+        $total_transactions = $payments->count();
+        $total_successful_transactions = $payments->where('TransID','!=', null )->count();
+        $total_failed_transactions = $payments->where('TransID', null)->count();
+        return view('events.payments', compact('event', 'payments', 'total_payment', 'total_transactions', 'total_successful_transactions', 'total_failed_transactions'));
     }
 
     public function eventPaymentsTable($event){

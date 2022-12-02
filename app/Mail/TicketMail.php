@@ -14,14 +14,16 @@ class TicketMail extends Mailable
     use Queueable, SerializesModels;
     use Queueable, SerializesModels;
     public $ticket_number;
+    public $event;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($ticket_number)
+    public function __construct($ticket_number, $event)
     {
         $this->ticket_number = $ticket_number;
+        $this->event = $event;
     }
 
     /**

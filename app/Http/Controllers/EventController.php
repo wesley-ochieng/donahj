@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Validator;
 use Storage;
 use  DB;
+use App\Models\Payment;
+use App\Models\Ticket;
 use App\Models\EventPrice;
 
 class EventController extends Controller
@@ -19,7 +21,10 @@ class EventController extends Controller
     public function index()
     {
         $events = Event::orderBy('id', 'desc')->get();
-        return view('events.index', compact('events'));
+        $total_payments = Payment::sum('TransAmount');
+        $total_tickets_sold = Ticket::where('status', '!=', 'unpaid')->count();
+        $total_transactions = Payment::count();
+        return view('events.index', compact('events','total_payments', 'total_tickets_sold', 'total_transactions'));
     }
 
     /**
@@ -91,6 +96,9 @@ class EventController extends Controller
             $event_price->vvip_quantity = $request->vvip_quantity;
             $event_price->vvip_advance_price = $request->vvip_advance_price;
             $event_price->vvip_gate_price = $request->vvip_gate_price;
+            $event_price->kids_quantity = $request->kids_quantity;
+            $event_price->kids_advance_price = $request->kids_advance_price;
+            $event_price->kids_gate_price = $request->kids_gate_price;
             $event_price->save();
 
             $event->capacity = $event_price->regular_quantity + $event_price->vip_quantity + $event_price->vvip_quantity;
@@ -116,7 +124,7 @@ class EventController extends Controller
      */
     public function show(Event $event)
     {
-        return response()->json($event, 200);
+        // return view('events.show', compact('event'));
     }
 
     /**
@@ -127,7 +135,7 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
-        //
+        return view('events.edit', compact('event'));
     }
 
     /**
@@ -145,8 +153,7 @@ class EventController extends Controller
             'start_date' => 'required|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
             'start_time' => 'required',
-            'amount' => 'required|integer',
-            'capacity' => 'required|integer',
+            'poster_image' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
         if ($validator->fails()) {
@@ -159,16 +166,42 @@ class EventController extends Controller
             $start_date = date('Y-m-d', strtotime($request->start_date));
             $end_date = date('Y-m-d', strtotime($request->end_date));
 
-
+            $event = Event::find($event->id);
             $event->name = $request->name;
             $event->description = $request->description;
             $event->start_date = $start_date;
             $event->end_date = $end_date;
             $event->start_time = $request->start_time;
-            $event->amount = $request->amount;
-            //check if event is active or not based on start date if it is in the past or not
+            $event->venue = $request->venue;
+            $event->venue_latitude = $request->venue_latitude;
+            $event->venue_longitude = $request->venue_longitude;
+           
             $event->status = $start_date > date('Y-m-d') ? 'upcoming' :( $start_date == date('Y-m-d') ? 'active' : 'passed');
-            // $event->capacity = $request->capacity;
+            
+            $event->save();
+            if($request->hasFile('poster_image')){
+                $image_path = Storage::disk('public')->put('/Images/poser_image/'.$event->id, $request->poster_image);
+                $event->poster_image = $image_path;
+                $event->save();
+            }
+
+            $event_price = EventPrice::where('event_id', $event->id)->first();
+            $event_price->event_id = $event->id;
+            $event_price->regular_quantity = $request->regular_quantity;
+            $event_price->regular_advance_price = $request->regular_advance_price;
+            $event_price->regular_gate_price = $request->regular_gate_price;
+            $event_price->vip_quantity = $request->vip_quantity;
+            $event_price->vip_advance_price = $request->vip_advance_price;
+            $event_price->vip_gate_price = $request->vip_gate_price;
+            $event_price->vvip_quantity = $request->vvip_quantity;
+            $event_price->vvip_advance_price = $request->vvip_advance_price;
+            $event_price->vvip_gate_price = $request->vvip_gate_price;
+            $event_price->kids_quantity = $request->kids_quantity;
+            $event_price->kids_advance_price = $request->kids_advance_price;
+            $event_price->kids_gate_price = $request->kids_gate_price;
+            $event_price->save();
+
+            $event->capacity = $event_price->regular_quantity + $event_price->vip_quantity + $event_price->vvip_quantity;
             $event->save();
             DB::commit();
             toastr()->success('Event updated successfully');
@@ -176,6 +209,7 @@ class EventController extends Controller
 
         } catch (\Throwable $th) {
             DB::rollBack();
+            dd($th);
             toastr()->error($th->getMessage());
             return redirect()->back();
         }

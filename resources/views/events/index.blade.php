@@ -24,6 +24,49 @@
     </div>
     <!-- Container-fluid starts-->
     <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="card shadow">
+            <div class="card-header b-l-warning">
+              <h5>Total Events</h5>
+            </div>
+            <div class="card-body py-3">
+              <p class="lead fs-3 fw-bold text-warning">{{ count($events) }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow">
+            <div class="card-header b-l-success">
+              <h5>Total Amount Collected</h5>
+            </div>
+            <div class="card-body py-3">
+              <p class="lead fs-3 fw-bold text-success">KSH {{ $total_payments }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow">
+            <div class="card-header b-l-info">
+              <h5>Total Tickets</h5>
+            </div>
+            <div class="card-body py-3">
+              <p class="lead fs-3 fw-bold text-info">{{ $total_tickets_sold }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow">
+            <div class="card-header b-l-primary">
+              <h5>Total Transactions</h5>
+            </div>
+            <div class="card-body py-3">
+              <p class="lead fs-3 fw-bold text-primary">{{ $total_transactions }}</p>
+            </div>
+          </div>
+        </div>
+        
+      </div>
       <div class="row project-cards">
         <div class="col-md-12 project-list">
           <div class="card">
@@ -64,24 +107,31 @@
                             <div class="col-6 font-success">{{ $event->start_time }}</div>
                             <div class="col-6"> <span>Capacity</span></div>
                             <div class="col-6 font-success">{{$event->capacity }}</div>
+                            <div class="col-6"> <span>Regular Capacity</span></div>
+                            <div class="col-6 font-success">{{$event->eventPrice->regular_quantity }}</div>
+                            <div class="col-6"> <span>VIP Capacity</span></div>
+                            <div class="col-6 font-success">{{$event->eventPrice->vip_quantity }}</div>
+                            <div class="col-6"> <span>Kids Capacity</span></div>
+                            <div class="col-6 font-success">{{$event->eventPrice->kids_quantity }}</div>
+
                         </div>
                         <div class="project-status mt-4">
                             <div class="media mb-0">
                               <p>{{$event->ticketsSold()}} / {{ $event->capacity }} 
-                                -
-                                <small class="text-info">{{($event->ticketsSold() * 100 == 0? 0: ($event->ticketsSold() * 100)/$event->capacty )}}%</small></p>
+                                - {{ empty($event->ticketsSold()) ? 0 : round($event->ticketsSold() / $event->capacity * 100) }}% Sold</p>
                               <div class="media-body text-end"><span>Sold</span></div>
                             </div>
                             <div class="progress" style="height: 5px">
                               <div class="progress-bar-animated bg-success progress-bar-striped" role="progressbar" 
-                              style="width:{{($event->ticketsSold() * 100 == 0? 0: ($event->ticketsSold() * 100)/$event->capacty )}}%" 
+                              style="width:{{ empty($event->ticketsSold()) ? 0 : round($event->ticketsSold() / $event->capacity * 100) }}%" 
                               aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             {{-- button to show tickets --}}
                             <a href="{{ route('tickets.list', $event->id,'tickets') }}" class="btn btn-primary mt-3">Show Tickets</a>
                             {{-- button to show payments --}}
                             <a href="{{ route('payments.event', $event->id,'payments') }}" class="btn btn-secondary mt-3">Show Payments</a>
-                            {{-- button to show payments --}}
+                            <a href="{{ route('events.edit', $event->id) }}" class="btn btn-info mt-3"> <i class="fa fa-edit" aria-hidden="true"></i> Edit</a>
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#complimentary-tickets" id="{{ $event->id }}" class="btn btn-warning mt-3 create-complimentary-btn"> Create Complimentary</a>
                         </div>
                       </div>
                     </div>
@@ -96,4 +146,50 @@
     </div>
     <!-- Container-fluid Ends-->
   </div>
+  {{-- modal complimentary-tickets --}}
+  <div class="modal fade" id="complimentary-tickets" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Create Complimentary Tickets</h5>
+          <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="{{ route('tickets.complimentary') }}" method="POST" id="complimentary-ticket-form">
+            @csrf
+            <input type="hidden" name="event_id" id="event_id" value="">
+            <div class="form-group">
+              <label for="name">Organization Name</label>
+              <input type="text" name="organization_name" id="name" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" name="email" id="email" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="quantity">Quantity</label>
+              <input type="number" name="quantity" id="quantity" class="form-control">
+            </div>
+          
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" form="complimentary-ticket-form" class="btn btn-primary float-start">Create</button>
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+@endsection
+@section('scripts')
+<script>
+  $(document).ready(function(){
+    $('.create-complimentary-btn').click(function(){
+      let eventId = $(this).attr('id');
+      console.log(eventId);
+      $('#event_id').val(eventId);
+    });
+  });
+</script>
 @endsection

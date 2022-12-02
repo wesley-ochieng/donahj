@@ -27,6 +27,48 @@
     </div>
     <!-- Container-fluid starts-->
     <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3">
+          <div class="card shadow">
+            <div class="card-header b-l-success">
+              <h5>Total Payments</h5>
+            </div>
+            <div class="card-body py-3">
+              <p class="lead fs-3 fw-bold text-success"> KES {{ $total_payment }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow">
+            <div class="card-header b-l-danger">
+              <h5>Total Transactions</h5>
+            </div>
+            <div class="card-body py-3">
+              <p class="lead fs-3 fw-bold text-danger">{{ $total_transactions }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow">
+            <div class="card-header b-l-info">
+              <h5>Successful Transactions</h5>
+            </div>
+            <div class="card-body py-3">
+              <p class="lead fs-3 fw-bold text-info">{{ $total_successful_transactions }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3">
+          <div class="card shadow">
+            <div class="card-header b-l-warning">
+              <h5>Failed Transactions</h5>
+            </div>
+            <div class="card-body py-3">
+              <p class="lead fs-3 fw-bold text-warning">{{ $total_failed_transactions }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="row project-cards">
         <div class="col-sm-12">
           <div class="card shadow">

@@ -44,6 +44,23 @@
     <link id="color" rel="stylesheet" href="{{ asset('assets/css/color-1.css') }}" media="screen">
     <!-- Responsive css-->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive.css') }}">
+    <style>
+        .time {
+            border-radius: 6px
+        }
+        .comingsoon-bg-img{
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        /* media query for mobile size comingsoonbg-img */
+        @media only screen and (max-width: 767px) {
+            .media-body{
+                font-size: 9px;
+            }
+        }
+    </style>
+
 </head>
 
 <body class="landing-wrraper">
@@ -56,7 +73,25 @@
     <!-- Loader ends-->
     <!-- page-wrapper Start-->
     <div class="page-wrapper" id="pageWrapper">
-        <header class="landing-header bg-transparent">
+        {{-- promotion banner --}}
+        <div class="promotion-banner fixed-top" style="background-color: #f5d500">
+            <div class="container">
+                <div class="row">
+                    <div class="col py-2">
+                        <div class="media">
+                            <div class="media-body">
+                                <span class="mb-0">Countdown to event: </span>
+                                <span class="time digits bg-dark p-1" id="days"></span><span class="title"> Days</span>
+                                <span class="time digits bg-dark p-1" id="hours"></span><span class="title"> Hours</span>
+                                <span class="time digits bg-dark p-1" id="minutes"></span><span class="title"> Minutes</span>
+                                <span class="time digits bg-dark p-1" id="seconds"></span><span class="title"> Seconds</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <header class="landing-header bg-transparent" style="top:21px">
             <div class="custom-container">
                 <div class="row">
                     <div class="col-12">
@@ -80,49 +115,43 @@
         <!-- Page Body Start-->
         @if($upcoming_event)
         <div class="container-fluid p-0 m-0">
-          
+         
             <div class="comingsoon comingsoon-bgimg"
-                style="background-image: url('{{ asset('storage/' . $upcoming_event->poster_image) }}');background-attachment: fixed;background-position: center;background-repeat: no-repeat;background-size: cover;">
-                <div class="comingsoon-inner text-center"><a href="#"><img
-                            src="{{ asset('assets/images/cropped-Praise.png') }}" alt=""></a>
-                    <h5
-                        class="text-dark text-capitalize"style="background-color: rgba(255, 255, 255, 0.5); padding: 20px;border-radius:10px">
-                        {{ $upcoming_event->name }}
-                    </h5>
+                style="background-image: url('{{ asset('storage/' . $upcoming_event->poster_image) }}'); background-attachment: fixed;">
+                <div class="comingsoon-inner text-center" style="position: absolute; top:63vh">
+                    
                     {{-- button to open modal and buy ticket --}}
-                    <button type="button" class="btn btn-warning btn-lg" data-bs-toggle="modal"
+                    <button type="button" class="btn buy-ticket-btn btn-lg" data-bs-toggle="modal"
                         data-bs-target="#exampleModal">
                         Buy Ticket
                     </button>
-
-                    <div class="countdown" id="clockdiv">
-                        <ul>
-                            <li><span class="time digits" id="days"></span><span class="title">days</span></li>
-                            <li><span class="time digits" id="hours"></span><span class="title">Hours</span>
-                            </li>
-                            <li><span class="time digits" id="minutes"></span><span class="title">Minutes</span>
-                            </li>
-                            <li><span class="time digits" id="seconds"></span><span class="title">Seconds</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <a href="#about" class="btn btn-secondary btn-sm">
-                        About this Event
-                    </a>
+                
                 </div>
             </div>
+            <h5 class="text-dark text-capitalize text-center event-title" style=" background-color: rgba(255, 255, 255, 0.4);">
+                <a href="#about" class="btn btn-secondary btn-sm">
+                    About this Event
+                </a>
+            </h5>
            
         </div>
         <div class="container">
-            <section id="about">
+            <section id="about" class="pt-5">
                 <div class="title">
-                    <h2 class="mt-3">About this event</h2>
+                    <h2 class="mt-5">About this event</h2>
                 </div>
                 <hr>
                 <div class="card card-absolute my-3 shadow">
                     <div class="card-header bg-primary">
-                        <h5 class="text-white">{{ $upcoming_event->name }}</h5>
+                        <button type="button" class="btn btn-primary btn-sm float-end" data-bs-toggle="modal"
+                        data-bs-target="#exampleModal">
+                        Buy Ticket
+                    </button>
+                       
                     </div>
+                    <button type="button" class="btn btn-light btn-lg float-end" >
+                        {{ $upcoming_event->name }}
+                    </button>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-sm-6">
@@ -159,6 +188,17 @@
                                     </strong>
                                     <small class="text-muted"><em>(advanced)</em></small>
                                     {{ $upcoming_event->eventPrice->vvip_gate_price  }}  KSH
+                                    <small class="text-muted"><em>(at the gate)</em></small>
+                                </p>
+                                @endif
+                                @if($upcoming_event->eventPrice->kids_advance_price )
+                                <p class="text-info"> 
+                                    <span class="text-muted" >Kids-price <em class="text-dark small">(12 years and below): </em> </span>
+                                    <strong>
+                                    {{ $upcoming_event->eventPrice->kids_advance_price  }}  KSH 
+                                    </strong>
+                                    <small class="text-muted"><em>(advanced)</em></small>
+                                    {{ $upcoming_event->eventPrice->kids_gate_price  }}  KSH
                                     <small class="text-muted"><em>(at the gate)</em></small>
                                 </p>
                                 @endif
@@ -267,6 +307,10 @@
                                 @if($upcoming_event->eventPrice->vvip_advance_price)
                                 <option value="vvip">VVIP</option>
                                 @endif
+                                @if($upcoming_event->eventPrice->kids_advance_price)
+                                <option value="kids">Kids <em>(12 years and below)</em></option>
+                                @endif
+                        
                             </select>
                         </div>
                         <div class="form-group">
@@ -365,6 +409,8 @@
                 totalAmount = {{ $upcoming_event->eventPrice->vip_advance_price ?  $upcoming_event->eventPrice->vip_advance_price:0}} * quantity;
             } else if(ticketType == 'vvip') {
                 totalAmount = {{ $upcoming_event->eventPrice->vvip_advance_price ? $upcoming_event->eventPrice->vvip_advance_price:0 }} * quantity;
+            }  else if(ticketType == 'kids') {
+                totalAmount = {{ $upcoming_event->eventPrice->kids_advance_price ? $upcoming_event->eventPrice->kids_advance_price:0 }} * quantity;
             }
             $('#totalAmount').text(totalAmount);
         });
@@ -378,6 +424,8 @@
                 totalAmount = {{ $upcoming_event->eventPrice->vip_advance_price ?  $upcoming_event->eventPrice->vip_advance_price:0}} * quantity;
             } else if(ticketType == 'vvip') {
                 totalAmount = {{ $upcoming_event->eventPrice->vvip_advance_price ? $upcoming_event->eventPrice->vvip_advance_price:0 }} * quantity;
+            } else if( ticketType == 'kids') {
+                totalAmount = {{ $upcoming_event->eventPrice->kids_advance_price ? $upcoming_event->eventPrice->kids_advance_price:0 }} * quantity;
             }
             $('#totalAmount').text(totalAmount);
         });
@@ -395,6 +443,7 @@
                 var phone = $('#phone').val();
                 var ticket_type = $('#ticket-type').val();
                 var _token = $("input[name=_token]").val();
+                var merchantRequestID =0;
                 if($('#name').val() == '' || $('#email').val() == '' || $('#quantity').val() == '' || $('#phone').val() == ''||  $('#ticket-type').val() == ''){
                   swal("Error", "All fields are required", "error");
                   $('#submit-form-btn').after('<div class="alert alert-danger alert-dismissible fade show" role="alert">All fields are required <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
@@ -415,12 +464,13 @@
                       },
                       success: function(response) {
                           if (response.ResponseCode == 0) {
-                              //close exampleModal
+                           
+                                merchantRequestID = response.MerchantRequestID; 
                               $('#exampleModal').modal('hide');
                               swal({
                                   title: "Check Your phone and Enter Mpesa Pin",
                                   text: "Initiating Payment, Please dont close this window",
-                                  icon: "info",
+                                  icon: "https://media.giphy.com/media/swhRkVYLJDrCE/giphy.gif",
                                   buttons: false,
                                   closeOnClickOutside: false,
                                   closeOnEsc: false,
@@ -428,6 +478,38 @@
                                       swal.showLoading();
                                   }
                               });
+
+                              var checkPaymentStatus = setInterval(function() {
+                                    console.log(merchantRequestID);
+
+                                    $.ajax({
+                                        url: "{{ route('payments.check','') }}"+"/"+merchantRequestID,
+                                        type: "POST",
+                                        data: {
+                                            _token: _token
+                                        },
+                                        success: function(response) {
+                                            console.log(response)
+                                            if (response == 'success') {
+                                                swal({
+                                                    title: "Thank You",
+                                                    text: "Payment Successful. Check your email for the ticket",
+                                                    // check email
+
+                                                    icon: "success",
+                                                    button: "Ok",
+                                                    closeOnClickOutside: true,
+                                                    closeOnEsc: true,
+                                                    backdrop: false,
+                                                }).then(function() {
+                                                    location.reload();
+                                                });
+                                                clearInterval(checkPaymentStatus);
+
+                                            } 
+                                        }
+                                    });
+                                }, 5000);
                           } else {
                               swal("Error", "Ticket not bought", "error");
                           }

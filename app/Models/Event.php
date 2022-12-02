@@ -35,6 +35,10 @@ class Event extends Model
         return $this->hasMany(EventPrice::class);
     }
 
+    public function complimentaryTickets()
+    {
+        return $this->hasMany(ComplimentaryTicket::class);
+    }
 
 
 }

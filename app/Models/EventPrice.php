@@ -20,6 +20,9 @@ class EventPrice extends Model
         'vvip_quantity',
         'vvip_advance_price',
         'vvip_gate_price',
+        'kids_quantity',
+        'kids_advance_price',
+        'kids_gate_price',
     ];
 
     public function event()
@@ -30,7 +33,7 @@ class EventPrice extends Model
     // total tickets 
     public function totalTickets()
     {
-        return $this->regular_quantity + $this->vip_quantity + $this->vvip_quantity;
+        return $this->regular_quantity + $this->vip_quantity + $this->vvip_quantity + $this->kids_quantity;
     }
 
 }

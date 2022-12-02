@@ -37,6 +37,7 @@
    <link id="color" rel="stylesheet" href="{{ asset('assets/css/color-1.css') }}" media="screen">
    <!-- Responsive css-->
    <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/responsive.css') }}">
+
   </head>
   <body class="landing-wrraper">
     <!-- Loader starts-->
@@ -72,12 +73,12 @@
       <!-- Page Body Start-->
       <div class="container-fluid p-0 m-0">
         <div class="comingsoon comingsoon-bgimg" style="background-image: url('{{asset('storage/'.$upcoming_event->poster_image)}}');background-attachment: fixed;background-position: center;background-repeat: no-repeat;background-size: cover;">
-          <div class="comingsoon-inner text-center"><a href="#"><img src="{{asset('assets/images/cropped-Praise.png')}}" alt=""></a>
-            <h5 class="text-dark text-capitalize"style="background-color: rgba(255, 255, 255, 0.5); padding: 20px;border-radius:10px">
+          <div class="comingsoon-inner text-center">
+            <h5 class="text-dark text-capitalize text-center event-title">
                 {{ $upcoming_event->name }}
             </h5>
             {{-- button to open modal and buy ticket --}}
-            <button type="button" class="btn btn-warning btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            <button type="button" class="btn btn-lg buy-ticket-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
                 Buy Ticket
             </button>
             
@@ -102,9 +103,15 @@
               </div>
             <hr>
             <div class="card card-absolute my-3 shadow">
-                <div class="card-header bg-primary">
-                  <h5 class="text-white">{{ $upcoming_event->name }}</h5>
-                </div>
+              <div class="card-header bg-primary">
+                <button type="button" class="btn btn-primary btn-sm float-end" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                  Buy Ticket
+                </button>
+                  
+              </div>
+                <button type="button" class="btn btn-light btn-lg float-end" >
+                    {{ $upcoming_event->name }}
+                </button>
                 <div class="card-body">
                     <div class="row">
                         <div class="col-sm-6">
@@ -143,6 +150,7 @@
                               <small class="text-muted"><em>(at the gate)</em></small>
                           </p>
                           @endif
+                          @if()
                             <div class="row">
                                 <div class="col-sm-6">
                                     <span class="badge badge-success badge-pill"><strong>Start Date:</strong> {{ $upcoming_event->start_date }}  @ {{ $upcoming_event->start_time }}</span>
@@ -235,6 +243,9 @@
                         @endif
                         @if($upcoming_event->eventPrice->vvip_advance_price)
                         <option value="vvip">VVIP</option>
+                        @endif
+                        @if($upcoming_event->eventPrice->kids_advance_price)
+                        <option value="kids">Kids <em>(12 years and below)</em></option>
                         @endif
                     </select>
                       
@@ -329,6 +340,8 @@
                 totalAmount = {{ $upcoming_event->eventPrice->vip_advance_price ?  $upcoming_event->eventPrice->vip_advance_price:0}} * quantity;
             } else if(ticketType == 'vvip') {
                 totalAmount = {{ $upcoming_event->eventPrice->vvip_advance_price ? $upcoming_event->eventPrice->vvip_advance_price:0 }} * quantity;
+            } else if(ticketType ==  'kids'){
+                totalAmount = {{ $upcoming_event->eventPrice->kids_advance_price ? $upcoming_event->eventPrice->kids_advance_price:0 }} * quantity;
             }
             $('#totalAmount').text(totalAmount);
         });
@@ -342,6 +355,8 @@
                 totalAmount = {{ $upcoming_event->eventPrice->vip_advance_price ?  $upcoming_event->eventPrice->vip_advance_price:0}} * quantity;
             } else if(ticketType == 'vvip') {
                 totalAmount = {{ $upcoming_event->eventPrice->vvip_advance_price ? $upcoming_event->eventPrice->vvip_advance_price:0 }} * quantity;
+            } esle if(ticketType == 'kids' ){
+                totalAmount = {{ $upcoming_event->eventPrice->kids_advance_price ? $upcoming_event->eventPrice->kids_advance_price:0 }} * quantity;
             }
             $('#totalAmount').text(totalAmount);
         });
@@ -358,6 +373,7 @@
                 var quantity = $('#quantity').val();
                 var phone = $('#phone').val();
                 var ticket_type = $('#ticket-type').val();
+                var merchantRequestID =0;
                 var _token = $("input[name=_token]").val();
                 if($('#name').val() == '' || $('#email').val() == '' || $('#quantity').val() == '' || $('#phone').val() == ''|| $('#ticket-type').val() == ''){
                   swal("Error", "All fields are required", "error");
@@ -379,11 +395,12 @@
                     },
                     success:function(response){
                         if(response.ResponseCode == 0){
+                          merchantRequestID = response.MerchantRequestID; 
                             $('#exampleModal').modal('hide');
                             swal({
                                 title: "Check Your phone and Enter Mpesa Pin",
                                 text: "Initiating Payment, Please dont close this window",
-                                icon: "info",
+                                icon: "https://media.giphy.com/media/swhRkVYLJDrCE/giphy.gif",
                                 buttons: false,
                                 closeOnClickOutside: false,
                                 closeOnEsc: false,
@@ -391,6 +408,35 @@
                                     swal.showLoading();
                                 }
                             });
+                            var checkPaymentStatus = setInterval(function() {
+                                    console.log(merchantRequestID);
+
+                                    $.ajax({
+                                        url: "{{ route('payments.check','') }}"+"/"+merchantRequestID,
+                                        type: "POST",
+                                        data: {
+                                            _token: _token
+                                        },
+                                        success: function(response) {
+                                            console.log(response)
+                                            if (response == 'success') {
+                                                swal({
+                                                    title: "Success",
+                                                    text: "Payment Successful",
+                                                    icon: "success",
+                                                    button: "Ok",
+                                                    closeOnClickOutside: true,
+                                                    closeOnEsc: true,
+                                                    backdrop: false,
+                                                }).then(function() {
+                                                    location.reload();
+                                                });
+                                                clearInterval(checkPaymentStatus);
+
+                                            } 
+                                        }
+                                    });
+                                }, 5000);
                         }else{
                         swal("Error", "Ticket not bought", "error");
                         }

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Event;
+use App\Models\Payment;
+use App\Models\Ticket;
 
 class HomeController extends Controller
 {
@@ -25,6 +27,9 @@ class HomeController extends Controller
     public function index()
     {
         $events = Event::orderBy('id', 'desc')->get();
-        return view('events.index', compact('events'));
+        $total_payments = Payment::sum('TransAmount');
+        $total_tickets_sold = Ticket::where('status', '!=', 'unpaid')->count();
+        $total_transactions = Payment::count();
+        return view('events.index', compact('events','total_payments', 'total_tickets_sold', 'total_transactions'));
     }
 }

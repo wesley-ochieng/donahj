@@ -19,7 +19,6 @@
 
     <!-- Begin page -->
     <div id="layout-wrapper">
-
         <!-- Vertical Overlay-->
         <div class="vertical-overlay"></div>
 
@@ -59,9 +58,21 @@
                                                                 <td class="content-block" style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0; padding-top: 15px" valign="top">
                                                                     <div style="display: flex; align-items: center;">
                                                                         <div style="margin-left: 8px;">
+                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">You have successfully purchased a ticket for {{ $event }}:</p>
                                                                             <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">Here is your QRCode:</p>
                                                                             <!-- get the ticket image from storage based on the ticket number-->
-                                                                            <img src="{{ asset('storage/qr_codes/'.$ticket_number.'.svg') }}" alt="" height="100">
+                                                                            <img src="{{ asset('storage/qr_codes/'.$ticket_number.'.png') }}" alt="" height="100">
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: 14px; margin: 0; border-top: 1px solid #e9ebec;">
+                                                                <td class="content-block" style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0; padding-top: 15px" valign="top">
+                                                                    <div style="display: flex; align-items: center;">
+                                                                        <div style="margin-left: 8px;">
+                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">Ensure you present this QRCode at the gate.</p>
+                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">Thank You.</p>
+                                                                            <p style="font-family: 'Roboto', sans-serif; font-size: 14px;color: #98a6ad; margin: 0px;"> @ 2022 Praise Atmosphere</p>
                                                                         </div>
                                                                     </div>
                                                                 </td>
@@ -70,9 +81,6 @@
                                                     </td>
                                                 </tr>
                                             </table>
-                                            <div style="text-align: center; margin: 0px auto;">
-                                                <p style="font-family: 'Roboto', sans-serif; font-size: 14px;color: #98a6ad; margin: 0px;">2022 Tickets</p>
-                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -82,7 +90,6 @@
                         <!--end col-->
                     </div><!-- end row -->
                     <!-- end row -->
-
                 </div>
                 <!-- container-fluid -->
             </div>
