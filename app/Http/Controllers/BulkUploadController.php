@@ -8,8 +8,12 @@ use Str;
 
 class BulkUploadController extends Controller
 {
+    public function index(Request $request) {
+        $payments = BulkUpload::where('event_id', $request->event_id)->get();
+        return response()->json(['payments' => $payments], 200);
+    }
     // create a bulk upload from excel file
-    public function bulkUpload(Request $request)
+    public function bulkUpload(Request $request, $id)
     {
         try {
             if ($request->file) {
@@ -58,13 +62,14 @@ class BulkUploadController extends Controller
                         fclose($file);
                         foreach ($importData_arr as $importData) {
                             $transaction['payment_code'] = $importData[0];
-                            $transaction['inititation_time'] = $importData[1];
+                            $transaction['initiation_time'] = $importData[1];
                             $transaction['details'] = $importData[2];
                             $transaction['transaction_status'] = $importData[3];
-                            $transaction['transaction_amount'] = $importData[4];
+                            $transaction['amount'] = $importData[4];
                             $transaction['other_party'] = $importData[8];
                             $transaction['status'] = 'paid';
                             $transaction['ticket_number'] = Str::orderedUuid();
+                            $transaction['event_id'] = $id;
                             // check if the transaction exists
                             $transactionExists = BulkUpload::where('payment_code', $transaction['payment_code'])->first();
 

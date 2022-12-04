@@ -35,4 +35,5 @@ Route::post('tickets/confirm', [TicketController::class, 'updateStatus']);
 // bulk upload
 // Route::post('events/{event}/payments', [TicketController::class, 'storeBulk']);
 Route::post('events/{event}/payments', [BulkUploadController::class, 'bulkUpload']);
-Route::post('payment/{code}', [TicketController::class, 'confirmPayment']);
+Route::post('bulk-payments', [BulkUploadController::class, 'index']);
+Route::post('payment/confirm', [TicketController::class, 'confirmPayment']);

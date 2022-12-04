@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('bulk_uploads', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('event_id');
+            $table->foreign('event_id')->references('id')->on('events');
             $table->string('ticket_number')->nullable();
             $table->string('payment_code')->nullable();
             $table->string('initiation_time')->nullable();

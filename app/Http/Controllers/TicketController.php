@@ -111,6 +111,7 @@ class TicketController extends Controller
 
         //check if the ticket exists
         $ticket = Ticket::where('ticket_number', $request->ticket_number)->first();
+        $complementary_ticket = ComplimentaryTicket::where('ticket_number', $request->ticket_number)->first();
         if($ticket){
             //check if the ticket has been used
             if($ticket->status == 'used'){
@@ -124,7 +125,21 @@ class TicketController extends Controller
             $ticket->status = 'used';
             $ticket->save();
             return response()->json(['message' => 'Ticket status updated successfully'], 200);
+        } else if ($complementary_ticket) {
+            //check if the ticket has been used
+            if($complementary_ticket->status == 'used'){
+                return response()->json(['message' => 'Ticket has already been used'], 400);
+            }
+            //check if the ticket is unpaid
+            if($complementary_ticket->status == 'unpaid'){
+                return response()->json(['message' => 'Ticket is unpaid'], 400);
+            }
+            //update the ticket status
+            $complementary_ticket->status = 'used';
+            $complementary_ticket->save();
+            return response()->json(['message' => 'Ticket status updated successfully'], 200);
         }
+
         return response()->json(['message' => 'Ticket does not exist'], 400);
 
         // return redirect()->route('tickets.index')->with('success', 'Ticket status updated successfully');
@@ -220,32 +235,30 @@ class TicketController extends Controller
         }
     }
 
-    public function confirmPayment ($code) {
+    public function confirmPayment (Request $request) {
+        $validator = Validator::make($request->all(), [
+            'ticket_number' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first()], 422);
+        }
         // check if the payment code exists
-        $payment = BulkUpload::where('payment_code', $code)->first();
+        $payment = BulkUpload::where('ticket_number', $request->ticket_number)->first();
 
         // check if the payment does not exist
         if (!$payment) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Payment code does not exist'
-            ]);
+            return response()->json(['message' => 'Ticket does not exist'], 400);
         }
 
         // check if the payment code has been used
         if ($payment->status == 'used') {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Payment code has already been used'
-            ]);
+            return response()->json(['message' => 'Ticket has already been used'], 400);
         }
         // update the payment code
         $payment->status = 'used';
         $payment->save();
 
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Payment code confirmed successfully'
-        ]);
+        return response()->json(['message' => 'Ticket status updated successfully'], 200);
     }
 }

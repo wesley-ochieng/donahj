@@ -10,6 +10,7 @@ class BulkUpload extends Model
     use HasFactory;
 
     protected $fillable = [
+        'event_id',
         'ticket_number',
         'payment_code',
         'initiation_time',
