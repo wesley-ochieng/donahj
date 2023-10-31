@@ -150,7 +150,6 @@
                               <small class="text-muted"><em>(at the gate)</em></small>
                           </p>
                           @endif
-                          @if()
                             <div class="row">
                                 <div class="col-sm-6">
                                     <span class="badge badge-success badge-pill"><strong>Start Date:</strong> {{ $upcoming_event->start_date }}  @ {{ $upcoming_event->start_time }}</span>

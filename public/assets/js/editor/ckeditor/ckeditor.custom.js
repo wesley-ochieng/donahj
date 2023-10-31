@@ -3,12 +3,12 @@ CKEDITOR.replace( 'editor1', {
     // toolbar mini
     toolbar: [
         [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat' ],
-        [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ],
-        [ 'Link', 'Unlink', 'Anchor' ],
-        [ 'Table', 'HorizontalRule', 'SpecialChar' ],
+        [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ],
+        [ 'Link', 'Unlink' ],
+        [ 'Table' ],
         [ 'Styles', 'Format', 'Font', 'FontSize' ],
-        [ 'TextColor', 'BGColor' ],
-        [ 'Maximize', 'ShowBlocks' ]
+        [ 'TextColor', 'BGColor'],
+        [ 'Maximize']
     ],
     on: {
         contentDom: function( evt ) {

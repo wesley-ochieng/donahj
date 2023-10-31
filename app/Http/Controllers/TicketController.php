@@ -12,6 +12,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Models\ComplimentaryTicket;
 use Str;
 use Storage;
+use DB;
 
 class TicketController extends Controller
 {
@@ -129,7 +130,7 @@ class TicketController extends Controller
     public function eventPayments(Request $request){
         $event = Event::find($request->event_id);
         $tickets = Ticket::where('event_id', $event->id)
-        ->where('status', 'paid')
+        ->where('status', 'paid')->take(5)
         ->get();
         $payments = $tickets->map(function($ticket) use ($event) {
             $payment = Payment::where('merchantRequestId', $ticket->merchantRequestId)
@@ -201,5 +202,51 @@ class TicketController extends Controller
         }
         toastr()->success('Ticket generated successfully');
         return redirect()->back()->with('success', 'Ticket generated successfully');
+    }
+
+    public function searchPayment(Request $request) {
+
+        $event = Event::find($request->event_id);
+        $payments = Payment::where('TransID', 'like', '%' . $request->ticket_number . '%')->take(5)->get();
+
+        if ($payments->isNotEmpty()) {
+            foreach ($payments as $key => $payment) {
+                $ticket = $payment->ticket; // Assuming you have a 'ticket' relationship defined in the Payment model
+                if ($ticket) {
+                    $payment->ticket_number = $ticket->ticket_number;
+                    $payment->event_name = $event->name;
+                    $payment->status = $ticket->status;
+                    $payment->TransID = $payment->TransID;
+                }
+                // Optionally, you can unset the original 'ticket' relationship to avoid confusion
+                unset($payment->ticket);
+            }
+        }
+
+
+
+        return response()->json(['payments' => $payments], 200);
+    }
+
+    public function getDashboard(Request $request){
+        // return response()->json("test",  200);
+        $total_tickets = Ticket::where('event_id',$request->event_id)->count();
+        $total_paid_tickets = Ticket::where('status', 'paid')->where('event_id',$request->event_id)->count();
+        $total_unpaid_tickets = Ticket::where('status', 'unpaid')->where('event_id',$request->event_id)->count();
+        $total_active_tickets = Ticket::where('status', 'active')->where('event_id',$request->event_id)->count();
+        $total_used_tickets = Ticket::where('status', 'used')->where('event_id',$request->event_id)->count();
+        //where not in unpaid active and used
+        $total_events = Event::count();
+        $total_payments = Payment::count();
+        //return json response
+        return response()->json([
+            'total_tickets' => $total_tickets,
+            'total_paid_tickets' => $total_paid_tickets,
+            'total_unpaid_tickets' => $total_unpaid_tickets,
+            'total_active_tickets' => $total_active_tickets,
+            'total_used_tickets' => $total_used_tickets,
+            'total_events' => $total_events,
+            'total_payments' => $total_payments,
+        ], 200);
     }
 }

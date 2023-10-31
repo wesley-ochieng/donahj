@@ -16,7 +16,7 @@ class Payment extends Model
 
     public function ticket()
     {
-        return $this->belongsTo(Ticket::class);
+        return $this->belongsTo(Ticket::class, 'merchantRequestId', 'merchantRequestId');
     }
     public function getTicket($payment_id)
     {

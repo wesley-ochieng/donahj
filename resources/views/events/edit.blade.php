@@ -42,12 +42,23 @@
                         @csrf
                         @method('PUT')
                         <div class="row">
-                            <div class="col">
-                            <div class="mb-3">
-                                <label for="event-name" >Event Name:</label>
-                                <input type="text" class="form-control" id="event-name" name="name" value="{{ $event->name }}" placeholder="Event Name" required>
-                                <div class="invalid-feedback">Please provide a valid city.</div>
+                            <div class="col sm-9">
+                                <div class="mb-3">
+                                    <label for="event-name" >Event Name:</label>
+                                    <input type="text" class="form-control" id="event-name" name="name" value="{{ $event->name }}" placeholder="Event Name" required>
+                                    <div class="invalid-feedback">Please provide a valid city.</div>
+                                </div>
                             </div>
+                            <div class="col-sm-3">
+                                <div class="mb-3">
+                                    <label for="status">Status</label>
+                                    <select name="status" id="status" class="form-select input-air-primary">
+                                        <option value="" selected>Select Status</option>
+                                        <option value="active" {{ $event->status == 'active'? 'selected':'' }}> Active</option>
+                                        <option value="upcoming" {{ $event->status == 'upcoming'? 'selected':'' }}>Upcoming</option>
+                                        <option value="passed" {{ $event->status == 'passed'? 'selected':'' }}>Passed</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="row">

@@ -30,3 +30,6 @@ Route::post('mpesa/callback', [PaymentController::class, 'MpesaResponse']);
 //confirming the ticket is valid
 Route::post('payments', [TicketController::class, 'eventPayments']);
 Route::post('tickets/confirm', [TicketController::class, 'updateStatus']);
+
+Route::post('search-payment',[TicketController::class,'searchPayment']);
+Route::post('tickets-dashboard',[TicketController::class, 'getDashboard']);

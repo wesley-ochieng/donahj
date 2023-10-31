@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TicketController; 
+use App\Http\Controllers\FoundationController;
+use App\Http\Controllers\C2bController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -21,6 +24,15 @@ Route::get('/', [App\Http\Controllers\FrontEndController::class, 'home'])->name(
 Route::get('/praise-atmosphere/events/{event}',[App\Http\Controllers\FrontEndController::class, 'homeEvent'] )->name('home-event');
 
 Auth::routes(['register' => false]);
+
+Route::group(['prefix' => 'praise'], function($route){
+
+    Route::post ('password/generate', [C2bController::class, 'mpesaPassword']);
+    Route::post('access/token', [C2bController::class, 'mpesaAccessToken']);
+    Route::post ('validation', [C2bController::class, 'mpesaValidation']);
+    Route::post ('payment/confirmation', [C2bController::class, 'mpesaConfirmation']);
+    Route::get ('register/urls', [C2bController::class, 'mpesaRegisterUrls']);
+});
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
@@ -57,3 +69,32 @@ Route::get('run-migrations',function(){
     Artisan::call('migrate');
     return "Migrations run successfully";
 });
+Route::get('clear-cache',function(){
+    Artisan::call('cache:clear');
+    Artisan::call('config:clear');
+    return "Cache cleared successfully";
+});
+
+Route::get('create-storage',function(){
+    try {
+        //code...
+        Artisan::call('storage:link');
+    return "Storage created successfully";
+    } catch (\Throwable $th) {
+        //throw $th;
+        dd($th);
+    }
+    
+});
+
+
+//foundation
+Route::get('/foundation', [App\Http\Controllers\FoundationController::class, 'index'])->name('foundation');
+Route::post('/create-foundation',[App\Http\Controllers\FoundationController::class, 'store'])->name('create-foundation');
+// route('foundation.pay', $foundation->id)
+Route::get('/foundation/{foundation}/pay', [App\Http\Controllers\FoundationController::class, 'showPage'])->name('foundation.pay');
+// // edit-foundation
+Route::get('/edit-foundation/{foundation}', [App\Http\Controllers\FoundationController::class, 'edit'])->name('edit-foundation');
+
+// //update-foundation;
+Route::put('/update-foundation/{foundation}', [App\Http\Controllers\FoundationController::class, 'update'])->name('update-foundation');

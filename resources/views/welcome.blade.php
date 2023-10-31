@@ -271,10 +271,12 @@
     @if($upcoming_event)
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog flipInX  animated" role="document">
+        <div class="modal-dialog flipInX  animated modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Buy Ticket for - {{ $upcoming_event->name }}</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">
+                         <img src="{{ asset('assets/images/cropped-Praise.png') }}" alt="" style="max-width:81px;"> 
+                         Get Ticket for - {{ $upcoming_event->name }}</h5>
                     <button type="button" class="btn btn-light" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -297,20 +299,19 @@
                         <div class="form-group">
                             <label for="ticket-type">Ticket Type</label>
                             <select class="form-select input-air-primary" name="ticket_type" id="ticket-type">
-                                <option value="" selected disabled>Select ticket type</option>
-                                @if($upcoming_event->eventPrice->regular_advance_price)
-                                <option value="regular">Regular</option>
+                                <option value="" selected disabled>Select ticket type </option>
+                                @if($upcoming_event->eventPrice->regular_advance_price !== null && $upcoming_event->eventPrice->regular_advance_price >= 0)
+                                    <option value="regular">Regular</option>
                                 @endif
                                 @if($upcoming_event->eventPrice->vip_advance_price)
-                                <option value="vip">VIP</option>
+                                    <option value="vip">VIP</option>
                                 @endif
                                 @if($upcoming_event->eventPrice->vvip_advance_price)
-                                <option value="vvip">VVIP</option>
+                                    <option value="vvip">VVIP</option>
                                 @endif
-                                @if($upcoming_event->eventPrice->kids_advance_price)
-                                <option value="kids">Kids <em>(12 years and below)</em></option>
+                                @if($upcoming_event->eventPrice->kids_advance_price !== null && $upcoming_event->eventPrice->kids_advance_price >= 0)
+                                    <option value="kids">Kids <em>(Between 3 and 12 Years)</em></option>
                                 @endif
-                        
                             </select>
                         </div>
                         <div class="form-group">
@@ -322,9 +323,9 @@
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone Number <em>07xxxxxxxx</em></label>
-                            <input type="text" name="phone" id="phone"
+                            <input type="number" name="phone" id="phone"
                                 class="form-control input-air-primary" placeholder="Enter phone number" maxlength="10"
-                                aria-describedby="helpId">
+                                aria-describedby="helpId" oninput="limitNumberLength(this, 10)">
                         </div>
                         <div class="form-group">
                             <button type="button" id="buy-ticket-btn" class="btn btn-primary">Buy</button>
@@ -396,7 +397,12 @@
                     icon: "success",
                     button: "Ok",
                 });
-            }   
+            } 
+            function limitNumberLength(input, maxLength) {
+                if (input.value.length > maxLength) {
+                    input.value = input.value.slice(0, maxLength); // Truncate input to the maximum length.
+                }
+            }  
     </script>
     <script>
         $('#ticket-type').on('change', function() {
@@ -442,11 +448,35 @@
                 var quantity = $('#quantity').val();
                 var phone = $('#phone').val();
                 var ticket_type = $('#ticket-type').val();
+                console.log($('#ticket-type').val())
                 var _token = $("input[name=_token]").val();
                 var merchantRequestID =0;
-                if($('#name').val() == '' || $('#email').val() == '' || $('#quantity').val() == '' || $('#phone').val() == ''||  $('#ticket-type').val() == ''){
-                  swal("Error", "All fields are required", "error");
-                  $('#submit-form-btn').after('<div class="alert alert-danger alert-dismissible fade show" role="alert">All fields are required <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
+                var missingFields = [];
+
+                if ($('#name').val() == '') {
+                    missingFields.push('Name');
+                }
+
+                if ($('#email').val() == '') {
+                    missingFields.push('Email');
+                }
+
+                if ($('#quantity').val() == '') {
+                    missingFields.push('Quantity');
+                }
+
+                if ($('#phone').val() == '') {
+                    missingFields.push('Phone');
+                }
+
+                if ($('#ticket-type').val() == '' || $('#ticket-type').val() == null) {
+                    missingFields.push('Ticket Type');
+                }
+
+                if (missingFields.length > 0) {
+                    var missingFieldsMessage = 'The following fields are required: ' + missingFields.join(', ');
+                    swal("Error", missingFieldsMessage, "error");
+                    $('#submit-form-btn').after('<div class="alert alert-danger alert-dismissible fade show" role="alert">' + missingFieldsMessage + ' <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>');
                 }else{
                   $('#buy-ticket-btn').attr('disabled', true);
                   $('#buy-ticket-btn').html('');
@@ -511,9 +541,20 @@
                                     });
                                 }, 5000);
                           } else {
-                              swal("Error", "Ticket not bought", "error");
+                              swal("Error", "There was an error getting the ticket", "error");
+                              $('#buy-ticket-btn').attr('disabled', false);
+                            $('#buy-ticket-btn').html('');
+                            $('#buy-ticket-btn').append('Buy Ticket');
                           }
                       },
+                    error: function(error) {
+                        console.log(error);
+                        swal("Error", "There was an error getting the ticket", "error");
+                        // button remove disabled
+                        $('#buy-ticket-btn').attr('disabled', false);
+                        $('#buy-ticket-btn').html('');
+                        $('#buy-ticket-btn').append('Buy Ticket');
+                    }
                   });
               }
             });

@@ -99,6 +99,10 @@ class EventController extends Controller
             $event_price->kids_quantity = $request->kids_quantity;
             $event_price->kids_advance_price = $request->kids_advance_price;
             $event_price->kids_gate_price = $request->kids_gate_price;
+            $event_price->regular_end_date = $request->regular_end_date;
+            $event_price->vip_end_date = $request->vip_end_date;
+            $event_price->vvip_end_date = $request->vvip_end_date;
+            $event_price->kids_end_date = $request->kids_end_date;
             $event_price->save();
 
             $event->capacity = $event_price->regular_quantity + $event_price->vip_quantity + $event_price->vvip_quantity;
@@ -108,7 +112,7 @@ class EventController extends Controller
             return redirect()->route('events.list');
         } catch (\Throwable $th) {
             DB::rollBack();
-            dd($th);
+            dd($th->getMessage());
             toastr()->error($th->getMessage());
             return redirect()->back();
         }
@@ -147,17 +151,22 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
+        // dd($event);
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'description' => 'required',
             'start_date' => 'required|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
             'start_time' => 'required',
-            'poster_image' => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'poster_image' => 'image|mimes:jpeg,png,jpg,gif,svg,webp',
+            'status'=>'required'
         ]);
 
         if ($validator->fails()) {
-            toastr()->warning('Event not updated');
+           //loop through errors
+            foreach ($validator->errors()->all() as $error) {
+                toastr()->error($error);
+            }
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
@@ -175,6 +184,7 @@ class EventController extends Controller
             $event->venue = $request->venue;
             $event->venue_latitude = $request->venue_latitude;
             $event->venue_longitude = $request->venue_longitude;
+            $event->status = $request->status;
            
             $event->status = $start_date > date('Y-m-d') ? 'upcoming' :( $start_date == date('Y-m-d') ? 'active' : 'passed');
             
@@ -199,6 +209,10 @@ class EventController extends Controller
             $event_price->kids_quantity = $request->kids_quantity;
             $event_price->kids_advance_price = $request->kids_advance_price;
             $event_price->kids_gate_price = $request->kids_gate_price;
+            $event_price->regular_end_date = $request->regular_end_date;
+            $event_price->vip_end_date = $request->vip_end_date;
+            $event_price->vvip_end_date = $request->vvip_end_date;
+            $event_price->kids_end_date = $request->kids_end_date;
             $event_price->save();
 
             $event->capacity = $event_price->regular_quantity + $event_price->vip_quantity + $event_price->vvip_quantity;
@@ -209,7 +223,6 @@ class EventController extends Controller
 
         } catch (\Throwable $th) {
             DB::rollBack();
-            dd($th);
             toastr()->error($th->getMessage());
             return redirect()->back();
         }

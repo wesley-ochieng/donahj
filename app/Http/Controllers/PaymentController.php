@@ -75,16 +75,43 @@ class PaymentController extends Controller
 
         $eventprice = EventPrice::where('event_id', $event->id)->first();
         //check the price of the particular ticket type
+        function isDateInPast($date) {
+            $parsedDate = Carbon::createFromFormat('m/d/Y', $date);
+            
+        
+            return $parsedDate->isPast();
+        }
         if($request->ticket_type == 'regular') {
-            $amount = $eventprice->regular_advance_price;
+            //check if the $eventprice->regular_end_date is less than todays date
+            if (isDateInPast($eventprice->regular_end_date)) {
+               $amount= $eventprice->regular_gate_price;
+            }else{
+                $amount = $eventprice->regular_advance_price;
+            }
         } else if($request->ticket_type == 'vip') {
-            $amount = $eventprice->vip_advance_price;
+            if (isDateInPast($eventprice->vip_end_date )) {
+                $amount = $eventprice->vip_gate_price;
+            }else{
+                $amount = $eventprice->vip_advance_price;
+            }
         } else if($request->ticket_type == 'vvip') {
-            $amount = $eventprice->vvip_advance_price;
+            if (isDateInPast($eventprice->vvip_end_date )) {
+                $amount = $eventprice->vvip_gate_price;
+            }else{
+                $amount = $eventprice->vvip_advance_price;
+            }
         } else if($request->ticket_type == 'kids') {
-            $amount = $eventprice->kids_advance_price;
+            if (isDateInPast($eventprice->kids_end_date )) {
+                $amount = $eventprice->kids_gate_price;
+            }else{
+                $amount = $eventprice->kids_advance_price;
+            }
         } else {
-            $amount = $eventprice->regular_quantity;
+            if($eventprice->regular_end_date < Carbon::now()) {
+                $amount = $eventprice->regular_gate_price;
+            }else{
+                $amount = $eventprice->regular_advance_price;
+            }
         }
 
         try {
@@ -113,7 +140,7 @@ class PaymentController extends Controller
                 $ticket->event_id = $event->id;
                 $ticket->ticket_number = Str::orderedUuid();
                 //generate qr code and store it in the storage folder
-                $qrCode = QrCode::format('png')->size(500)->generate($ticket->ticket_number);
+                $qrCode = QrCode::format('png')->merge(public_path('assets/images/cropped-Praise.png'), 0.2, true)->backgroundColor(255,255,255)->size(400)->generate($ticket->ticket_number);
                 $path = 'qr_codes/'.$ticket->ticket_number.'.png';
                 Storage::disk('public')->put($path, $qrCode);
                 $ticket->qr_code = $ticket->ticket_number.'.png';
@@ -121,13 +148,25 @@ class PaymentController extends Controller
                 $ticket->save();
                 
             }
+        }else if($request->quantity ==1 ){
+            $ticket = new Ticket();
+            $ticket->email = $request->email;
+            $ticket->event_id = $event->id;
+            $ticket->ticket_number = Str::orderedUuid();
+            //generate qr code and store it in the storage folder
+            $qrCode = QrCode::format('png')->merge(public_path('assets/images/cropped-Praise.png'), 0.2, true)->backgroundColor(255,255,255)->size(400)->generate($ticket->ticket_number);
+            $path = 'qr_codes/'.$ticket->ticket_number.'.png';
+            Storage::disk('public')->put($path, $qrCode);
+            $ticket->qr_code = $ticket->ticket_number.'.png';
+            $ticket->status = 'unpaid';
+            $ticket->save();
         } else {
             $ticket = new Ticket();
             $ticket->email = $request->email;
             $ticket->event_id = $event->id;
             $ticket->ticket_number = Str::orderedUuid();
             //generate qr code and store it in the storage folder
-            $qrCode = QrCode::format('png')->size(500)->generate($ticket->ticket_number);
+            $qrCode = QrCode::format('png')->backgroundColor(255,255,255)->size(400)->generate($ticket->ticket_number);
             $path = 'qr_codes/'.$ticket->ticket_number.'.png';
             Storage::disk('public')->put($path, $qrCode);
             $ticket->qr_code = $ticket->ticket_number.'.png';

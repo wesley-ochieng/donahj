@@ -61,7 +61,7 @@
                                                                             <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">You have successfully purchased a ticket for {{ $event }}:</p>
                                                                             <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">Here is your QRCode:</p>
                                                                             <!-- get the ticket image from storage based on the ticket number-->
-                                                                            <img src="{{ asset('storage/qr_codes/'.$ticket_number.'.png') }}" alt="" height="100">
+                                                                            <img src="{{ asset('storage/qr_codes/'.$ticket_number.'.png') }}" alt="" height="180">
                                                                         </div>
                                                                     </div>
                                                                 </td>
@@ -71,6 +71,8 @@
                                                                     <div style="display: flex; align-items: center;">
                                                                         <div style="margin-left: 8px;">
                                                                             <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">Ensure you present this QRCode at the gate.</p>
+                                                                            {{-- disclaimer. once ticket has been purchased it is non refundable but can be donated to someone else --}}
+                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #ff6762;">This ticket is non refundable but can be donated to someone else.</p>
                                                                             <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">Thank You.</p>
                                                                             <p style="font-family: 'Roboto', sans-serif; font-size: 14px;color: #98a6ad; margin: 0px;"> @ 2022 Praise Atmosphere</p>
                                                                         </div>
