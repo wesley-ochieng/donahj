@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\PaymentImport;
 use App\Models\Ticket;
 use App\Models\Event;
 use App\Models\Payment;
@@ -109,6 +110,7 @@ class TicketController extends Controller
 
         //check if the ticket exists
         $ticket = Ticket::where('ticket_number', $request->ticket_number)->first();
+        $complementary_ticket = ComplimentaryTicket::where('ticket_number', $request->ticket_number)->first();
         if($ticket){
             //check if the ticket has been used
             if($ticket->status == 'used'){
@@ -122,7 +124,21 @@ class TicketController extends Controller
             $ticket->status = 'used';
             $ticket->save();
             return response()->json(['message' => 'Ticket status updated successfully'], 200);
+        } else if ($complementary_ticket) {
+            //check if the ticket has been used
+            if($complementary_ticket->status == 'used'){
+                return response()->json(['message' => 'Ticket has already been used'], 400);
+            }
+            //check if the ticket is unpaid
+            if($complementary_ticket->status == 'unpaid'){
+                return response()->json(['message' => 'Ticket is unpaid'], 400);
+            }
+            //update the ticket status
+            $complementary_ticket->status = 'used';
+            $complementary_ticket->save();
+            return response()->json(['message' => 'Ticket status updated successfully'], 200);
         }
+
         return response()->json(['message' => 'Ticket does not exist'], 400);
 
         // return redirect()->route('tickets.index')->with('success', 'Ticket status updated successfully');

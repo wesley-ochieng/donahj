@@ -202,7 +202,7 @@ class PaymentController extends Controller
             'PartyA' => $phoneNumber,
             'PartyB' => env('MPESA_BUSINESS_SHORT_CODE'),
             'PhoneNumber' => $phoneNumber,
-            'CallBackURL' => env('NGROK_URL').'/api/mpesa/callback',
+            'CallBackURL' => env('NGROK_URL').'/mpesa/callback/url',
             'AccountReference' => 'Praise Atmosphere',
             'TransactionDesc' => $event->name,
         ];

@@ -73,6 +73,9 @@
       <div class="row project-cards">
         <div class="col-sm-12">
           <div class="card shadow">
+            <div class="card-header">
+              <button class="btn btn-primary float-end" data-bs-toggle="modal" data-bs-target="#bulk-upload">Bulk Upload</button>
+            </div>
             <div class="card-body">
               <div class="tab-content" id="top-tabContent">
                 <div class="tab-pane fade show active" id="top-home" role="tabpanel" aria-labelledby="top-home-tab">
@@ -104,6 +107,32 @@
           </div>
         </div>
       </div>
+
+      <div class="modal fade" id="bulk-upload" tabindex="-1" role="dialog" aria-labelledby="bulk-upload" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form method="POST" id="bulkUpload" action="{{route('payments.bulk', $event->id)}}" enctype="multipart/form-data">
+                @csrf
+                @method('POST')
+                <input type="file" id="file" name="file" class="form-control">
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" form="bulkUpload">Save changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
     </div>
     <!-- Container-fluid Ends-->
   </div>
