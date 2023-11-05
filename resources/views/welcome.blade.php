@@ -160,57 +160,20 @@
                             </div>
                             <div class="col sm-6">
                                 <p>{!! $upcoming_event->description !!}.</p>
-                                <p class="text-primary"> 
-                                    <span class="text-muted" >Regular-price: </span>
-                                    <strong>
-                                    {{ $upcoming_event->eventPrice->regular_advance_price  }}  KSH 
-                                    </strong>
-                                    <small class="text-muted"><em>(advanced)</em></small>
-                                    {{ $upcoming_event->eventPrice->regular_gate_price  }}  KSH
-                                    <small class="text-muted"><em>(at the gate)</em></small>
-                                </p>
-                                @if($upcoming_event->eventPrice->vip_advance_price )
-                                <p class="text-success"> 
-                                    <span class="text-muted" >Vip-price: </span>
-                                    <strong>
-                                    {{ $upcoming_event->eventPrice->vip_advance_price  }}  KSH 
-                                    </strong>
-                                    <small class="text-muted"><em>(advanced)</em></small>
-                                    {{ $upcoming_event->eventPrice->vip_gate_price  }}  KSH
-                                    <small class="text-muted"><em>(at the gate)</em></small>
-                                </p>
-                                @endif
-                                @if($upcoming_event->eventPrice->vvip_advance_price )
-                                <p class="text-warning"> 
-                                    <span class="text-muted" >VVip-price: </span>
-                                    <strong>
-                                    {{ $upcoming_event->eventPrice->vvip_advance_price  }}  KSH 
-                                    </strong>
-                                    <small class="text-muted"><em>(advanced)</em></small>
-                                    {{ $upcoming_event->eventPrice->vvip_gate_price  }}  KSH
-                                    <small class="text-muted"><em>(at the gate)</em></small>
-                                </p>
-                                @endif
-                                @if($upcoming_event->eventPrice->kids_advance_price )
-                                <p class="text-info"> 
-                                    <span class="text-muted" >Kids-price <em class="text-dark small">(12 years and below): </em> </span>
-                                    <strong>
-                                    {{ $upcoming_event->eventPrice->kids_advance_price  }}  KSH 
-                                    </strong>
-                                    <small class="text-muted"><em>(advanced)</em></small>
-                                    {{ $upcoming_event->eventPrice->kids_gate_price  }}  KSH
-                                    <small class="text-muted"><em>(at the gate)</em></small>
-                                </p>
-                                @endif
+                                <hr>
                                 <div class="row">
                                     <div class="col-sm-6">
                                         <span class="badge badge-success badge-pill"><strong>Start Date:</strong>
-                                            {{ $upcoming_event->start_date }} @
+                                            {{ \Carbon\Carbon::parse($upcoming_event->start_date)->format('d-M-Y')}}@
                                             {{ $upcoming_event->start_time }}</span>
                                     </div>
                                     <div class="col-sm-6">
                                         <span class="badge badge-warning badge-pill"><strong>End Date:</strong>
-                                            {{ $upcoming_event->end_date }}</span>
+                                            {{ \Carbon\Carbon::parse($upcoming_event->end_date)->format('d-M-Y')}}</span>
+                                    </div>
+                                    <div class="col-12">
+                                        {{-- disclaimer --}}
+                                        <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #ff6762;">Once the ticket is bought, it is non refundable but can be donated to someone else.</p>
                                     </div>
                                 </div>
                             </div>
@@ -261,7 +224,7 @@
                 </div>
                 <div class="col-md-6 col-sm-10">
                     <div class="footer-contain">
-                        <p class="mb-0">Copyright 2022-23 © Praise Atmosphere All rights reserved. </p>
+                        <p class="mb-0">Copyright 2023-24 © Praise Atmosphere All rights reserved. </p>
                     </div>
                 </div>
             </div>
@@ -276,8 +239,8 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">
                          <img src="{{ asset('assets/images/cropped-Praise.png') }}" alt="" style="max-width:81px;"> 
-                         Get Ticket for - {{ $upcoming_event->name }}</h5>
-                    <button type="button" class="btn btn-light" data-bs-dismiss="modal" aria-label="Close">
+                         Buy - {{ $upcoming_event->name }} Ticket</h5>
+                    <button type="button" class="btn btn-xs btn-light" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>

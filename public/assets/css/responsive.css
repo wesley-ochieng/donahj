@@ -3466,3 +3466,18 @@
      62. Responsive CSS Ends
 ==========================**/
 /*# sourceMappingURL=responsive.css.map */
+
+.comingsoon-bgimg {
+  /* Set a background size of cover to make the image cover the entire div */
+  background-size: cover;
+  /* Center the background image both horizontally and vertically */
+  background-position: center center;
+}
+
+/* Media query for mobile screens */
+@media (max-width: 767px) {
+  .comingsoon-bgimg {
+    /* Adjust the background size for mobile screens */
+    background-size: contain; /* or auto, whichever works best for your design */
+  }
+}
