@@ -59,7 +59,7 @@ class PaymentController extends Controller
 
     }
 
-    public function stkPush(Request $request, Event $event) {
+  public function stkPush(Request $request, Event $event) {
         $validator = Validator::make($request->all(), [
         'quantity' => 'required|integer',
         'email' => 'required|email',
@@ -77,10 +77,12 @@ class PaymentController extends Controller
         //check the price of the particular ticket type
         function isDateInPast($date) {
             $parsedDate = Carbon::createFromFormat('m/d/Y', $date);
-            
         
             return $parsedDate->isPast();
         }
+        $regularGradient = [0,0,0,0,0,0,'radial'];
+        $vipGradient = [255, 255, 255, 255, 215, 0, 'radial'];
+        $vvipGradient = [120, 81, 169, 18, 25, 90, 'radial'];
         if($request->ticket_type == 'regular') {
             //check if the $eventprice->regular_end_date is less than todays date
             if (isDateInPast($eventprice->regular_end_date)) {
@@ -88,30 +90,35 @@ class PaymentController extends Controller
             }else{
                 $amount = $eventprice->regular_advance_price;
             }
+            $gradientValues = $regularGradient;
         } else if($request->ticket_type == 'vip') {
             if (isDateInPast($eventprice->vip_end_date )) {
                 $amount = $eventprice->vip_gate_price;
             }else{
                 $amount = $eventprice->vip_advance_price;
             }
+            $gradientValues = $vipGradient;
         } else if($request->ticket_type == 'vvip') {
             if (isDateInPast($eventprice->vvip_end_date )) {
                 $amount = $eventprice->vvip_gate_price;
             }else{
                 $amount = $eventprice->vvip_advance_price;
             }
+            $gradientValues = $vvipGradient;
         } else if($request->ticket_type == 'kids') {
             if (isDateInPast($eventprice->kids_end_date )) {
                 $amount = $eventprice->kids_gate_price;
             }else{
                 $amount = $eventprice->kids_advance_price;
             }
+            $gradientValues = $regularGradient;
         } else {
             if($eventprice->regular_end_date < Carbon::now()) {
                 $amount = $eventprice->regular_gate_price;
             }else{
                 $amount = $eventprice->regular_advance_price;
             }
+            $gradientValues = $regularGradient;
         }
 
         try {
@@ -140,7 +147,9 @@ class PaymentController extends Controller
                 $ticket->event_id = $event->id;
                 $ticket->ticket_number = Str::orderedUuid();
                 //generate qr code and store it in the storage folder
-                $qrCode = QrCode::format('png')->merge(public_path('assets/images/cropped-Praise.png'), 0.2, true)->backgroundColor(255,255,255)->size(400)->generate($ticket->ticket_number);
+                $qrCode = QrCode::format('png')->merge(public_path('assets/images/cropped-Praise.png'), 0.2, true)
+                ->gradient($gradientValues[0], $gradientValues[1], $gradientValues[2], $gradientValues[3], $gradientValues[4], $gradientValues[5], $gradientValues[6])
+                ->backgroundColor(255,255,255)->size(600)->generate($ticket->ticket_number);
                 $path = 'qr_codes/'.$ticket->ticket_number.'.png';
                 Storage::disk('public')->put($path, $qrCode);
                 $ticket->qr_code = $ticket->ticket_number.'.png';
@@ -154,7 +163,9 @@ class PaymentController extends Controller
             $ticket->event_id = $event->id;
             $ticket->ticket_number = Str::orderedUuid();
             //generate qr code and store it in the storage folder
-            $qrCode = QrCode::format('png')->merge(public_path('assets/images/cropped-Praise.png'), 0.2, true)->backgroundColor(255,255,255)->size(400)->generate($ticket->ticket_number);
+            $qrCode = QrCode::format('png')->merge(public_path('assets/images/cropped-Praise.png'), 0.2, true)
+            ->gradient($gradientValues[0], $gradientValues[1], $gradientValues[2], $gradientValues[3], $gradientValues[4], $gradientValues[5], $gradientValues[6])
+            ->backgroundColor(255,255,255)->size(600)->generate($ticket->ticket_number);
             $path = 'qr_codes/'.$ticket->ticket_number.'.png';
             Storage::disk('public')->put($path, $qrCode);
             $ticket->qr_code = $ticket->ticket_number.'.png';
@@ -166,7 +177,9 @@ class PaymentController extends Controller
             $ticket->event_id = $event->id;
             $ticket->ticket_number = Str::orderedUuid();
             //generate qr code and store it in the storage folder
-            $qrCode = QrCode::format('png')->backgroundColor(255,255,255)->size(400)->generate($ticket->ticket_number);
+            $qrCode = QrCode::format('png')->backgroundColor(255,255,255)->size(400)
+            ->gradient($gradientValues[0], $gradientValues[1], $gradientValues[2], $gradientValues[3], $gradientValues[4], $gradientValues[5], $gradientValues[6])
+            ->generate($ticket->ticket_number);
             $path = 'qr_codes/'.$ticket->ticket_number.'.png';
             Storage::disk('public')->put($path, $qrCode);
             $ticket->qr_code = $ticket->ticket_number.'.png';
@@ -202,7 +215,7 @@ class PaymentController extends Controller
             'PartyA' => $phoneNumber,
             'PartyB' => env('MPESA_BUSINESS_SHORT_CODE'),
             'PhoneNumber' => $phoneNumber,
-            'CallBackURL' => env('NGROK_URL').'/mpesa/callback/url',
+            'CallBackURL' => env('NGROK_URL').'/api/mpesa/callback',
             'AccountReference' => 'Praise Atmosphere',
             'TransactionDesc' => $event->name,
         ];

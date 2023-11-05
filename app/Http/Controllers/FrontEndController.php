@@ -17,7 +17,12 @@ class FrontEndController extends Controller
 
     public function home(){
 
-        
+        // $qrCode = QrCode::format('png')->merge(public_path('assets/images/cropped-Praise.png'), 0.2, true)->backgroundColor(255,255,255)->gradient (255, 255, 255,255, 215, 0, 'radial')->size(400)->generate("VIP"); 
+        // Storage::disk('public')->put('qr-codes/vvip.png', $qrCode);
+        // (120, 81, 169, 18, 25, 90, 'radial');
+
+        // add color to the qr code
+
         $upcoming_event = Event::where('status', 'upcoming')
         ->orWhere('status', 'active')
         ->first();
