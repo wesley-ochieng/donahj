@@ -82,7 +82,8 @@ class PaymentController extends Controller
         }
         $regularGradient = [0,0,0,0,0,0,'radial'];
         $vipGradient = [255, 255, 255, 255, 215, 0, 'radial'];
-        $vvipGradient = [120, 81, 169, 18, 25, 90, 'radial'];
+        $kidsGradient = [120, 81, 169, 18, 25, 90, 'radial'];
+        $vvipGradient = [100, 220, 150,3, 192, 75, 'radial'];
         if($request->ticket_type == 'regular') {
             //check if the $eventprice->regular_end_date is less than todays date
             if (isDateInPast($eventprice->regular_end_date)) {
@@ -111,7 +112,7 @@ class PaymentController extends Controller
             }else{
                 $amount = $eventprice->kids_advance_price;
             }
-            $gradientValues = $regularGradient;
+            $gradientValues = $kidsGradient;
         } else {
             if($eventprice->regular_end_date < Carbon::now()) {
                 $amount = $eventprice->regular_gate_price;

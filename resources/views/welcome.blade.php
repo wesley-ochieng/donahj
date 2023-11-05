@@ -166,13 +166,12 @@
                                             <ol>
                                                 <li>Tap on <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal"><u> <em>buy ticket</em> </u> </a> </li>
                                                 <li>Enter your name and Email address that will be used to receive the ticket</li>
-                                                
                                                 <li>Select Ticket Type</li>
                                                 <li>Select the quantity of tickets you want</li>
                                                 <li>Enter the phone number that you will use to make the payment</li>
                                                 <li>Tap on Buy, and you will receive a prompt message that asks if you can proceed with the PIN transaction</li>
-                                                <li>Complete the transition using your MPESA PIN</li>
-                                                <li>You will receive an SMS confirmation that funds have been sent from your MPESA account to PraiseAtmosphere Events</li>
+                                                <li>Complete the transaction using your MPESA PIN</li>
+                                                <li>You will receive an SMS confirmation that funds have been sent from your MPESA account to Praise Atmosphere Events</li>
                                                 <li>An Email with the QR code will be sent to your email. This ticket will be used at the gate as your ticket</li>
                                             </ol>
                                         </div>
