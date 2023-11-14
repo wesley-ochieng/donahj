@@ -83,6 +83,7 @@
                                 <th scope="col">Ticket Number</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Qr </th>
+                                <th scope="col">Amount </th>
                                 <th scope="col">Action</th>
                             </tr>
                             </thead>
@@ -115,7 +116,9 @@
                 { data: 'ticket_number', name: 'ticket_number' },
                 { data: 'status', name: 'status' },
                 { data: 'qr_code', name: 'qr_code' },
+                { data: 'amount', name: 'amount' },
                 { data: 'action', name: 'action' },
+            
             ],
             columnDefs:[
                 {
@@ -133,11 +136,17 @@
                 {
                     targets: [2],
                     visible: true,
+                    searchable: true,
+                    orderable: true, 
+                },
+                {
+                    targets: [3],
+                    visible: true,
                     searchable: false,
                     orderable: false, 
                 },
                 {
-                    targets: [3],
+                    targets: [4],
                     visible: true,
                     searchable: false,
                     orderable: false, 

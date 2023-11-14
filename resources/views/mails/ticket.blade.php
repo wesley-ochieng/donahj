@@ -70,7 +70,7 @@
                                                                 <td class="content-block" style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0; padding-top: 15px" valign="top">
                                                                     <div style="display: flex; align-items: center;">
                                                                         <div style="margin-left: 8px;">
-                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">Ensure you present this QRCode at the gate.</p>
+                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">Please Ensure you present this QRCode at the gate. This serves as your ticket</p>
                                                                             {{-- disclaimer. once ticket has been purchased it is non refundable but can be donated to someone else --}}
                                                                             <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #ff6762;">This ticket is non refundable but can be donated to someone else.</p>
                                                                             <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">Thank You.</p>

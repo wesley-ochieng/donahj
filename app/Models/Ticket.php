@@ -18,7 +18,7 @@ class Ticket extends Model
     }
 
     public function payment(){
-        return $this->hasOne(Payment::class);
+        return $this->hasOne(Payment::class, 'merchantRequestId', 'merchantRequestId');
     }
 
     //send ticket

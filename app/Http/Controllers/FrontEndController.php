@@ -10,23 +10,22 @@ use App\Models\Ticket;
 
 class FrontEndController extends Controller
 {
-    //
     public function index(){
         return view('about');
     }
 
     public function home(){
 
-        // $qrCode = QrCode::format('png')->merge(public_path('assets/images/cropped-Praise.png'), 0.2, true)->backgroundColor(255,255,255)->gradient (255, 255, 255,255, 215, 0, 'radial')->size(400)->generate("VIP"); 
-        // Storage::disk('public')->put('qr-codes/vvip.png', $qrCode);
+        // $qrCode = QrCode::format('png')->merge(public_path('assets/images/cropped-Praise.png'), 0.2, true)->backgroundColor(255,255,255)
+        // ->gradient (255, 135, 120,231, 76, 60,'radial')->size(400)->generate("VIP"); 
+        // Storage::disk('public')->put('qr-codes/kids.png', $qrCode);
         // (120, 81, 169, 18, 25, 90, 'radial');
-
         // add color to the qr code
 
         $upcoming_event = Event::where('status', 'upcoming')
         ->orWhere('status', 'active')
         ->first();
-    if(!$upcoming_event){
+        if(!$upcoming_event){
             $events = Event::all();
         }else{
             $events = Event::where('status', 'upcoming')

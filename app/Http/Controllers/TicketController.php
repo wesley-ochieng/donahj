@@ -87,13 +87,17 @@ class TicketController extends Controller
                 return '<span class="badge badge-secondary shadow-sm">Used</span>';
             }
         })
+        //amount
+        ->addColumn('amount', function($ticket){
+            return $ticket->payment->TransAmount;
+        })
         ->addColumn('ticket_number', function($ticket){
             return $ticket->ticket_number;
         })
         ->addColumn('qr_code', function($ticket){
             return '<img src="'.asset('storage/qr_codes/'.$ticket->qr_code).'" alt="barcode" style="max-width:81px"  />';
         })
-        ->rawColumns(['action', 'status', 'ticket_number', 'qr_code'])
+        ->rawColumns(['action', 'status', 'ticket_number', 'qr_code','amount'])
         ->make(true);
     }
 
