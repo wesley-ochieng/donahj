@@ -67,7 +67,10 @@ class TicketController extends Controller
         $total_unpaid_tickets = Ticket::where('status', 'unpaid')->where('event_id', $event->id)->count();
         $total_active_tickets = Ticket::where('status', 'active')->where('event_id', $event->id)->count();
         $total_used_tickets = Ticket::where('status', 'used')->where('event_id', $event->id)->count();
-        return view('events.tickets', compact('tickets','event', 'total_paid_tickets', 'total_unpaid_tickets', 'total_active_tickets', 'total_used_tickets'));
+        $total_amount = Ticket::where('event_id',$event->id)->where('status', 'paid')
+        ->join('payments', 'tickets.merchantRequestId', '=', 'payments.merchantRequestId')
+        ->sum('payments.TransAmount');
+        return view('events.tickets', compact('tickets','total_amount','event', 'total_paid_tickets', 'total_unpaid_tickets', 'total_active_tickets', 'total_used_tickets'));
     }
     public function eventTicketsTables($event)
     {
@@ -222,6 +225,62 @@ class TicketController extends Controller
         }
         toastr()->success('Ticket generated successfully');
         return redirect()->back()->with('success', 'Ticket generated successfully');
+    }
+    public function storeThirdparty(Request $request){
+        $validator = Validator::make($request->all(), [
+            'event_id' => 'required|exists:events,id',
+            'organization_name' => 'required',
+            'email' => 'required',
+            'quantity' => 'required',
+        ]);
+        if ($validator->fails()) {
+            toastr()->error($validator->errors()->first());
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $event = Event::find($request->event_id);
+        if($request->quantity > 1) {
+
+            for($i = 0; $i < $request->quantity; $i++) {
+                $ticket = new Ticket();
+                $ticket->email = $request->email;
+                $ticket->event_id = $event->id;
+                $ticket->ticket_number = Str::orderedUuid();
+                //generate qr code and store it in the storage folder
+                
+                $qrCode = QrCode::format('png')->merge(public_path('assets/images/cropped-Praise.png'), 0.2, true)
+                ->gradient(0,0,0,0,0,0,'radial')
+                ->backgroundColor(255,255,255)->size(600)->generate($ticket->ticket_number);
+                $path = 'qr_codes/'.$ticket->ticket_number.'.png';
+                Storage::disk('public')->put($path, $qrCode);
+                $ticket->qr_code = $ticket->ticket_number.'.png';
+                $ticket->status = 'paid';
+                // $ticket->organization_name = $request->organization_name;
+                $ticket->save();
+                    
+                $ticket->sendTicket($ticket->email, $ticket->ticket_number, $event->name);
+                
+            }
+        } else {
+            $ticket = new Ticket();
+            $ticket->email = $request->email;
+            $ticket->event_id = $event->id;
+            $ticket->ticket_number = Str::orderedUuid();
+            //generate qr code and store it in the storage folder
+            $qrCode = QrCode::format('png')->merge(public_path('assets/images/cropped-Praise.png'), 0.2, true)
+            ->gradient(0,0,0,0,0,0,'radial')
+            ->backgroundColor(255,255,255)->size(600)->generate($ticket->ticket_number);
+            $path = 'qr_codes/'.$ticket->ticket_number.'.png';
+            Storage::disk('public')->put($path, $qrCode);
+            $ticket->qr_code = $ticket->ticket_number.'.png';
+            $ticket->status = 'paid';
+            // $ticket->organization_name = $request->organization_name;
+            $ticket->save();
+            $ticket->sendTicket($ticket->email, $ticket->ticket_number, $event->name);
+        }
+        toastr()->success('Ticket generated successfully');
+        return redirect()->back()->with('success', 'Ticket generated successfully');
+            
     }
 
     public function searchPayment(Request $request) {

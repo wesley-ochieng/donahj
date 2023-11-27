@@ -40,11 +40,11 @@
         </div>
         <div class="col-md-3">
           <div class="card shadow">
-            <div class="card-header b-l-danger">
-              <h5>Total Unpaid</h5>
+            <div class="card-header b-l-primary">
+              <h5>Total Amount</h5>
             </div>
             <div class="card-body py-3">
-              <p class="lead fs-3 fw-bold text-danger">{{ $total_unpaid_tickets }}</p>
+              <p class="lead fs-3 fw-bold text-primary">KSH {{ number_format($total_amount) }}</p>
             </div>
           </div>
         </div>

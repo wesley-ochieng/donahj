@@ -66,6 +66,8 @@ Route::post('tickets/confirm', [TicketController::class, 'updateStatus']);
 
 //create complementary ticket
 Route::post('events/complimentary', [TicketController::class, 'storeComplimentary'])->name('tickets.complimentary')->middleware('auth');
+// thirdparty
+Route::post('events/thirdparty', [TicketController::class, 'storeThirdparty'])->name('tickets.thirdparty');
 Route::get('run-migrations',function(){
     Artisan::call('migrate');
     return "Migrations run successfully";

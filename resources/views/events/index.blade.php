@@ -89,7 +89,16 @@
                   <div class="row">
                     @foreach($events as $event)
                     <div class="col-xxl-4 col-lg-6">
-                      <div class="project-box shadow-sm"><span class="badge badge-success">{{ $event->status }}</span>
+                      <div class="project-box shadow-sm">
+                        <span class="badge badge-success">{{ $event->status }}</span>
+                        {{-- dropdown ewith elipsis --}}
+                        <div class="dropdown custom-dropdown mb-0 float-end">
+                          <div class="btn sharp tp-btn" data-bs-toggle="dropdown" aria-expanded="false"><i data-feather="more-horizontal"></i></div>
+                          <div class="dropdown-menu dropdown-menu-end">
+                            <a class="dropdown-item thirdparty-btn" href="#" data-bs-toggle="modal" data-bs-target="#thirdparty-tickets" id="{{ $event->id }}"><i class="fa fa-ticket" aria-hidden="true"></i> Third Party Tickets</a>
+                          </div>
+                        </div>
+
                         <h6>{{$event->name}}</h6>
                         <div class="media"><img class="img-40 me-2 rounded-circle" src="{{ asset('storage/'.$event->poster_image) }}" alt="" data-original-title="" title="">
                             <div class="media-body">
@@ -180,6 +189,39 @@
       </div>
     </div>
   </div>
+  <div class="modal fade" id="thirdparty-tickets" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Create Thirdparty Tickets</h5>
+          <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="{{ route('tickets.thirdparty') }}" method="POST" id="thirdparty-ticket-form">
+            @csrf
+            <input type="hidden" name="event_id" class="thirdparty-event-id" id="event_id" value="">
+            <div class="form-group">
+              <label for="name">Organization Name</label>
+              <input type="text" name="organization_name" id="name" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" name="email" id="email" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="quantity">Quantity</label>
+              <input type="number" name="quantity" id="quantity" class="form-control">
+            </div>
+          
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" form="thirdparty-ticket-form" class="btn btn-primary float-start">Create</button>
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 @endsection
 @section('scripts')
@@ -189,6 +231,11 @@
       let eventId = $(this).attr('id');
       console.log(eventId);
       $('#event_id').val(eventId);
+    });
+    $('.thirdparty-btn').click(function(){
+      let eventId = $(this).attr('id');
+      console.log(eventId);
+      $('.thirdparty-event-id').val(eventId);
     });
   });
 </script>
