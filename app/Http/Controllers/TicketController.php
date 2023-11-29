@@ -90,7 +90,6 @@ class TicketController extends Controller
                 return '<span class="badge badge-secondary shadow-sm">Used</span>';
             }
         })
-        //amount
         ->addColumn('amount', function($ticket){
             return $ticket->payment->TransAmount;
         })
