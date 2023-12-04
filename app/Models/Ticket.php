@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Jobs\TicketJob;
 use App\Mail\TicketMail;
+use App\Mail\ThirdPartyMail;
 use Mail;
 
 class Ticket extends Model
@@ -25,6 +26,11 @@ class Ticket extends Model
     public function sendTicket($email, $ticketnumber, $event){
         // TicketJob::dispatch($email, $ticketnumber);
         Mail::to($email)->send(new TicketMail($ticketnumber, $event));
+    }
+
+    public function sendThirdPartyTicket($email, $attachmentPaths, $event)
+    {
+        Mail::to($email)->send(new ThirdPartyMail($attachmentPaths, $event));
     }
 
     public function ticketsSold()

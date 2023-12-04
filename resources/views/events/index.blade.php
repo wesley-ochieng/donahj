@@ -208,6 +208,17 @@
               <label for="email">Email</label>
               <input type="email" name="email" id="email" class="form-control">
             </div>
+            {{-- regular vip r vvip or kids --}}
+             <div class="form-group">
+                <label for="ticket-type">Ticket Type</label>
+                <select class="form-select input-air-primary" name="ticket_type" id="ticket-type">
+                    <option value="" selected disabled>Select ticket type </option>
+                        <option value="regular">Regular</option>
+                        <option value="vip">VIP</option>
+                        <option value="vvip">VVIP</option>
+                        <option value="kids">Kids <em>(Between 3 and 12 Years)</em></option>
+                </select>
+            </div>
             <div class="form-group">
               <label for="quantity">Quantity</label>
               <input type="number" name="quantity" id="quantity" class="form-control">
