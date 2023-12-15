@@ -91,7 +91,7 @@ class TicketController extends Controller
             }
         })
         ->addColumn('amount', function($ticket){
-            return $ticket->payment->TransAmount;
+            return $ticket->payment;
         })
         ->addColumn('ticket_number', function($ticket){
             return $ticket->ticket_number;
@@ -152,6 +152,9 @@ class TicketController extends Controller
     public function eventPayments(Request $request){
         $event = Event::find($request->event_id);
         $tickets = Ticket::where('event_id', $event->id)
+        //where transamount is not null
+        ->join('payments', 'tickets.merchantRequestId', '=', 'payments.merchantRequestId')
+
         ->where('status', 'paid')->take(5)
         ->get();
         $payments = $tickets->map(function($ticket) use ($event) {
@@ -195,16 +198,21 @@ class TicketController extends Controller
                 $ticket->email = $request->email;
                 $ticket->event_id = $event->id;
                 $ticket->ticket_number = Str::orderedUuid();
-                //generate qr code and store it in the storage folder
-                $qrCode = QrCode::format('png')->size(500)->generate($ticket->ticket_number);
+
+                $qrCode = QrCode::format('png')->merge(public_path('assets/images/cropped-Praise.png'), 0.2, true)
+                ->gradient(0,0,0,0,0,0,'radial')
+                ->backgroundColor(255,255,255)->size(600)->generate($ticket->ticket_number);
+
                 $path = 'qr_codes/'.$ticket->ticket_number.'.png';
                 Storage::disk('public')->put($path, $qrCode);
                 $ticket->qr_code = $ticket->ticket_number.'.png';
                 $ticket->status = 'paid';
-                $ticket->organization_name = $request->organization_name;
+                
                 $ticket->save();
+                $ticket->organization_name = $request->organization_name;
+                // dd( $ticket->organization_name);
                     
-                $ticket->sendTicket($ticket->email, $ticket->ticket_number, $event->name);
+                $ticket->sendTicket($ticket->email, $ticket->ticket_number, $event->name, $ticket->organization_name);
                 
             }
         } else {
@@ -213,18 +221,23 @@ class TicketController extends Controller
             $ticket->event_id = $event->id;
             $ticket->ticket_number = Str::orderedUuid();
             //generate qr code and store it in the storage folder
-            $qrCode = QrCode::format('png')->size(500)->generate($ticket->ticket_number);
+            $qrCode = QrCode::format('png')->merge(public_path('assets/images/cropped-Praise.png'), 0.2, true)
+            ->gradient(0,0,0,0,0,0,'radial')
+            ->backgroundColor(255,255,255)->size(600)->generate($ticket->ticket_number);
             $path = 'qr_codes/'.$ticket->ticket_number.'.png';
             Storage::disk('public')->put($path, $qrCode);
             $ticket->qr_code = $ticket->ticket_number.'.png';
             $ticket->status = 'paid';
-            $ticket->organization_name = $request->organization_name;
+            
             $ticket->save();
-            $ticket->sendTicket($ticket->email, $ticket->ticket_number, $event->name);
+            $ticket->organization_name = $request->organization_name;
+
+            $ticket->sendTicket($ticket->email, $ticket->ticket_number, $event->name, $ticket->organization_name);
         }
         toastr()->success('Ticket generated successfully');
         return redirect()->back()->with('success', 'Ticket generated successfully');
     }
+
     public function storeThirdparty(Request $request){
         $validator = Validator::make($request->all(), [
             'event_id' => 'required|exists:events,id',
@@ -238,45 +251,50 @@ class TicketController extends Controller
         }
 
         $event = Event::find($request->event_id);
-        if($request->quantity > 1) {
+        $quantity = $request->quantity;
+        $tickets = [];
 
-            for($i = 0; $i < $request->quantity; $i++) {
-                $ticket = new Ticket();
-                $ticket->email = $request->email;
-                $ticket->event_id = $event->id;
-                $ticket->ticket_number = Str::orderedUuid();
-                //generate qr code and store it in the storage folder
-                
-                $qrCode = QrCode::format('png')->merge(public_path('assets/images/cropped-Praise.png'), 0.2, true)
-                ->gradient(0,0,0,0,0,0,'radial')
-                ->backgroundColor(255,255,255)->size(600)->generate($ticket->ticket_number);
-                $path = 'qr_codes/'.$ticket->ticket_number.'.png';
-                Storage::disk('public')->put($path, $qrCode);
-                $ticket->qr_code = $ticket->ticket_number.'.png';
-                $ticket->status = 'paid';
-                // $ticket->organization_name = $request->organization_name;
-                $ticket->save();
-                    
-                $ticket->sendTicket($ticket->email, $ticket->ticket_number, $event->name);
-                
-            }
+        $regularGradient = [0,0,0,0,0,0,'radial'];
+        $vipGradient = [255, 255, 255, 255, 215, 0, 'radial'];
+        $kidsGradient = [231, 76, 60, 255, 135, 120,'radial'];
+        $vvipGradient = [100, 220, 150,3, 192, 75, 'radial'];
+
+        if($request->ticket_type == 'regular') {
+            $gradientValues = $regularGradient;
+        } else if($request->ticket_type == 'vip') {
+            $gradientValues = $vipGradient;
+        } else if($request->ticket_type == 'vvip') {
+            $gradientValues = $vvipGradient;
+        } else if($request->ticket_type == 'kids') {
+            $gradientValues = $kidsGradient;
         } else {
+            $gradientValues = $regularGradient;
+        }
+
+        for ($i = 0; $i < $quantity; $i++) {
             $ticket = new Ticket();
             $ticket->email = $request->email;
             $ticket->event_id = $event->id;
             $ticket->ticket_number = Str::orderedUuid();
-            //generate qr code and store it in the storage folder
+
             $qrCode = QrCode::format('png')->merge(public_path('assets/images/cropped-Praise.png'), 0.2, true)
-            ->gradient(0,0,0,0,0,0,'radial')
-            ->backgroundColor(255,255,255)->size(600)->generate($ticket->ticket_number);
-            $path = 'qr_codes/'.$ticket->ticket_number.'.png';
+                ->gradient($gradientValues[0], $gradientValues[1], $gradientValues[2], $gradientValues[3], $gradientValues[4], $gradientValues[5], $gradientValues[6])
+                ->backgroundColor(255, 255, 255)->size(600)->generate($ticket->ticket_number);
+
+            $path = 'qr_codes/' . $ticket->ticket_number . '.png';
             Storage::disk('public')->put($path, $qrCode);
-            $ticket->qr_code = $ticket->ticket_number.'.png';
+            $ticket->qr_code = $ticket->ticket_number . '.png';
             $ticket->status = 'paid';
-            // $ticket->organization_name = $request->organization_name;
+
             $ticket->save();
-            $ticket->sendTicket($ticket->email, $ticket->ticket_number, $event->name);
+            $tickets[] = $ticket;
         }
+
+        $attachmentPaths = array_map(function ($ticket) {
+            return 'qr_codes/' . $ticket->ticket_number . '.png';
+        }, $tickets);
+
+        $ticket->sendThirdPartyTicket($ticket->email, $attachmentPaths, $event->name);
         toastr()->success('Ticket generated successfully');
         return redirect()->back()->with('success', 'Ticket generated successfully');
             

@@ -92,6 +92,7 @@
                                 <th scope="col">Phone Number </th>
                                 <th scope="col">Quantity </th>
                                 <th scope="col">Status</th>
+                                <th scope="col">Type</th>
                                 <th scope="col">Action</th>
                             </tr>
                             </thead>
@@ -118,7 +119,7 @@
               </button>
             </div>
             <div class="modal-body">
-              <form method="POST" id="bulkUpload" action="{{route('payments.bulk', $event->id)}}" enctype="multipart/form-data">
+              <form method="POST" id="bulkUpload" action="" enctype="multipart/form-data">
                 @csrf
                 @method('POST')
                 <input type="file" id="file" name="file" class="form-control">
@@ -140,6 +141,11 @@
 @endsection
 @section('scripts')
 <script src="{{ asset('assets/js/datatable/datatables/jquery.dataTables.min.js') }}"></script>
+<!-- DataTables Buttons JS -->
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.7.1/js/dataTables.buttons.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.html5.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/buttons/1.7.1/js/buttons.print.min.js"></script>
 <script>
     $(document).ready(function() {
         $('#tickets-table').DataTable({
@@ -155,23 +161,79 @@
                 { data: 'phone_number', name: 'phone_number' },
                 { data: 'quantity', name: 'quantity' },
                 { data: 'status', name: 'status' },
+                { data: 'ticket_type', name: 'ticket_type' },
                 { data: 'action', name: 'action' },
             ],
             
             columnDefs:[
                 {
-                    targets: [0,1,2,3,4,5,6,7],
+                    targets: [0,1,2,3,4,5,6,7,8],
                     searchable:true,
                     orderable:true
                 },
                 {
-                    targets: [8],
+                    targets: [9],
                     searchable:false,
                     orderable:false
                 }
-            ]
+            ],
+            //export options
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'pdf', 'print',
+                {
+                    "extend": 'excel',
+                    "text": '<button class="btn"><i class="fa fa-file-excel-o" style="color: green;"></i>  Excel</button>',
+                    "titleAttr": 'Excel',
+                    "action": newexportaction
+                },
+            ],
+
+            
             
         });
+
+        function newexportaction(e, dt, button, config) {
+         var self = this;
+         var oldStart = dt.settings()[0]._iDisplayStart;
+         dt.one('preXhr', function (e, s, data) {
+             // Just this once, load all data from the server...
+             data.start = 0;
+             data.length = 2147483647;
+             dt.one('preDraw', function (e, settings) {
+                 // Call the original action function
+                 if (button[0].className.indexOf('buttons-copy') >= 0) {
+                     $.fn.dataTable.ext.buttons.copyHtml5.action.call(self, e, dt, button, config);
+                 } else if (button[0].className.indexOf('buttons-excel') >= 0) {
+                     $.fn.dataTable.ext.buttons.excelHtml5.available(dt, config) ?
+                         $.fn.dataTable.ext.buttons.excelHtml5.action.call(self, e, dt, button, config) :
+                         $.fn.dataTable.ext.buttons.excelFlash.action.call(self, e, dt, button, config);
+                 } else if (button[0].className.indexOf('buttons-csv') >= 0) {
+                     $.fn.dataTable.ext.buttons.csvHtml5.available(dt, config) ?
+                         $.fn.dataTable.ext.buttons.csvHtml5.action.call(self, e, dt, button, config) :
+                         $.fn.dataTable.ext.buttons.csvFlash.action.call(self, e, dt, button, config);
+                 } else if (button[0].className.indexOf('buttons-pdf') >= 0) {
+                     $.fn.dataTable.ext.buttons.pdfHtml5.available(dt, config) ?
+                         $.fn.dataTable.ext.buttons.pdfHtml5.action.call(self, e, dt, button, config) :
+                         $.fn.dataTable.ext.buttons.pdfFlash.action.call(self, e, dt, button, config);
+                 } else if (button[0].className.indexOf('buttons-print') >= 0) {
+                     $.fn.dataTable.ext.buttons.print.action(e, dt, button, config);
+                 }
+                 dt.one('preXhr', function (e, s, data) {
+                     // DataTables thinks the first item displayed is index 0, but we're not drawing that.
+                     // Set the property to what it was before exporting.
+                     settings._iDisplayStart = oldStart;
+                     data.start = oldStart;
+                 });
+                 // Reload the grid with the original page. Otherwise, API functions like table.cell(this) don't work properly.
+                 setTimeout(dt.ajax.reload, 0);
+                 // Prevent rendering of the full data to the DOM
+                 return false;
+             });
+         });
+         // Requery the server with the new one-time export settings
+         dt.ajax.reload();
+     }
     } );
 </script>
 @endsection

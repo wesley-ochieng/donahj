@@ -403,9 +403,14 @@ class PaymentController extends Controller
 
     public function eventPayments($event){
         $event = Event::where('id', $event)->first();
-        $tickets = Ticket::where('event_id', $event->id)->get();
+        $tickets = Ticket::where('event_id', $event->id)
+        ->where('status', 'paid')
+        ->where('payment_id','!=', null )
+        ->get();
         $payments = $tickets->map(function($ticket) use ($event) {
-            $payment = Payment::where('merchantRequestId', $ticket->merchantRequestId)->first();
+            $payment = Payment::where('merchantRequestId', $ticket->merchantRequestId)
+            ->where('TransID','!=', null )
+            ->first();
             if($payment){
                 $payment->ticket_number = $ticket->ticket_number;
                 $payment->event_name = $event->name;
@@ -413,7 +418,6 @@ class PaymentController extends Controller
             }
             return $payment;
         });
-
         $total_payment = $payments->where('TransID','!=', null )->sum('TransAmount');
 
         $total_transactions = $payments->count();
@@ -424,13 +428,49 @@ class PaymentController extends Controller
 
     public function eventPaymentsTable($event){
         $event = Event::where('id', $event)->first();
-        $tickets = Ticket::where('event_id', $event->id)->get();
+        $tickets = Ticket::where('event_id', $event->id)
+        ->where('status', 'paid')
+
+        ->where('payment_id','!=', null )
+
+        ->get();
         $payments = $tickets->map(function($ticket) use ($event) {
-            $payment = Payment::where('merchantRequestId', $ticket->merchantRequestId)->first();
+            $payment = Payment::where('merchantRequestId', $ticket->merchantRequestId)
+            ->where('TransID','!=', null )
+            ->first();
             if($payment){
                 $payment->ticket_number = $ticket->ticket_number;
                 $payment->event_name = $event->name;
                 $payment->status = $ticket->status;
+                //check for the ticket type by dividing the payment transaction amount by the quantity and matching the value in the EventPrice model to inf
+                
+                $paymentAmount = intval($payment->TransAmount) / $payment->quantity;
+                $eventprice = EventPrice::where('event_id', $event->id)->first();
+                $payment->ticket_type = 'N/A'; // Default value
+                
+                if (
+                    $paymentAmount == $eventprice->regular_advance_price || 
+                    $paymentAmount == $eventprice->regular_gate_price
+                ) {
+                    $payment->ticket_type = 'regular';
+                } elseif (
+                    $paymentAmount == $eventprice->vip_advance_price || 
+                    $paymentAmount == $eventprice->vip_gate_price
+                ) {
+                    $payment->ticket_type = 'vip';
+                } elseif (
+                    $paymentAmount == $eventprice->vvip_advance_price || 
+                    $paymentAmount == $eventprice->vvip_gate_price
+                ) {
+                    $payment->ticket_type = 'vvip';
+                } elseif (
+                    $paymentAmount == $eventprice->kids_advance_price || 
+                    $paymentAmount == $eventprice->kids_gate_price
+                ) {
+                    $payment->ticket_type = 'kids';
+                }
+                
+
             }
             return $payment;
         });
@@ -460,12 +500,15 @@ class PaymentController extends Controller
         ->addColumn('event_name', function($payment){
             return $payment->event_name;
         })
+        //ticket type
+        ->addColumn('ticket_type', function($payment){
+            return $payment->ticket_type;
+        })
         ->addColumn('status', function($payment){
             $ticket = Ticket::where('payment_id', $payment->id)->first();
             return 'active';
-            // return $ticket->status;
         })
-        ->rawColumns(['action', 'quantity', 'phone_number', 'TransID', 'TransTime', 'TransAmount', 'ticket_number', 'event_name', 'status'])
+        ->rawColumns(['action', 'quantity', 'phone_number', 'TransID', 'TransTime', 'TransAmount', 'ticket_number', 'event_name', 'status','ticket_type'])
         ->make(true);
     }
 }

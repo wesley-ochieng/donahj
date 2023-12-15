@@ -51,15 +51,18 @@
                                                             </tr>
                                                             <tr style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
                                                                 <td class="content-block" style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: 20px; line-height: 1.5; font-weight: 500; vertical-align: top; margin: 0; padding: 0 0 10px;" valign="top">
-                                                                    Hey
+                                                                    Exciting News: Your {{ $event }} Tickets are Ready!
                                                                 </td>
                                                             </tr>
                                                             <tr style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: 14px; margin: 0; border-top: 1px solid #e9ebec;">
                                                                 <td class="content-block" style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0; padding-top: 15px" valign="top">
                                                                     <div style="display: flex; align-items: center;">
                                                                         <div style="margin-left: 8px;">
-                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">You have successfully purchased a ticket for {{ $event }}:</p>
-                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">Here is your QRCode:</p>
+                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">We're thrilled to share that your tickets for the upcoming {{ $event }} are now available! 🎉:</p>
+                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">Please find the attached tickets to make your event experience seamless. Each QR code is your gateway to an unforgettable time at {{ $event }}.</p>
+                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">If you have any questions or need assistance, feel free to reach out. We're here to ensure you have a fantastic time at the event!</p>
+                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">Thank you for choosing us, and we look forward to seeing you at {{ $event }}!</p>
+                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;"></p>
                                                                             <!-- get the ticket image from storage based on the ticket number-->
                                                                             <img src="{{ asset('storage/qr_codes/'.$ticket_number.'.png') }}" alt="" height="180">
                                                                         </div>
@@ -74,7 +77,7 @@
                                                                             {{-- disclaimer. once ticket has been purchased it is non refundable but can be donated to someone else --}}
                                                                             <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #ff6762;">This ticket is non refundable but can be donated to someone else.</p>
                                                                             <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">Thank You.</p>
-                                                                            <p style="font-family: 'Roboto', sans-serif; font-size: 14px;color: #98a6ad; margin: 0px;"> @ 2022 Praise Atmosphere</p>
+                                                                            <p style="font-family: 'Roboto', sans-serif; font-size: 14px;color: #98a6ad; margin: 0px;">Best Regards,<br>PrasieAtmosphere @ {{ date('Y') }}</p>
                                                                         </div>
                                                                     </div>
                                                                 </td>
