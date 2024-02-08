@@ -6,8 +6,8 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <link rel="icon" href="{{asset('assets/images/cropped-Praise.png')}}" type="image/x-icon">
-    <link rel="shortcut icon" href="{{asset('assets/images/cropped-Praise.png')}}" type="image/x-icon">
+    <link rel="icon" href="{{asset('assets/images/janealler.png')}}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{asset('assets/images/janealler.png')}}" type="image/x-icon">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
@@ -48,9 +48,9 @@
       <div class="main-header-right row m-0">
         <div class="main-header-left">
           <div class="logo-wrapper">
-            <a href="index.html"><img class="img-fluid" src="{{ asset('assets/images/cropped-Praise.png')}}" alt="" style="max-width: 33px"></a></div>
+            <a href="index.html"><img class="img-fluid" src="{{ asset('assets/images/janealler.png')}}" alt="" style="max-width: 33px"></a></div>
           <div class="dark-logo-wrapper">
-            <a href="index.html"><img class="img-fluid" src="{{ asset('assets/images/cropped-Praise.png')}}"  style="max-width: 33px"></a></div>
+            <a href="index.html"><img class="img-fluid" src="{{ asset('assets/images/janealler.png')}}"  style="max-width: 33px"></a></div>
           <div class="toggle-sidebar"><i class="status_toggle middle" data-feather="align-center" id="sidebar-toggle"></i></div>
         </div>
         <div class="left-menu-header col">
@@ -81,9 +81,9 @@
       <!-- Page Sidebar Start-->
       <header class="main-nav">
         <div class="sidebar-user text-center">
-            <img class="img-90 rounded-circle" src="{{ asset('assets/images/cropped-Praise.png')}}" alt="">
+            <img class="img-90 rounded-circle" src="{{ asset('assets/images/janealler.png')}}" alt="">
           <div class="badge-bottom"></div><a href="#">
-            <h6 class="mt-3 f-14 f-w-600">Praise Atmosphere</h6></a>
+            <h6 class="mt-3 f-14 f-w-600">JaneAller Music</h6></a>
           <p class="mb-0 font-roboto">Manage Events</p>
         </div>
         <nav>

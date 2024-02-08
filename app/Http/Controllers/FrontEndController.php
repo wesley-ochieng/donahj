@@ -16,12 +16,11 @@ class FrontEndController extends Controller
 
     public function home(){
 
-        // $qrCode = QrCode::format('png')->merge(public_path('assets/images/cropped-Praise.png'), 0.2, true)->backgroundColor(255,255,255)
-        // ->gradient (255, 135, 120,231, 76, 60,'radial')->size(400)->generate("VIP"); 
-        // Storage::disk('public')->put('qr-codes/kids.png', $qrCode);
-        // (120, 81, 169, 18, 25, 90, 'radial');
-        // add color to the qr code
-
+        $qrCode = QrCode::format('png')->merge(public_path('assets/images/janealler.png'), 0.3, true)->backgroundColor(255,255,255)
+        ->style('round')->eye('square')
+        ->gradient (0,0,0,0,0,0,'radial')->size(300)->generate("https://janeallermusic.com/soaked"); 
+        Storage::disk('public')->put('qr-codes/promotion.png', $qrCode);
+    
         $upcoming_event = Event::where('status', 'upcoming')
         ->orWhere('status', 'active')
         ->first();

@@ -65,6 +65,7 @@ class PaymentController extends Controller
         'email' => 'required|email',
         'phone' => 'required',
         'ticket_type' => 'required',
+        
         // 'TransactionDescription' => 'required'
         ]);
 
@@ -148,13 +149,18 @@ class PaymentController extends Controller
                 $ticket->event_id = $event->id;
                 $ticket->ticket_number = Str::orderedUuid();
                 //generate qr code and store it in the storage folder
-                $qrCode = QrCode::format('png')->merge(public_path('assets/images/cropped-Praise.png'), 0.2, true)
+                $qrCode = QrCode::format('png')->merge(public_path('assets/images/janealler.png'), 0.2, true)
                 ->gradient($gradientValues[0], $gradientValues[1], $gradientValues[2], $gradientValues[3], $gradientValues[4], $gradientValues[5], $gradientValues[6])
                 ->backgroundColor(255,255,255)->size(600)->generate($ticket->ticket_number);
                 $path = 'qr_codes/'.$ticket->ticket_number.'.png';
                 Storage::disk('public')->put($path, $qrCode);
                 $ticket->qr_code = $ticket->ticket_number.'.png';
                 $ticket->status = 'unpaid';
+                $ticket->name = $request->name;
+                $ticket->phone = $request->phone;
+                $ticket->ticket_type = $request->ticket_type;
+                $ticket->ticket_price = $amount;
+                $ticket->quantity = $request->quantity;
                 $ticket->save();
                 
             }
@@ -164,7 +170,7 @@ class PaymentController extends Controller
             $ticket->event_id = $event->id;
             $ticket->ticket_number = Str::orderedUuid();
             //generate qr code and store it in the storage folder
-            $qrCode = QrCode::format('png')->merge(public_path('assets/images/cropped-Praise.png'), 0.2, true)
+            $qrCode = QrCode::format('png')->merge(public_path('assets/images/janealler.png'), 0.2, true)
             ->gradient($gradientValues[0], $gradientValues[1], $gradientValues[2], $gradientValues[3], $gradientValues[4], $gradientValues[5], $gradientValues[6])
             ->backgroundColor(255,255,255)->size(600)->generate($ticket->ticket_number);
             $path = 'qr_codes/'.$ticket->ticket_number.'.png';
@@ -217,7 +223,7 @@ class PaymentController extends Controller
             'PartyB' => env('MPESA_BUSINESS_SHORT_CODE'),
             'PhoneNumber' => $phoneNumber,
             'CallBackURL' => env('NGROK_URL').'/api/mpesa/callback',
-            'AccountReference' => 'Praise Atmosphere',
+            'AccountReference' => 'JaneAllerMusic',
             'TransactionDesc' => $event->name,
         ];
 

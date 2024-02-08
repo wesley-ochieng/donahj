@@ -199,7 +199,7 @@ class TicketController extends Controller
                 $ticket->event_id = $event->id;
                 $ticket->ticket_number = Str::orderedUuid();
 
-                $qrCode = QrCode::format('png')->merge(public_path('assets/images/cropped-Praise.png'), 0.2, true)
+                $qrCode = QrCode::format('png')->merge(public_path('assets/images/janealler.png'), 0.2, true)
                 ->gradient(0,0,0,0,0,0,'radial')
                 ->backgroundColor(255,255,255)->size(600)->generate($ticket->ticket_number);
 
@@ -221,7 +221,7 @@ class TicketController extends Controller
             $ticket->event_id = $event->id;
             $ticket->ticket_number = Str::orderedUuid();
             //generate qr code and store it in the storage folder
-            $qrCode = QrCode::format('png')->merge(public_path('assets/images/cropped-Praise.png'), 0.2, true)
+            $qrCode = QrCode::format('png')->merge(public_path('assets/images/janealler.png'), 0.2, true)
             ->gradient(0,0,0,0,0,0,'radial')
             ->backgroundColor(255,255,255)->size(600)->generate($ticket->ticket_number);
             $path = 'qr_codes/'.$ticket->ticket_number.'.png';
@@ -277,7 +277,7 @@ class TicketController extends Controller
             $ticket->event_id = $event->id;
             $ticket->ticket_number = Str::orderedUuid();
 
-            $qrCode = QrCode::format('png')->merge(public_path('assets/images/cropped-Praise.png'), 0.2, true)
+            $qrCode = QrCode::format('png')->merge(public_path('assets/images/janealler.png'), 0.2, true)
                 ->gradient($gradientValues[0], $gradientValues[1], $gradientValues[2], $gradientValues[3], $gradientValues[4], $gradientValues[5], $gradientValues[6])
                 ->backgroundColor(255, 255, 255)->size(600)->generate($ticket->ticket_number);
 

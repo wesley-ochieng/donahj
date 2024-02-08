@@ -45,7 +45,7 @@
                                                             <tr style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
                                                                 <td class="content-block" style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
                                                                     <div style="margin-bottom: 15px;">
-                                                                        <img src="{{asset('assets/images/cropped-Praise.png')}}" alt="" height="23">
+                                                                        <img src="{{asset('assets/images/janealler.png')}}" alt="" height="23">
                                                                     </div>
                                                                 </td>
                                                             </tr>
@@ -74,7 +74,7 @@
                                                                             {{-- disclaimer. once ticket has been purchased it is non refundable but can be donated to someone else --}}
                                                                             <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #ff6762;">This ticket is non refundable but can be donated to someone else.</p>
                                                                             <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">Thank You.</p>
-                                                                            <p style="font-family: 'Roboto', sans-serif; font-size: 14px;color: #98a6ad; margin: 0px;"> @ {{ date('Y') }} Praise Atmosphere</p>
+                                                                            <p style="font-family: 'Roboto', sans-serif; font-size: 14px;color: #98a6ad; margin: 0px;"> @ {{ date('Y') }} Jane Aller</p>
                                                                         </div>
                                                                     </div>
                                                                 </td>

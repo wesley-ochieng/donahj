@@ -22,6 +22,11 @@ return new class extends Migration
             $table->foreignId('payment_id')->nullable();
             $table->foreign('payment_id')->references('id')->on('payments');
             $table->string('email')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('name')->nullable();
+            $table->string('ticket_type')->nullable();
+            $table->string('ticket_price')->nullable();
+            $table->string('quantity')->nullable();
             $table->enum('status', ['active', 'used', 'unpaid', 'paid'])->default('unpaid');
             $table->string('qr_code')->nullable();
             $table->timestamps();
