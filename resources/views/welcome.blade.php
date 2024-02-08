@@ -83,7 +83,7 @@
                         <div class="header-meta">
 
                             <div class="header-btn d-none d-md-block">
-                                <a href="price.html" class="btn btn-primary">Buy Ticket Now</a>
+                                <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">Buy Ticket Now</a>
                             </div>
 
                             <!-- Header Toggle Start -->
@@ -235,7 +235,7 @@
                             </div>
                             <!-- Countdown End -->
                             <div class="header-btn" data-aos-delay="900" data-aos="fade-up">
-                                <a class="btn-2" href="price.html">Get Your Ticket Now</a>
+                                <a class="btn-2" href="#" class="icon-open-container" data-bs-toggle="modal" data-bs-target="#exampleModal">Get Your Ticket Now</a>
                             </div>
                         </div>
                     </div>
@@ -563,7 +563,7 @@
                                     <div class="col-md-7">
                                         <!-- Footer widget Map Start -->
                                         <div class="footer-widget-map">
-                                            <iframe src="https://maps.google.com/maps?q=New%20York%20University%20&t=m&z=10&output=embed&iwloc=near" title="New York University" aria-label="New York University"></iframe>
+                                            <iframe src="https://maps.google.com/maps?q=Kenyatta%20International%20Convention%20Centre,%20Nairobi,%20Kenya&t=m&z=15&output=embed&iwloc=near" title="KICC" aria-label="KICC"></iframe>
                                         </div>
                                         <!-- Footer widget Map End -->
                                     </div>

@@ -111,12 +111,7 @@
                 <li><a class="nav-link menu-title link-nav" href="#"><i data-feather="headphones"></i><span>Support Ticket</span></a></li>
                 {{-- logout --}}
                 <li class="sidebar-main-title">
-                  <div>
-                    <h6>Foundation</h6>
-                  </div>
-                </li>
-                <li class="dropdown"><a class="nav-link menu-title link-nav" href="{{ route('foundation') }}"><i data-feather="printer"></i></i><span>Foundation</span></a></li>
-                <li class="dropdown"><a class="nav-link menu-title link-nav" href="{{ route('tickets.all') }}"><i data-feather="printer"></i></i><span>Foundation Payments</span></a></li>
+                  
                 <li class="dropdown">
                   <a class="nav-link menu-title" href="javascript:void(0)"><i data-feather="log-out"></i><span>Logout</span></a>
                   <ul class="nav-submenu menu-content">
