@@ -534,7 +534,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">
-                             <img src="{{ asset('assets/images/janealler.png') }}" alt="" style="max-width:81px;"> 
+                             <img src="{{ asset('assets/images/janefinal.png') }}" alt="" style="max-width:81px;"> 
                              Buy - {{ $upcoming_event->name }} Ticket</h5>
                         <button type="button" class="btn btn-xs btn-light" data-bs-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>

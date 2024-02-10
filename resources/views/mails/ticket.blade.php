@@ -45,23 +45,24 @@
                                                             <tr style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
                                                                 <td class="content-block" style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
                                                                     <div style="margin-bottom: 15px;">
-                                                                        <img src="{{asset('assets/images/janealler.png')}}" alt="" height="23">
+                                                                        <img src="{{asset('assets/images/janefinal.png')}}" alt="" height="23">
                                                                     </div>
                                                                 </td>
                                                             </tr>
+                                                            
                                                             <tr style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">
                                                                 <td class="content-block" style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: 20px; line-height: 1.5; font-weight: 500; vertical-align: top; margin: 0; padding: 0 0 10px;" valign="top">
-                                                                    Exciting News: Your {{ $event }} Tickets are Ready!
+                                                                    Welcome! We're thrilled to share that your ticket for "{{ $event }}" LIVE RECORDING by Jane Aller is now available 🎉! 
                                                                 </td>
                                                             </tr>
                                                             <tr style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: 14px; margin: 0; border-top: 1px solid #e9ebec;">
                                                                 <td class="content-block" style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0; padding-top: 15px" valign="top">
                                                                     <div style="display: flex; align-items: center;">
                                                                         <div style="margin-left: 8px;">
-                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">We're thrilled to share that your tickets for the upcoming {{ $event }} are now available! 🎉:</p>
-                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">Please find the attached tickets to make your event experience seamless. Each QR code is your gateway to an unforgettable time at {{ $event }}.</p>
-                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">If you have any questions or need assistance, feel free to reach out. We're here to ensure you have a fantastic time at the event!</p>
-                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">Thank you for choosing us, and we look forward to seeing you at {{ $event }}!</p>
+                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">Please find the attached ticket(s) to make your event experience seamless. Each QR code is your gateway to an unforgettable time at SOAKED LIVE RECORDING. </p>
+                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">For any question or assistance, feel free to reach out to Pst Donah on 0722162863.</p>
+                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">Thank you for booking and we look forward to seeing you at {{ $event }} live Recording. </p>
+                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">(Psalm 86:9-All the nations You have made shall come and worship before You, O Lord, and shall glorify Your name.)</p>
                                                                             <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;"></p>
                                                                             <!-- get the ticket image from storage based on the ticket number-->
                                                                             <img src="{{ asset('storage/qr_codes/'.$ticket_number.'.png') }}" alt="" height="180">
@@ -73,11 +74,11 @@
                                                                 <td class="content-block" style="font-family: 'Roboto', sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0; padding-top: 15px" valign="top">
                                                                     <div style="display: flex; align-items: center;">
                                                                         <div style="margin-left: 8px;">
-                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">Please Ensure you present this QRCode at the gate. This serves as your ticket</p>
+                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">Please ensure you present this QRcode at the Entrance.This serves as your Ticket. </p>
                                                                             {{-- disclaimer. once ticket has been purchased it is non refundable but can be donated to someone else --}}
-                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #ff6762;">This ticket is non refundable but can be donated to someone else.</p>
+                                                                            <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #ff6762;">This ticket is none refundable but can be donated to someone else. </p>
                                                                             <p style="font-size: 13px; margin-bottom: 0px; margin-top: 3px; color: #878a99;">Thank You.</p>
-                                                                            <p style="font-family: 'Roboto', sans-serif; font-size: 14px;color: #98a6ad; margin: 0px;">Best Regards,<br>PrasieAtmosphere @ {{ date('Y') }}</p>
+                                                                            <p style="font-family: 'Roboto', sans-serif; font-size: 14px;color: #98a6ad; margin: 0px;">Best Regards,<br>Jane Aller Music  © {{ date('Y') }}</p>
                                                                         </div>
                                                                     </div>
                                                                 </td>

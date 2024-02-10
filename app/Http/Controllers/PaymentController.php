@@ -176,6 +176,11 @@ class PaymentController extends Controller
             Storage::disk('public')->put($path, $qrCode);
             $ticket->qr_code = $ticket->ticket_number.'.png';
             $ticket->status = 'unpaid';
+            $ticket->name = $request->name;
+            $ticket->phone = $request->phone;
+            $ticket->ticket_type = $request->ticket_type;
+            $ticket->ticket_price = $amount;
+            $ticket->quantity = $request->quantity;
             $ticket->save();
         } else {
             $ticket = new Ticket();
@@ -190,6 +195,11 @@ class PaymentController extends Controller
             Storage::disk('public')->put($path, $qrCode);
             $ticket->qr_code = $ticket->ticket_number.'.png';
             $ticket->status = 'unpaid';
+            $ticket->name = $request->name;
+            $ticket->phone = $request->phone;
+            $ticket->ticket_type = $request->ticket_type;
+            $ticket->ticket_price = $amount;
+            $ticket->quantity = $request->quantity;
             $ticket->save();
         }
 
@@ -237,7 +247,6 @@ class PaymentController extends Controller
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
         $curl_response = curl_exec($curl);
         //create a payment
-        dd(json_decode($curl_response));
         $payment = new payment();
         $payment->merchantRequestId = json_decode($curl_response)->MerchantRequestID;
         $payment->phone_number = $phoneNumber;
