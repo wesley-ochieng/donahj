@@ -90,6 +90,11 @@ Route::get('create-storage',function(){
     
 });
 
+// test php info
+Route::get('phpinfo',function(){
+    phpinfo();
+});
+
 
 //foundation
 Route::get('/foundation', [App\Http\Controllers\FoundationController::class, 'index'])->name('foundation');

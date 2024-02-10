@@ -16,9 +16,9 @@ class FrontEndController extends Controller
 
     public function home(){
 
-        // $qrCode = QrCode::format('png')->merge(public_path('assets/images/janealler.png'), 0.3, true)->backgroundColor(255,255,255)
+        // $qrCode = QrCode::format('png')->merge(public_path('assets/images/janefinal.png'), 0.2, true)->backgroundColor(255,255,255)
         // ->style('round')->eye('square')
-        // ->gradient (0,0,0,0,0,0,'radial')->size(300)->generate("https://janeallermusic.com/soaked"); 
+        // ->gradient (0,0,0,0,0,0,'radial')->size(300)->generate("https://events.janeallermusic.com/"); 
         // Storage::disk('public')->put('qr-codes/promotion.png', $qrCode);
     
         $upcoming_event = Event::where('status', 'upcoming')

@@ -108,64 +108,6 @@
         </div>
         <!-- Header End -->
 
-        <!-- Mini Cart Start -->
-        <div class="off-canvas">
-            <div class="icon-close"></div>
-
-            <!-- Mini Cart Box Start -->
-            <div class="meeta-mini-cart-box">
-
-                <div class="mini-cart-items">
-
-                    <div class="mini-cart-item">
-                        <div class="mini-cart-item-image">
-                            <a href="#"><img src="assets/images/cart/cart-1.jpg" alt="Cart"></a>
-                        </div>
-                        <div class="mini-cart-item-content">
-                            <h4 class="mini-cart-title"><a href="#">Virtual Event with Protected Content and Hidden Livestream </a></h4>
-                            <p class="mini-cart-quantity">1 × $19.99</p>
-                        </div>
-                        <button class="btn-close"></button>
-                    </div>
-
-                    <div class="mini-cart-item">
-                        <div class="mini-cart-item-image">
-                            <a href="#"><img src="assets/images/cart/cart-2.jpg" alt="Cart"></a>
-                        </div>
-                        <div class="mini-cart-item-content">
-                            <h4 class="mini-cart-title"><a href="#">Virtual Event with Protected Content and Hidden Livestream </a></h4>
-                            <p class="mini-cart-quantity">1 × $19.99</p>
-                        </div>
-                        <button class="btn-close"></button>
-                    </div>
-
-                    <div class="mini-cart-item">
-                        <div class="mini-cart-item-image">
-                            <a href="#"><img src="assets/images/cart/cart-3.jpg" alt="Cart"></a>
-                        </div>
-                        <div class="mini-cart-item-content">
-                            <h4 class="mini-cart-title"><a href="#">Virtual Event with Protected Content and Hidden Livestream </a></h4>
-                            <p class="mini-cart-quantity">1 × $19.99</p>
-                        </div>
-                        <button class="btn-close"></button>
-                    </div>
-
-                </div>
-
-                <div class="mini-cart-sub-total">
-                    <p><strong>Subtotal:</strong> <span class="mini-cart-amount">$99.97</span></p>
-                </div>
-                <div class="mini-cart-sub-btn">
-                    <a class="btn btn-primary" href="#">View cart</a>
-                    <a class="btn btn-white" href="#">Checkout</a>
-                </div>
-            </div>
-            <!-- Mini Cart Box End -->
-
-        </div>
-        <!-- Mini Cart End -->
-
-
         <!-- Offcanvas Start-->
         <div class="offcanvas offcanvas-start" id="offcanvasExample">
             <div class="offcanvas-header">
@@ -260,7 +202,7 @@
                                 <img src="{{ asset('storage/' . $upcoming_event->poster_image) }}" alt="About">
                             </div>
                             <div class="play-btn">
-                                <a class="popup-video" href="https://www.youtube-nocookie.com/embed/Ga6RYejo6Hk"><i class="fas fa-play"></i></a>
+                                <a class="popup-video" href="https://www.youtube.com/watch?v=_BQ0Tz5k_Y8"><i class="fas fa-play"></i></a>
                             </div>
                         </div>
                         <!-- About Images End -->
@@ -284,7 +226,7 @@
                                     <ul>
                                         <li class="about-list-item">
                                             <div class="about-icon">
-                                                <img src="assets/images/ab-icon-1.png" alt="">
+                                                <img src="{{ asset('assets/images/janealler.png') }}" style="max-width: 20px" alt="">
                                             </div>
                                             <div class="about-text">
                                                 <h3 class="title">Live Music</h3>
@@ -292,7 +234,7 @@
                                         </li>
                                         <li class="about-list-item">
                                             <div class="about-icon">
-                                                <img src="assets/images/ab-icon-2.png" alt="">
+                                                <img src="{{ asset('assets/images/janealler.png') }}" style="max-width: 20px" alt="">
                                             </div>
                                             <div class="about-text">
                                                 <h3 class="title">Live Recording</h3>
@@ -300,7 +242,7 @@
                                         </li>
                                         <li class="about-list-item">
                                             <div class="about-icon">
-                                                <img src="assets/images/ab-icon-3.png" alt="">
+                                                <img src="{{ asset('assets/images/janealler.png') }}" style="max-width: 20px" alt="">
                                             </div>
                                             <div class="about-text">
                                                 <h3 class="title">Networking</h3>
@@ -308,7 +250,7 @@
                                         </li>
                                         <li class="about-list-item">
                                             <div class="about-icon">
-                                                <img src="assets/images/ab-icon-4.png" alt="">
+                                                <img src="{{ asset('assets/images/janealler.png') }}" style="max-width: 20px" alt="">
                                             </div>
                                             <div class="about-text">
                                                 <h3 class="title">Qr Code Tickets</h3>
@@ -423,7 +365,7 @@
                                     <li>Middle Row Seats</li>
                                     <li>Networking</li>
                                 </ul>
-                                <a class="btn" href="price.html">Book A Seat</a>
+                                <a class="btn" href="#"data-bs-toggle="modal" data-bs-target="#exampleModal">Book A Seat</a>
                             </div>
                         </div>
                         <!-- Single Pricing End -->
@@ -444,7 +386,7 @@
                                     <li>Front Row Seats</li>
                                     <li>Networking</li>
                                 </ul>
-                                <a class="btn" href="price.html">Book A Seat</a>
+                                <a class="btn" href="#"data-bs-toggle="modal" data-bs-target="#exampleModal">Book A Seat</a>
                             </div>
                         </div>
                         <!-- Single Pricing End -->
@@ -466,7 +408,7 @@
                                     <li>Accompanied by an Adult</li>
                                 
                                 </ul>
-                                <a class="btn" href="price.html">Book A Seat</a>
+                                <a class="btn" href="#"data-bs-toggle="modal" data-bs-target="#exampleModal">Book A Seat</a>
                             </div>
                         </div>
                         <!-- Single Pricing End -->
@@ -598,24 +540,24 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body hero-form-wrap">
                         <form action="{{ route('payments.stkpush', $upcoming_event->id, 'pay') }}" class="needs-validation" id="submit-form" method="POST">
                             @csrf
-                            <div class="form-group">
+                            <div class="single-form">
                                 <label for="name">Name</label>
                                 <input type="text" name="name" id="name"
-                                    class="form-control input-air-primary" placeholder="Enter your name"
+                                    class="form-control" placeholder="Enter your name"
                                     aria-describedby="helpId">
                             </div>
-                            <div class="form-group">
+                            <div class="single-form">
                                 <label for="email">Email</label>
                                 <input type="email" name="email" id="email"
-                                    class="form-control input-air-primary" placeholder="Enter your email"
+                                    class="form-control" placeholder="Enter your email"
                                     aria-describedby="helpId">
                             </div>
-                            <div class="form-group">
+                            <div class="single-form">
                                 <label for="ticket-type">Ticket Type</label>
-                                <select class="form-select input-air-primary" name="ticket_type" id="ticket-type">
+                                <select class="form-control " name="ticket_type" id="ticket-type">
                                     <option value="" selected disabled>Select ticket type </option>
                                     @if($upcoming_event->eventPrice->regular_advance_price !== null && $upcoming_event->eventPrice->regular_advance_price >= 0)
                                         <option value="regular">Regular</option>
@@ -631,20 +573,20 @@
                                     @endif
                                 </select>
                             </div>
-                            <div class="form-group">
+                            <div class="singe-form">
                                 <label for="quantity">Quantity</label>
                                 <input type="number" name="quantity" id="quantity"
-                                    class="form-control input-air-primary touchspin" placeholder="Enter quantity" value="1"
+                                    class="form-control  touchspin" placeholder="Enter quantity" value="1"
                                     aria-describedby="helpId">
                                     <span class="text-muted"> Total amount is : <strong class="text-success" id="totalAmount"></strong></span>
                             </div>
-                            <div class="form-group">
+                            <div class="single-form">
                                 <label for="phone">Phone Number <em>07xxxxxxxx</em></label>
                                 <input type="number" name="phone" id="phone"
-                                    class="form-control input-air-primary" placeholder="Enter phone number" maxlength="10"
+                                    class="form-control " placeholder="Enter phone number" maxlength="10"
                                     aria-describedby="helpId" oninput="limitNumberLength(this, 10)">
                             </div>
-                            <div class="form-group">
+                            <div class="single-form">
                                 <button type="button" id="buy-ticket-btn" class="btn btn-primary">Buy</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             </div>
@@ -688,14 +630,16 @@
     <script src="{{ asset('frontend/assets/js/waypoints.min.js') }}"></script>
     <script src="{{ asset('frontend/assets/js/aos.js') }}"></script>
     <script src="{{ asset('frontend/assets/js/jquery.nice-select.min.js') }}"></script>
-{{-- 
+
     <script src="{{ asset('assets/js/modal-animated.js') }}"></script>
-    <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
+    <script src="{{ asset('assets/js/form-validation-custom.js') }}"></script>
+    <script src="{{ asset('assets/js/sweet-alert/sweetalert.min.js') }}"></script>
+    {{-- <script src="{{ asset('assets/js/tooltip-init.js') }}"></script>
     <script src="{{ asset('assets/js/touchspin/vendors.min.js') }}"></script>
     <script src="{{ asset('assets/js/touchspin/touchspin.js') }}"></script>
     <script src="{{ asset('assets/js/touchspin/input-groups.min.js') }}"></script>
-    <script src="{{ asset('assets/js/sweet-alert/sweetalert.min.js') }}"></script>
-    <script src="{{ asset('assets/js/form-validation-custom.js') }}"></script> --}}
+    
+     --}}
     
     <!-- Main JS -->
     <script src="{{ asset('frontend/assets/js/main.js') }}"></script>

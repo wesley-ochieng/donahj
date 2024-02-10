@@ -26,12 +26,11 @@ class PaymentController extends Controller
         //timestamp
         $timestamp = Carbon::rawParse('now')->format('YmdHms');
         //passkey
-        $passkey = "996552801fb21afb5cb091fae6994e99664ad2dc17ffb20258e783cd227ca87e";
+        $passkey = "8a5495b9bfac4b5110d7124dc4082565cc462d411a3935b71246425b92de214f";
         //businessShortCode
         $businessShortCode = env('MPESA_BUSINESS_SHORT_CODE');
         //generate password
         $mpesaToken = base64_encode($businessShortCode.$passkey.$timestamp);
-
         return $mpesaToken;
     }
 
@@ -149,7 +148,7 @@ class PaymentController extends Controller
                 $ticket->event_id = $event->id;
                 $ticket->ticket_number = Str::orderedUuid();
                 //generate qr code and store it in the storage folder
-                $qrCode = QrCode::format('png')->merge(public_path('assets/images/janealler.png'), 0.2, true)
+                $qrCode = QrCode::format('png')->merge(public_path('assets/images/janefinal.png'), 0.2, true)
                 ->gradient($gradientValues[0], $gradientValues[1], $gradientValues[2], $gradientValues[3], $gradientValues[4], $gradientValues[5], $gradientValues[6])
                 ->backgroundColor(255,255,255)->size(600)->generate($ticket->ticket_number);
                 $path = 'qr_codes/'.$ticket->ticket_number.'.png';
@@ -238,6 +237,7 @@ class PaymentController extends Controller
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
         $curl_response = curl_exec($curl);
         //create a payment
+        dd(json_decode($curl_response));
         $payment = new payment();
         $payment->merchantRequestId = json_decode($curl_response)->MerchantRequestID;
         $payment->phone_number = $phoneNumber;
