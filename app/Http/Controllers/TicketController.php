@@ -255,7 +255,7 @@ class TicketController extends Controller
         $tickets = [];
 
         $regularGradient = [0,0,0,0,0,0,'radial'];
-        $vipGradient = [255, 255, 255, 255, 215, 0, 'radial'];
+        $vipGradient = [100, 220, 150,3, 192, 75, 'radial'];
         $kidsGradient = [231, 76, 60, 255, 135, 120,'radial'];
         $vvipGradient = [100, 220, 150,3, 192, 75, 'radial'];
 
