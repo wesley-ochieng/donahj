@@ -22,11 +22,11 @@ use App\Http\Controllers\C2bController;
 */
 Route::get('/about', [App\Http\Controllers\FrontEndController::class, 'index'])->name('about');
 Route::get('/', [App\Http\Controllers\FrontEndController::class, 'home'])->name('welcome');
-Route::get('/praise-atmosphere/events/{event}',[App\Http\Controllers\FrontEndController::class, 'homeEvent'] )->name('home-event');
+Route::get('/janealler',[App\Http\Controllers\FrontEndController::class, 'homeEvent'] )->name('home-event');
 
 Auth::routes(['register' => false]);
 
-Route::group(['prefix' => 'praise'], function($route){
+Route::group(['prefix' => 'janealler'], function($route){
 
     Route::post ('password/generate', [C2bController::class, 'mpesaPassword']);
     Route::post('access/token', [C2bController::class, 'mpesaAccessToken']);

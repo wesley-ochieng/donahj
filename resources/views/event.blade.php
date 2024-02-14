@@ -60,7 +60,7 @@
                       <li class="nav-item menu-back">back<i class="fa fa-angle-right"></i></li>
                     </ul>
                     <div class="buy-block">
-                      <a class="btn-landing" href="https://praiseatmosphere.com/"
+                      <a class="btn-landing" href="https://janeallermusic.com/"
                             target="_blank">Home</a>
                             <a class="btn btn-secondary" href="{{ url('/') }}" style="border-radius: 20px">Events</a>
                         <div class="toggle-menu"><i class="fa fa-bars"></i></div>

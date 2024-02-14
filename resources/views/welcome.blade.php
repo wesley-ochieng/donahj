@@ -31,9 +31,9 @@
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/aos.css') }}">
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/nice-select.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/sweetalert2.css') }}">
-
     <!-- Main Style CSS -->
     <link rel="stylesheet" href="{{ asset('frontend/assets/css/style.css') }}">
+
 
 </head>
 
@@ -152,11 +152,11 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="meeta-hero-content text-center" data-aos-delay="700" data-aos="fade-up">
-                            <h2 class="title">{{ $upcoming_event->name }}</h2>
+                            <h2 class="title">{{ $upcoming_event->name }} </h2>
                             <span class="text"> {{ \Carbon\Carbon::parse($upcoming_event->start_date)->format('d M, Y')}} ,  {{ $upcoming_event->venue }}</span>
 
                             <!-- Countdown Start -->
-                            <div class="meeta-countdown-2 countdown" data-countdown="2024/05/8" data-format="short">
+                            <div class="meeta-countdown-2 countdown" data-countdown="{{ \Carbon\Carbon::parse($upcoming_event->start_date)->format('Y/m/d')}}" data-format="short">
                                 <div class="single-countdown">
                                     <span class="count countdown__time daysLeft"></span>
                                     <span class="value countdown__time daysText"></span>
@@ -198,9 +198,9 @@
                             <div class="shape-1">
                                 <img src="{{ asset('storage/' . $upcoming_event->poster_image) }}" alt="">
                             </div>
-                            <div class="image">
+                            {{-- <div class="image">
                                 <img src="{{ asset('storage/' . $upcoming_event->poster_image) }}" alt="About">
-                            </div>
+                            </div> --}}
                             <div class="play-btn">
                                 <a class="popup-video" href="https://www.youtube.com/watch?v=_BQ0Tz5k_Y8"><i class="fas fa-play"></i></a>
                             </div>
@@ -291,18 +291,8 @@
                             <!-- Single Counter Start -->
                             <div class="single-counter counter-item-1 text-center">
                                 <div class="counter-text">
-                                    <span class="counter">4</span>
-                                    <p>Artists</p>
-                                </div>
-                            </div>
-                            <!-- Single Counter End -->
-                        </div>
-                        <div class="col-lg-3 col-sm-6">
-                            <!-- Single Counter Start -->
-                            <div class="single-counter counter-item-2 text-center">
-                                <div class="counter-text">
-                                    <span class="counter">12</span>
-                                    <p>Tickets Sold</p>
+                                    <span class="counter">{{ $regular_quantity }}</span>
+                                    <p>Regular Tickets Available</p>
                                 </div>
                             </div>
                             <!-- Single Counter End -->
@@ -311,7 +301,7 @@
                             <!-- Single Counter Start -->
                             <div class="single-counter counter-item-3 text-center">
                                 <div class="counter-text">
-                                    <span class="counter">34</span>
+                                    <span class="counter">{{ $vip_quantity }}</span>
                                     <p>Vip Tickets Available</p>
                                 </div>
                             </div>
@@ -319,10 +309,21 @@
                         </div>
                         <div class="col-lg-3 col-sm-6">
                             <!-- Single Counter Start -->
+                            <div class="single-counter counter-item-2 text-center">
+                                <div class="counter-text">
+                                    <span class="counter">{{ $kids_quantity }}</span>
+                                    <p>Kids Tickets Available</p>
+                                </div>
+                            </div>
+                            <!-- Single Counter End -->
+                        </div>
+                        
+                        <div class="col-lg-3 col-sm-6">
+                            <!-- Single Counter Start -->
                             <div class="single-counter text-center">
                                 <div class="counter-text">
-                                    <span class="counter">10</span>
-                                    <p>Standard Tickets Available</p>
+                                    <span class="counter">{{ $paid_tickets }}</span>
+                                    <p>Tickets Sold</p>
                                 </div>
                             </div>
                             <!-- Single Counter End -->
@@ -474,7 +475,7 @@
                         <div class="col-lg-3">
                             <!-- Footer Logo Start -->
                             <div class="footer-logo">
-                                <a href="index.html"><img src="{{ asset('assets/images/janealler.png') }}" style="max-width: 81px" alt="Logo"></a>
+                                <a href="#"><img src="{{ asset('assets/images/janealler.png') }}" style="max-width: 81px" alt="Logo"></a>
                             </div>
                             <!-- Footer Logo End -->
                         </div>
@@ -543,19 +544,20 @@
                     <div class="modal-body hero-form-wrap">
                         <form action="{{ route('payments.stkpush', $upcoming_event->id, 'pay') }}" class="needs-validation" id="submit-form" method="POST">
                             @csrf
-                            <div class="single-form">
+                            
+                            <div class="single-form form-group">
                                 <label for="name">Name</label>
                                 <input type="text" name="name" id="name"
                                     class="form-control" placeholder="Enter your name"
                                     aria-describedby="helpId">
                             </div>
-                            <div class="single-form">
+                            <div class="single-form form-group">
                                 <label for="email">Email</label>
                                 <input type="email" name="email" id="email"
                                     class="form-control" placeholder="Enter your email"
                                     aria-describedby="helpId">
                             </div>
-                            <div class="single-form">
+                            <div class="single-form form-group">
                                 <label for="ticket-type">Ticket Type</label>
                                 <select class="form-control " name="ticket_type" id="ticket-type">
                                     <option value="" selected disabled>Select ticket type </option>
@@ -565,28 +567,27 @@
                                     @if($upcoming_event->eventPrice->vip_advance_price)
                                         <option value="vip">VIP</option>
                                     @endif
-                                    @if($upcoming_event->eventPrice->vvip_advance_price)
-                                        <option value="vvip">VVIP</option>
-                                    @endif
                                     @if($upcoming_event->eventPrice->kids_advance_price !== null && $upcoming_event->eventPrice->kids_advance_price >= 0)
                                         <option value="kids">Kids <em>(Between 3 and 12 Years)</em></option>
                                     @endif
                                 </select>
                             </div>
-                            <div class="singe-form">
+                            <br>
+                            <br>
+                            <div class="single-form form-group">
                                 <label for="quantity">Quantity</label>
                                 <input type="number" name="quantity" id="quantity"
                                     class="form-control  touchspin" placeholder="Enter quantity" value="1"
                                     aria-describedby="helpId">
                                     <span class="text-muted"> Total amount is : <strong class="text-success" id="totalAmount"></strong></span>
                             </div>
-                            <div class="single-form">
+                            <div class="single-form form-group">
                                 <label for="phone">Phone Number <em>07xxxxxxxx</em></label>
                                 <input type="number" name="phone" id="phone"
                                     class="form-control " placeholder="Enter phone number" maxlength="10"
                                     aria-describedby="helpId" oninput="limitNumberLength(this, 10)">
                             </div>
-                            <div class="single-form">
+                            <div class="single-form form-group">
                                 <button type="button" id="buy-ticket-btn" class="btn btn-primary">Buy</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             </div>

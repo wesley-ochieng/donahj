@@ -7,6 +7,8 @@ use App\Models\Event;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Storage;
 use App\Models\Ticket;
+use App\Models\EventPrice;
+
 
 class FrontEndController extends Controller
 {
@@ -24,6 +26,19 @@ class FrontEndController extends Controller
         $upcoming_event = Event::where('status', 'upcoming')
         ->orWhere('status', 'active')
         ->first();
+       
+        
+        $paid_tickets = Ticket::where('status','paid')
+        ->where('event_id',$upcoming_event->id)
+        ->count();
+
+        $regular_quantity = EventPrice::where('event_id',$upcoming_event->id)
+        ->first()->regular_quantity;
+        $vip_quantity = EventPrice::where('event_id',$upcoming_event->id)
+        ->first()->vip_quantity;
+        $kids_quantity = EventPrice::where('event_id',$upcoming_event->id)
+        ->first()->kids_quantity;
+
         if(!$upcoming_event){
             $events = Event::all();
         }else{
@@ -31,8 +46,9 @@ class FrontEndController extends Controller
             ->orWhere('status', 'active')
             ->where('id', '!=', $upcoming_event->id)
             ->orderBy('id', 'desc')->get();
+
         }
-        return view('welcome', compact('upcoming_event', 'events'));
+        return view('welcome', compact('upcoming_event', 'events','paid_tickets','regular_quantity','vip_quantity','kids_quantity' ));
     }
     public function homeEvent($event){
         $upcoming_event = Event::find($event); 
