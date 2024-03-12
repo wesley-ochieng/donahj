@@ -13,5 +13,10 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         'api/mpesa/callback',
+        'payment/confirmation',
+        'janealler/payment/confirmation',
+        'janealler/validation',
+        'janealler/access/token',
+        'janealler/password/generate',
     ];
 }

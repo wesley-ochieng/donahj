@@ -18,16 +18,36 @@ class FrontEndController extends Controller
 
     public function home(){
 
-        // $qrCode = QrCode::format('png')->merge(public_path('assets/images/janefinal.png'), 0.2, true)->backgroundColor(255,255,255)
-        // ->style('round')->eye('square')
-        // ->gradient (0,0,0,0,0,0,'radial')->size(300)->generate("https://events.janeallermusic.com/"); 
-        // Storage::disk('public')->put('qr-codes/promotion.png', $qrCode);
-    
+        // test sending sms to env SMS_URL  with apikey service id and phone number
+        // $url = env('SMS_URL');
+        // $apikey = env('SMS_API_KEY');
+        // $service_id = 0;
+        // $mobile = '0726580246';
+        // $shortcode = 'Tilil';
+        // $message = 'Hello Jane, this is a test message from Jane Aller Music';
+  
+        // $sms = json_encode(array(
+        //     "api_key" => "c8rZzMlB1dL45HtwpY93JKCmau2qeVDoTUX6bOWiSygQjhNkPns0vARfIFxE7G",
+        //     "service_id" => $service_id,
+        //     "mobile" => $mobile,
+        //     "response_type" => "json",
+        //     "shortcode" => $shortcode,
+        //     "message" => $message
+        // ));
+        // $ch = curl_init();
+        // curl_setopt($ch, CURLOPT_URL, $url);
+        // curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+        // curl_setopt($ch, CURLOPT_POST, 1);
+        // curl_setopt($ch, CURLOPT_POSTFIELDS, $sms);
+        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // $response = curl_exec($ch);
+        // curl_close($ch);
+
         $upcoming_event = Event::where('status', 'upcoming')
         ->orWhere('status', 'active')
         ->first();
        
-        
+
         $paid_tickets = Ticket::where('status','paid')
         ->where('event_id',$upcoming_event->id)
         ->count();

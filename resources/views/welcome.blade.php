@@ -271,7 +271,7 @@
         <!-- About Section End -->
 
         <!-- Counter Start -->
-        <div class="meeta-counter-section section-padding" style="background-image: url('{{ asset('storage/' . $upcoming_event->poster_image) }}');">
+        <div class="meeta-counter-section section-padding" style="background-image: url('{{ asset('storage/' . $upcoming_event->poster_image) }}'); background-attachment: fixed;">
             <div class="shape-1">
                 <img src="{{ asset('frontend/assets/images/shape/counter-shape-1.png') }}" alt="">
             </div>
@@ -284,53 +284,7 @@
             <div class="shape-4">
                 <img src="{{ asset('frontend/assets/images/shape/counter-shape-4.png') }}" alt="">
             </div>
-            <div class="container">
-                <div class="counter-wrap">
-                    <div class="row">
-                        <div class="col-lg-3 col-sm-6">
-                            <!-- Single Counter Start -->
-                            <div class="single-counter counter-item-1 text-center">
-                                <div class="counter-text">
-                                    <span class="counter">{{ $regular_quantity }}</span>
-                                    <p>Regular Tickets Available</p>
-                                </div>
-                            </div>
-                            <!-- Single Counter End -->
-                        </div>
-                        <div class="col-lg-3 col-sm-6">
-                            <!-- Single Counter Start -->
-                            <div class="single-counter counter-item-3 text-center">
-                                <div class="counter-text">
-                                    <span class="counter">{{ $vip_quantity }}</span>
-                                    <p>Vip Tickets Available</p>
-                                </div>
-                            </div>
-                            <!-- Single Counter End -->
-                        </div>
-                        <div class="col-lg-3 col-sm-6">
-                            <!-- Single Counter Start -->
-                            <div class="single-counter counter-item-2 text-center">
-                                <div class="counter-text">
-                                    <span class="counter">{{ $kids_quantity }}</span>
-                                    <p>Kids Tickets Available</p>
-                                </div>
-                            </div>
-                            <!-- Single Counter End -->
-                        </div>
-                        
-                        <div class="col-lg-3 col-sm-6">
-                            <!-- Single Counter Start -->
-                            <div class="single-counter text-center">
-                                <div class="counter-text">
-                                    <span class="counter">{{ $paid_tickets }}</span>
-                                    <p>Tickets Sold</p>
-                                </div>
-                            </div>
-                            <!-- Single Counter End -->
-                        </div>
-                    </div>
-                </div>
-            </div>
+           
         </div>
         <!-- Counter End -->
 

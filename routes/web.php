@@ -60,6 +60,8 @@ Route::post('/payments/{merchantRequestID}', [PaymentController::class, 'checkPa
 
 Route::post('events/{event}/pay', [PaymentController::class, 'stkpush'])->name('payments.stkpush');
 Route::post('mpesa/callback/url', [PaymentController::class, 'MpesaResponse']);
+// mpesa c2b call back
+Route::post('mpesa/c2b/callback', [PaymentController::class, 'c2bCallback']);
 
 //confirming the ticket is valid
 Route::post('tickets/confirm', [TicketController::class, 'updateStatus']);
